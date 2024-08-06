@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name": "Fitness-evolution",
+    "slug": "fitness-evolution",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/fitnessLogoSmall2.png",
+    "scheme": "fitness-evolution",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/FitnessSplash2.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0B1215"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/fitnessLogoSmall2.png",
+        "backgroundColor": "#0B1215"
+      },
+      "package": "com.ashri024.fitnessevolution"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/fitnessLogoSmall2.png"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "dbb0c0d2-6671-4083-8dd0-82205220f44e"
+      }
+    }
+  }
+}
