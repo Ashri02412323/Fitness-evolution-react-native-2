@@ -10,7 +10,10 @@ const GlobalProvider = ({ children }) => {
   const [forgottonEmail, setForgottonEmail] = useState(null);
   const [firstLetter, setFirstLetter] = useState('');
   const [index, setIndex] = useState(0);
-
+  const [chats, setChats] = useState([
+    "Hello there!",
+    "Hello, how are you?",
+  ]);
   const extractFirstLetter = (name) => {
     return name.charAt(0).toUpperCase();
   }
@@ -38,7 +41,7 @@ useEffect(() => {
         firstLetter,
         setFirstLetter,
         index,
-        setIndex
+        setIndex, chats, setChats
       }}
     >
       {children}

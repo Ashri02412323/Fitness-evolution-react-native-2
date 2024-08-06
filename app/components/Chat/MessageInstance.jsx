@@ -1,14 +1,11 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const MessageInstance = () => {
-  const insets = useSafeAreaInsets();
+const MessageInstance = ({ message }) => {
   return (
-    <View>
-      <Text>MessageInstance</Text>
+    <View className="self-end bg-mint-87 py-3 px-4 rounded-md mb-1 min-w-[20px] max-w-[90%]" >
+      <Text className="text-white font-inter_Regular">{message}</Text>
     </View>
-  )
-}
-
+  );
+};
 export default MessageInstance

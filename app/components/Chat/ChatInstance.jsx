@@ -8,7 +8,7 @@ const ChatInstance = ({user,lastMessage,profile,role,noOfMsg}) => {
     }
     return (
       <Pressable onPress={()=>{
-        navigate(user)
+        handleNavigate(user)
       }} className="flex flex-row items-center justify-between py-4 px-2 mb-2 relative">
         <View className="flex flex-row items-center gap-x-4">
           <View className="flex flex-col items-center justify-center">
