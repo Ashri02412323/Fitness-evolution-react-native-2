@@ -8,6 +8,7 @@ import NoInternetConnection from './NoInternetConnection'; // Adjust the path as
 import GlobalProvider from '../contexts/GlobalProvider'; // Adjust the path as necessary
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 import { NativeWindStyleSheet } from 'nativewind';
+import FormProvider from '../contexts/FormProivder';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -66,20 +67,25 @@ export default function RootLayout() {
 
   return (
     <GlobalProvider>
-    <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name='NoInternetConnection' options={{
-        headerShown: false,
-      }} />
-      <Stack.Screen name='ScheduleDetail' options={{
-        headerShown: false,
-      }} />
-      <Stack.Screen name='profile' options={{
-        headerShown: false,
-      }} />
-    </Stack>
+      <FormProvider>
+        <Stack>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name='NoInternetConnection' options={{
+            headerShown: false,
+          }} />
+          <Stack.Screen name='ScheduleDetail' options={{
+            headerShown: false,
+          }} />
+          <Stack.Screen name='profile' options={{
+            headerShown: false,
+          }} />
+          <Stack.Screen name='ChatScreen' options={{
+            headerShown: false,
+          }} />
+        </Stack>
+    </FormProvider>
     </GlobalProvider>
   );
 }
