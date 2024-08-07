@@ -19,7 +19,7 @@ const Chat = () => {
       noOfMsg : 3
     },
     {
-      user : "Rampo walka vala",
+      user : "Rampo Edogawa",
       lastMessage : "Heya Buddy! Let's hit the gym",
       profile : profile2,
       role : "Admin",

@@ -9,7 +9,7 @@ import Blogs from '../components/Home/Blogs';
 
 function HomeScreen() {
   const insets = useSafeAreaInsets();
-  const { isLoggedIn, delayCompleted, NotLoggedInComponent } = useCheckLoginStatus();
+  const { isLoggedIn, NotLoggedInComponent } = useCheckLoginStatus();
 
   if (isLoggedIn === null) {
     return NotLoggedInComponent;
@@ -17,7 +17,7 @@ function HomeScreen() {
   return (
     <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top, flex: 1 }}>
         <HomeHeader />
-      <ScrollView className=" pb-0">
+        <ScrollView className=" pb-0">
         <SchedulesCarousal />
         <Blogs/>
       </ScrollView>
@@ -25,4 +25,4 @@ function HomeScreen() {
   );
 }
 
-export default HomeScreen;
+export default HomeScreen

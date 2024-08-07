@@ -1,10 +1,10 @@
 import { View, Text, SafeAreaView, ScrollView } from 'react-native'
 import React from 'react'
-import ScheduleHeader from './components/MySchedules/ScheduleHeader'
+import ScheduleHeader from '../components/MySchedules/ScheduleHeader'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import UserInstance from './components/Admin/UserInstance';
-import Profile from '../assets/images/profilePic.png';
-import UserDetails from './components/Admin/UserDetails';
+import UserInstance from '../components/Admin/UserInstance';
+import Profile from '../../assets/images/profilePic.png';
+import UserDetails from '../components/Admin/UserDetails';
 
 const AdminUsers = () => {
     const insets = useSafeAreaInsets();

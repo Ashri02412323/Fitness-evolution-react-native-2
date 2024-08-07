@@ -13,7 +13,7 @@ const ScheduleAttended = () => {
   };
 
   return (
-    <View className="rounded-mg bg-lava py-3 px-4 flex flex-row justify-between items-center rounded-md">
+    <View className="rounded-mg bg-lava py-2 px-4 flex flex-row justify-between items-center rounded-md">
       <View className="flex flex-col items-start justify-center">
         <Text className="text-white_87 font-dm_SemiBold text-lg">Schedules Attended</Text>
         <Text className="text-white_60 font-inter_Medium text-base">3 left</Text>
@@ -21,8 +21,8 @@ const ScheduleAttended = () => {
         <View className="h-16 w-16 rounded-full flex items-center justify-center relative left-0">
             <ProgressChart
             data={data}
-            width={Dimensions.get('window').width / 4} // from react-native
-            height={Dimensions.get('window').width / 4}
+            width={Dimensions.get('window').width / 5} // from react-native
+            height={Dimensions.get('window').width / 5}
             strokeWidth={8}
             radius={28}
             chartConfig={{
@@ -35,7 +35,7 @@ const ScheduleAttended = () => {
             />
             <Text style={{
             position: 'absolute',
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: 'bold',
             color: '#fff',
             }}>

@@ -2,9 +2,9 @@ import { useGlobalSearchParams } from 'expo-router';
 import { View, Text, Image, SafeAreaView, ScrollView } from 'react-native';
 import React, { useEffect } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import ScheduleHeader from './components/MySchedules/ScheduleHeader';
-import DetailInstance from './components/MySchedules/DetailInstance';
-import CustomButton from './components/CustomButton';
+import ScheduleHeader from '../components/MySchedules/ScheduleHeader';
+import DetailInstance from '../components/MySchedules/DetailInstance';
+import CustomButton from '../components/CustomButton';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 const ScheduleDetail = () => {

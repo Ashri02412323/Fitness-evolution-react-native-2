@@ -72,25 +72,11 @@ export default function RootLayout() {
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="(internal screens)" 
+          options={{ headerShown: false }} />
           <Stack.Screen name='NoInternetConnection' options={{
             headerShown: false,
           }} />
-          <Stack.Screen name='ScheduleDetail' options={{
-            headerShown: false,
-          }} />
-          <Stack.Screen name='profile' options={{
-            headerShown: false,
-          }} />
-          <Stack.Screen name='ChatScreen' options={{
-            headerShown: false,
-          }} />
-          <Stack.Screen name='AdminUsers' options={{
-            headerShown: false,
-          }} />
-          <Stack.Screen name='BlogDetails' options={{
-            headerShown: false,
-          }} />
-
         </Stack>
     </FormProvider>
     </GlobalProvider>

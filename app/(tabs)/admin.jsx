@@ -6,6 +6,7 @@ import ScheduleAttended from '../components/Admin/ScheduleAttended';
 import TodaySchedule from '../components/Admin/TodaySchedule';
 import DataAnalytics from '../components/Admin/DataAnalytics';
 import UserDetails from '../components/Admin/UserDetails';
+import AdminBlog from '../components/Blogs/AdminBlog';
 
 const Admin = () => {
     const insets = useSafeAreaInsets();
@@ -20,6 +21,7 @@ const Admin = () => {
           <ScheduleAttended/>
           <TodaySchedule/>
           <DataAnalytics/>
+          <AdminBlog/>
         </View>
       </ScrollView>
     </SafeAreaView>

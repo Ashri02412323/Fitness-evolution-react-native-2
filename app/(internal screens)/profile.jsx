@@ -1,11 +1,11 @@
 import { View, Text, SafeAreaView, Pressable, ScrollView } from 'react-native'
 import React from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import ScheduleHeader from './components/MySchedules/ScheduleHeader';
-import { useGlobalContext } from '../contexts/GlobalProvider';
-import CustomButton from './components/CustomButton';
+import ScheduleHeader from '../components/MySchedules/ScheduleHeader';
+import { useGlobalContext } from '../../contexts/GlobalProvider';
+import CustomButton from '../components/CustomButton';
 import Feather from '@expo/vector-icons/Feather';
-import InfoInstance from './components/Profile/InfoInstance';
+import InfoInstance from '../components/Profile/InfoInstance';
 
 const profile = () => {
     const insets = useSafeAreaInsets();

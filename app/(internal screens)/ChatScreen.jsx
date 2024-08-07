@@ -1,11 +1,11 @@
 import { View, TextInput, SafeAreaView, ScrollView, Text, Pressable } from 'react-native';
 import React, { useEffect } from 'react';
-import ScheduleHeader from './components/MySchedules/ScheduleHeader';
+import ScheduleHeader from '../components/MySchedules/ScheduleHeader';
 import { useGlobalSearchParams } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useGlobalContext } from '../contexts/GlobalProvider';
-import MessageInstance from './components/Chat/MessageInstance';
+import { useGlobalContext } from '../../contexts/GlobalProvider';
+import MessageInstance from '../components/Chat/MessageInstance';
 
 const ChatScreen = () => {
   const { user } = useGlobalSearchParams();
