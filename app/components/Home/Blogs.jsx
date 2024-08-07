@@ -3,7 +3,7 @@ import React from 'react'
 import swimmingImg from '../../../assets/images/swimming.png'
 import ProfilePic from '../../../assets/images/profilePic.png'
 import BlogInstance from './BlogInstance'
-const Blogs = () => {
+const Blogs = ({title ="Blogs",hideSeeAll,isBlogDetail}) => {
     const blogSample = [
         {
             title: "Blog Title1 This is a long blo title. How are you doing?",
@@ -33,10 +33,10 @@ const Blogs = () => {
   return (
     <View className="mx-4 mt-4">
 
-      <View className="flex flex-row items-center justify-between mb-4">
-        <Text className="text-white_87 text-xl font-inter_SemiBold ">Blogs</Text>
+      <View className={`flex flex-row items-center justify-between mb-4 ${isBlogDetail && "mb-1"}`}>
+        <Text className={`text-white_87 text-xl font-inter_SemiBold ${isBlogDetail && "text-lg font-inter_Medium"}`}>{title}</Text>
         <Pressable className="">
-            <Text className="text-blue-500 text-base font-inter_semiBold">
+            <Text className={`text-blue-500 text-base font-inter_semiBold ${hideSeeAll && "hidden"}`}>
                 See All
             </Text>
         </Pressable>

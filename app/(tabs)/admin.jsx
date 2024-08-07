@@ -7,6 +7,7 @@ import TodaySchedule from '../components/Admin/TodaySchedule';
 import DataAnalytics from '../components/Admin/DataAnalytics';
 import UserDetails from '../components/Admin/UserDetails';
 import AdminBlog from '../components/Blogs/AdminBlog';
+import CreateBlogCard from '../components/Blogs/CreateBlogCard';
 
 const Admin = () => {
     const insets = useSafeAreaInsets();
