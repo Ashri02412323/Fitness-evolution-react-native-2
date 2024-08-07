@@ -73,7 +73,7 @@ const SchedulesCarousal = () => {
             tab:0
         },
         {
-            title: 'Pending Schedules',
+            title: 'Requested Schedules',
             bg: PendingBg,
             value: 3,
             tab:0

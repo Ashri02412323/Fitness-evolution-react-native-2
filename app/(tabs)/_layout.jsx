@@ -1,35 +1,25 @@
-import { StatusBar } from "expo-status-bar";
-import { Tabs } from "expo-router";
-import { Image, Text, View } from "react-native";
-import defaultIcon from "../../assets/images/icon.png";
-import Ionicons from '@expo/vector-icons/Ionicons';
+import React from 'react';
+import { View, StatusBar } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
+import { useGlobalContext } from '../../contexts/GlobalProvider';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+// Import your tab screens explicitly
+import HomeScreen from './home';
+import MySchedulesScreen from './mySchedules';
+import AddScheduleScreen from './addSchedule';
+import ChatScreen from './chat';
+import AdminScreen from './admin';
 
-const TabIcon = ({ icon, color, name, focused }) => {
-  return (
-    <View className="flex items-center justify-center gap-2">
-      <Image
-        source={icon}
-        resizeMode="contain"
-        tintColor={color}
-        className="w-6 h-6"
-      />
-      {/* <Text
-        className={`${focused ? "font-psemibold" : "font-pregular"} text-xs`}
-        style={{ color: color }}
-      >
-        {name}
-      </Text> */}
-    </View>
-  );
-};
+const Tabs = createBottomTabNavigator();
 
 const AuthLayout = () => {
+  const { user } = useGlobalContext();
+
   return (
     <>
-    <View className="
-    absolute top-0 left-0 right-0 -z-20 bg-primary h-full"
-    />
-      <Tabs
+      <View className="absolute top-0 left-0 right-0 -z-20 bg-primary h-full" />
+      <Tabs.Navigator
         screenOptions={{
           tabBarShowLabel: false,
           tabBarStyle: {
@@ -37,7 +27,6 @@ const AuthLayout = () => {
             backgroundColor: "#232323",
             borderTopWidth: 0,
             borderBottomWidth: 2.5,
-            // borderBottomColor: "#686C6E",
             height: 60,
             borderRadius: 50,
             width: "90%",
@@ -46,51 +35,66 @@ const AuthLayout = () => {
           },
         }}
       >
-        <Tabs.Screen
-          name="home"
-          options={{
-            title: "Home",
-            headerShown: false,
-            tabBarIcon: ({ color, focused }) => (
-                <Ionicons name="home-outline" size={28} color={focused?"#00C7BE":"#DFE0E1"} />
-            ),
-          }}
-        />
+        {user.role !== "admin" && (
+          <Tabs.Screen
+            name="home"
+            component={HomeScreen}
+            options={{
+              title: "Home",
+              headerShown: false,
+              tabBarIcon: ({ color, focused }) => (
+                <Ionicons name="home-outline" size={28} color={focused ? "#00C7BE" : "#DFE0E1"} />
+              ),
+            }}
+          />
+        )}
+        {user.role === "admin" && (
+          <Tabs.Screen
+            name="admin"
+            component={AdminScreen}
+            options={{
+              title: "Admin",
+              headerShown: false,
+              tabBarIcon: ({ color, focused }) => (
+                <MaterialIcons name="dashboard" size={28} color={focused ? "#00C7BE" : "#DFE0E1"} />
+              ),
+            }}
+          />
+        )}
         <Tabs.Screen
           name="mySchedules"
+          component={MySchedulesScreen}
           options={{
             title: "My Schedules",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
-                <Ionicons name="time-outline" size={28} color={focused?"#00C7BE":"#DFE0E1"} />
-
+              <Ionicons name="time-outline" size={28} color={focused ? "#00C7BE" : "#DFE0E1"} />
             ),
           }}
         />
-
         <Tabs.Screen
           name="addSchedule"
+          component={AddScheduleScreen}
           options={{
             title: "Add Schedule",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
-                <Ionicons name="add-circle-outline" size={28} color={focused?"#00C7BE":"#DFE0E1"} />
-
+              <Ionicons name="add-circle-outline" size={28} color={focused ? "#00C7BE" : "#DFE0E1"} />
             ),
           }}
         />
         <Tabs.Screen
           name="chat"
+          component={ChatScreen}
           options={{
             title: "Chat",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
-                <Ionicons name="chatbubble-ellipses-outline" size={28} color={focused?"#00C7BE":"#DFE0E1"} />
+              <Ionicons name="chatbubble-ellipses-outline" size={28} color={focused ? "#00C7BE" : "#DFE0E1"} />
             ),
           }}
         />
-      </Tabs>
-
+      </Tabs.Navigator>
       <StatusBar backgroundColor="#161622" style="light" />
     </>
   );

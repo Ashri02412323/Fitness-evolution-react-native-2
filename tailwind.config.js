@@ -16,7 +16,7 @@ module.exports = {
         white_38:"#686C6E",
         stroke_38:"#6B7376",
         lava:"#352F36",
-        // requested: "",
+        requested: "#1F67FF",
         upcoming:"#D8730A",
         completed: "#73C34D",
         red: "#FF3B30"

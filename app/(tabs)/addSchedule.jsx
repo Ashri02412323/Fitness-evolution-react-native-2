@@ -49,8 +49,8 @@ const {selectedDate, startTime,  endTime,subject, description, userName,link} = 
 
   return (
     <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top }}>
-      <ScrollView>
       <ScheduleHeader title={"Create A Schedule"} />
+      <ScrollView>
       <Formik
         initialValues={{
           milestone1: { date: '', startTime: '', endTime: '' },

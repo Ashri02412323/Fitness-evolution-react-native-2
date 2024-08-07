@@ -7,7 +7,7 @@ import { useCheckLoginStatus } from '../useCheckLoginStatus';
 import SchedulesCarousal from '../components/Home/SchedulesCarousal';
 import Blogs from '../components/Home/Blogs';
 
-export default function Home() {
+function HomeScreen() {
   const insets = useSafeAreaInsets();
   const { isLoggedIn, delayCompleted, NotLoggedInComponent } = useCheckLoginStatus();
 
@@ -16,11 +16,13 @@ export default function Home() {
   }
   return (
     <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top, flex: 1 }}>
-      <ScrollView className=" pb-0">
         <HomeHeader />
+      <ScrollView className=" pb-0">
         <SchedulesCarousal />
         <Blogs/>
       </ScrollView>
     </SafeAreaView>
   );
 }
+
+export default HomeScreen;

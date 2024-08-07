@@ -8,12 +8,8 @@ import CustomButton from './components/CustomButton';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 const ScheduleDetail = () => {
-  const { title, date, time, link, trainer, isCompleted, profileImg,descr } = useGlobalSearchParams();
+  const { title, date, time, link, trainer, noLink, profileImg,descr } = useGlobalSearchParams();
   const insets = useSafeAreaInsets();
-  useEffect(()=>{
-    // console.log("profileImg: ",profileImg)
-    console.log("isCompleted detail: ", typeof isCompleted)
-  },[isCompleted])
   return (
     <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top }}>
       <ScrollView className="h-full"> 
@@ -23,7 +19,7 @@ const ScheduleDetail = () => {
         <View className="mt-6 px-4">
           <DetailInstance title="Date" value={date} />
           <DetailInstance title="Time" value={time} />
-          { (!isCompleted || isCompleted === "false") &&
+          { (!noLink || noLink === "false") &&
           <DetailInstance title="Link" value={link} isLink={true}/>
         }
           <DetailInstance title="Trainer" value={trainer}/>

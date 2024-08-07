@@ -14,6 +14,12 @@ const GlobalProvider = ({ children }) => {
     "Hello there!",
     "Hello, how are you?",
   ]);
+  const [detailName, setDetailName] = useState('');
+  const [detailAge, setDetailAge] = useState('');
+  const [detailGender, setDetailGender] = useState('');
+  const [detailRole, setDetailRole] = useState('');
+  const [detailProfile, setDetailProfile] = useState('');
+  const [isDetailVisible, setIsDetailVisible] = useState(false);
   const extractFirstLetter = (name) => {
     return name.charAt(0).toUpperCase();
   }
@@ -41,7 +47,7 @@ useEffect(() => {
         firstLetter,
         setFirstLetter,
         index,
-        setIndex, chats, setChats
+        setIndex, chats, setChats, detailName, setDetailName, detailAge, setDetailAge, detailGender, setDetailGender, detailRole, setDetailRole, detailProfile, setDetailProfile, isDetailVisible, setIsDetailVisible
       }}
     >
       {children}

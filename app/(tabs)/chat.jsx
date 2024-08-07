@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, Image } from 'react-native';
+import { View, Text, SafeAreaView, Image, ScrollView } from 'react-native';
 import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import profile from '../../assets/images/profilePic.png';
@@ -28,11 +28,13 @@ const Chat = () => {
   return (
     <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top }}>
       <ScheduleHeader title="Chat" />
+        <ScrollView>
       <View className="flex flex-col px-2">
         {twoUsers.map((user,index) => (
           <ChatInstance key={index} {...user}/>
         ))}
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

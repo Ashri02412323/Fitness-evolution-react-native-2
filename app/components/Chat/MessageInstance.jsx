@@ -8,4 +8,5 @@ const MessageInstance = ({ message }) => {
     </View>
   );
 };
+
 export default MessageInstance

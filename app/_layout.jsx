@@ -84,6 +84,13 @@ export default function RootLayout() {
           <Stack.Screen name='ChatScreen' options={{
             headerShown: false,
           }} />
+          <Stack.Screen name='AdminUsers' options={{
+            headerShown: false,
+          }} />
+          <Stack.Screen name='BlogDetails' options={{
+            headerShown: false,
+          }} />
+
         </Stack>
     </FormProvider>
     </GlobalProvider>
