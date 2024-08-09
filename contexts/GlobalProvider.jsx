@@ -20,6 +20,8 @@ const GlobalProvider = ({ children }) => {
   const [detailRole, setDetailRole] = useState('');
   const [detailProfile, setDetailProfile] = useState('');
   const [isDetailVisible, setIsDetailVisible] = useState(false);
+  const [token, setToken] = useState('');
+  const [blogID, setBlogID] = useState('');
   const extractFirstLetter = (name) => {
     return name.charAt(0).toUpperCase();
   }
@@ -29,6 +31,7 @@ const GlobalProvider = ({ children }) => {
       setFirstLetter(extractFirstLetter(fullName));
     }
   },[user?.fullName])
+    
 useEffect(() => {
   if(user)
   console.log("User: ", user);
@@ -47,7 +50,7 @@ useEffect(() => {
         firstLetter,
         setFirstLetter,
         index,
-        setIndex, chats, setChats, detailName, setDetailName, detailAge, setDetailAge, detailGender, setDetailGender, detailRole, setDetailRole, detailProfile, setDetailProfile, isDetailVisible, setIsDetailVisible
+        setIndex, chats, setChats, detailName, setDetailName, detailAge, setDetailAge, detailGender, setDetailGender, detailRole, setDetailRole, detailProfile, setDetailProfile, isDetailVisible, setIsDetailVisible, blogID, setBlogID, token, setToken
       }}
     >
       {children}

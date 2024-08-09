@@ -9,6 +9,7 @@ import GlobalProvider from '../contexts/GlobalProvider'; // Adjust the path as n
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 import { NativeWindStyleSheet } from 'nativewind';
 import FormProvider from '../contexts/FormProivder';
+import ScheduleProvider from '../contexts/ScheduleProvider';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -68,16 +69,18 @@ export default function RootLayout() {
   return (
     <GlobalProvider>
       <FormProvider>
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="(internal screens)" 
-          options={{ headerShown: false }} />
-          <Stack.Screen name='NoInternetConnection' options={{
-            headerShown: false,
-          }} />
-        </Stack>
+        <ScheduleProvider>
+          <Stack>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(internal screens)" 
+            options={{ headerShown: false }} />
+            <Stack.Screen name='NoInternetConnection' options={{
+              headerShown: false,
+            }} />
+          </Stack>
+        </ScheduleProvider>
     </FormProvider>
     </GlobalProvider>
   );

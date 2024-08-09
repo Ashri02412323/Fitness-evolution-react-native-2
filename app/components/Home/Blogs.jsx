@@ -30,10 +30,11 @@ const Blogs = ({title ="Blogs",hideSeeAll,isBlogDetail}) => {
             blogImage: swimmingImg
         },
     ];
+    const blogsToDisplay = !isBlogDetail ? blogSample.slice(0, 2) : blogSample;
   return (
     <View className="mx-4 mt-4">
 
-      <View className={`flex flex-row items-center justify-between mb-4 ${isBlogDetail && "mb-1"}`}>
+      <View className={`flex flex-row items-center justify-between mb-4 ${isBlogDetail && "mb-1 mt-2"}`}>
         <Text className={`text-white_87 text-xl font-inter_SemiBold ${isBlogDetail && "text-lg font-inter_Medium"}`}>{title}</Text>
         <Pressable className="">
             <Text className={`text-blue-500 text-base font-inter_semiBold ${hideSeeAll && "hidden"}`}>
@@ -42,8 +43,8 @@ const Blogs = ({title ="Blogs",hideSeeAll,isBlogDetail}) => {
         </Pressable>
       </View>
 
-      <View className="w-[98%] mx-auto flex flex-col justify-center mb-4" style={{gap:20}}>
-        {blogSample.map((blog,index) => (
+      <View className="w-[98%] mx-auto flex flex-col justify-center mb-4" style={{gap:15}}>
+        {blogsToDisplay.map((blog,index) => (
           <BlogInstance
             key={`${blog.title}${index}`}
             title={blog.title}
@@ -52,7 +53,7 @@ const Blogs = ({title ="Blogs",hideSeeAll,isBlogDetail}) => {
             authorName={blog.authorName}
             slugs={blog.slugs}
             blogImg={blog.blogImage}
-            isLast={index === blogSample.length - 1}
+            isLast={index === blogsToDisplay.length - 1}
           />
         ))}
       </View>

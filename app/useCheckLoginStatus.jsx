@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
-import { checkIfLoggedIn } from '../lib/Users/User'; // Adjust the import path as needed
+import { checkIfLoggedIn, getToken } from '../lib/Users/User'; // Adjust the import path as needed
 import { useGlobalContext } from '../contexts/GlobalProvider';
 import { ActivityIndicator, Text, View } from 'react-native';
 
 export const useCheckLoginStatus = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(null);
   const [delayCompleted, setDelayCompleted] = useState(false);
-  const { setUser } = useGlobalContext();
+  const { setUser,setToken } = useGlobalContext();
 
   useEffect(() => {
     SplashScreen.preventAutoHideAsync();
@@ -15,6 +15,10 @@ export const useCheckLoginStatus = () => {
     const checkLoginStatus = async () => {
       const loggedIn = await checkIfLoggedIn(setUser);
       setIsLoggedIn(loggedIn);
+      if(loggedIn){
+        const token = await getToken();
+        setToken(token);
+      }
     };
 
     checkLoginStatus();

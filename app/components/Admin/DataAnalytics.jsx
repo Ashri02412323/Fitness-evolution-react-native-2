@@ -2,12 +2,12 @@ import { View, Text, Dimensions } from 'react-native';
 import React from 'react';
 import { LineChart } from 'react-native-chart-kit';
 
-const DataAnalytics = () => {
+const DataAnalytics = ({upcoming,completed,requested}) => {
   const data = {
-    labels: ['Completed','Requested','Upcoming'],
+    labels: ['Upcoming','Completed','Requested'],
     datasets: [
       {
-        data: [30,  5,  28,], // Example data points with null values for spacing
+        data: [upcoming,  completed,  requested], // Example data points with null values for spacing
         strokeWidth: 2,
       },
     ],

@@ -3,17 +3,19 @@ import React from 'react'
 import profile from '../../../assets/images/profilePic.png'
 import { router } from 'expo-router'
 
-const handleNavigate = (title, date, time, link, trainer, noLink, profileImg,descr) => {
-    router.push({pathname: "/ScheduleDetail", params: {title, date, time, link, trainer, noLink,profileImg,descr}})
+const handleNavigate = (title, date, time, link, userName, noLink, profileImg,descr,isUser,isProfileLink,status,id) => {
+    router.push({pathname: "/ScheduleDetail", params: {title, date, time, link, userName, noLink,profileImg,descr,isUser,isProfileLink,status,id}})
 }
-const ScheduleInstance = ({title,date,time,link,trainer,noLink,profileImg,descr }) => {
+const ScheduleInstance = ({title,date,time,link,userName,noLink,profileImg,descr,isUser,status,id }) => {
     const handlePress = () => {
-        handleNavigate(title,date,time,link,trainer,noLink,profileImg??profile,descr)
+        handleNavigate(title,date,time,link,userName,noLink,profileImg??profile,descr,isUser,profileImg?true:false,status,id)
     }
   return (  
     <Pressable onPress={handlePress} className="flex flex-row bg-secondary w-full items-center justify-start p-2 pl-0 rounded-lg mb-2">
          <View className="w-[30%] flex items-center justify-center">
-            <Image source={profileImg ?? profile} className="h-16 w-16 rounded-full" />
+          {profileImg ? <Image source={{uri:profileImg}} className="h-16 w-16 rounded-full" />:
+          <Image source={profile} className="h-16 w-16 rounded-full" />
+          }
          </View>
          <View className="flex flex-col gap-y-[4px] w-[70%]">
             <Text className="text-white_87 font-dm_Medium text-base capitalize" numberOfLines={1}>{title}</Text>
@@ -22,7 +24,7 @@ const ScheduleInstance = ({title,date,time,link,trainer,noLink,profileImg,descr 
               {!noLink && <Text className=" text-blue-500 font-inter_Regular text-md" numberOfLines={1}
               style={{ flexShrink: 1 }}
               >{link}</Text>}
-              <Text className="text-white_38 font-inter_Regular text-sm">Trainer: {trainer}</Text>
+              <Text className="text-white_38 font-inter_Regular text-sm">{isUser ?"Trainer: ": "User: "}{userName}</Text>
             </View>
         </View> 
     </Pressable>

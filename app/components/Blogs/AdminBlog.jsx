@@ -2,6 +2,7 @@ import { View, Text, ImageBackground, Pressable } from 'react-native'
 import React from 'react'
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { Linking } from 'react-native';
 import { router } from 'expo-router';
 import AdmingBlogInstance from './AdmingBlogInstance';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -17,7 +18,7 @@ const AdminBlog = () => {
       onPress={()=> router.push("/BlogDetails")}/>
 
       <AdmingBlogInstance title={"Create A Blog"} subtitle={"This will redirect you to sanity.io site for creating new blogs."} icon={<Ionicons name="add-circle-outline" size={24} color="#01AFA8" />} buttonText={"Create A Blog"} isCreate={true}
-      onPress={()=> router.push("/BlogDetails")}
+      onPress={() => Linking.openURL("https://fitnessevolutionblogs.sanity.studio/structure/blogPost")}
       titleIcon={<FontAwesome name="edit" size={24} color="#DFE0E1" />}
       />
     </View>

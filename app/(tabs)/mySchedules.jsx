@@ -16,13 +16,13 @@ const MySchedules = () => {
   const [routes] = useState([
     { key: 'upcoming', title: 'Upcoming' },
     { key: 'completed', title: 'Completed' },
-    ...(user.role === 'admin' ? [{ key: 'requested', title: 'Requested' }] : [])
+    ...(user?.role === 'admin' ? [{ key: 'requested', title: 'Requested' }] : [])
   ]);
 
   const renderScene = SceneMap({
     upcoming: UpcomingSchedules,
     completed: CompletedSchedules,
-    ...(user.role === 'admin' && { requested: RequestedSchedules })
+    ...(user?.role === 'admin' && { requested: RequestedSchedules })
   });
 
   return (
@@ -37,10 +37,10 @@ const MySchedules = () => {
         renderTabBar={props => (
           <TabBar
             {...props}
-            indicatorStyle={{ backgroundColor: index === 2 && user.role === 'admin' ? '#1F67FF' : index === 0 ? '#D8730A' : '#73C34D', height: 3 }}
+            indicatorStyle={{ backgroundColor: index === 2 && user?.role === 'admin' ? '#1F67FF' : index === 0 ? '#D8730A' : '#73C34D', height: 3 }}
             className="bg-primary"
             renderLabel={({ route, focused, color }) => (
-              <Text className={`font-inter_Medium text-base mb-2 ${focused ? (route.key === 'requested' && user.role === 'admin' ? 'text-[#1F67FF]' : index === 0 ? 'text-upcoming' : 'text-completed') : 'text-white_60'}`}>
+              <Text className={`font-inter_Medium text-base mb-2 ${focused ? (route.key === 'requested' && user?.role === 'admin' ? 'text-[#1F67FF]' : index === 0 ? 'text-upcoming' : 'text-completed') : 'text-white_60'}`}>
                 {route.title}
               </Text>
             )}

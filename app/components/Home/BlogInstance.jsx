@@ -1,9 +1,18 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, Pressable } from 'react-native'
 import React from 'react'
 import Entypo from '@expo/vector-icons/Entypo';
+import { router } from 'expo-router';
 
+const handleNavigate = (title) => {
+
+    router.push({
+        pathname: '/BlogPage',
+        params:{title}
+    })
+}
 const BlogInstance = ({profileImg, blogImg,title, slugs, date,isLast,authorName}) => {
   return (
+    <Pressable onPress={()=>handleNavigate(title)}>
     <View className="flex flex-row items-center h-[120px]" style={{margin:0, gap:16}} >
         <Image source={blogImg} className="w-[110px] h-[100px] rounded-lg" resizeMethod='cover' style={{margin:0}} />
 
@@ -32,7 +41,7 @@ const BlogInstance = ({profileImg, blogImg,title, slugs, date,isLast,authorName}
             <View style={{
                 width: '100%',
                 position: 'absolute',
-                top: '110%',
+                top: '105%',
                 left: '0',
                 display: 'flex',
                 justifyContent: 'center',
@@ -48,6 +57,7 @@ const BlogInstance = ({profileImg, blogImg,title, slugs, date,isLast,authorName}
         </View>
       )}
     </View>
+    </Pressable>
   )
 }
 

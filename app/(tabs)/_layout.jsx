@@ -35,7 +35,7 @@ const AuthLayout = () => {
           },
         }}
       >
-        {user.role !== "admin" && (
+        {user?.role !== "admin" && (
           <Tabs.Screen
             name="home"
             component={HomeScreen}
@@ -48,7 +48,7 @@ const AuthLayout = () => {
             }}
           />
         )}
-        {user.role === "admin" && (
+        {user?.role === "admin" && (
           <Tabs.Screen
             name="admin"
             component={AdminScreen}
