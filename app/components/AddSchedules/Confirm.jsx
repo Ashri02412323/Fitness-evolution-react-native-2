@@ -1,15 +1,17 @@
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
 import React from 'react'
 import DetailInstance from '../MySchedules/DetailInstance'
-import { formatTime } from '../../../lib/Users/Schedule';
 import CustomButton from '../CustomButton';
 import { useFormContext } from '../../../contexts/FormProivder';
 import { FontAwesome5 } from '@expo/vector-icons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { useGlobalContext } from '../../../contexts/GlobalProvider';
 
 const Confirm = ({ values, handleBack,handleSubmit }) => {
-  const { selectedDate, startTime, endTime, subject, description, userName, link } = useFormContext();
+  const { selectedDate, startTime, endTime, subject, description, userName, link,postLoading } = useFormContext();
+  const {user} = useGlobalContext();
   const localDate = new Date(selectedDate).toLocaleDateString();
+
   const formattedTime = `${startTime} - ${endTime}`;
   return (
     <View className="mt-0">
@@ -18,8 +20,15 @@ const Confirm = ({ values, handleBack,handleSubmit }) => {
         <DetailInstance title="Schedule Description" value={description} />
         <DetailInstance title="Date" value={localDate} />
         <DetailInstance title="Time" value={formattedTime} />
+        { user.role==="user" &&
+        <DetailInstance title="Trainer" value={user.trainerAssigned?.fullName} isLast={true}/>
+        }
+        {user.role==="admin" &&
+        <>
         <DetailInstance title="User" value={userName} />
         <DetailInstance title="Link" value={link} isLast={true} isLink={true} />
+        </>
+      }
       </View>
 
       <View className="flex items-center justify-end w-full flex-row px-0 mt-16 ">
@@ -36,6 +45,7 @@ const Confirm = ({ values, handleBack,handleSubmit }) => {
           handlePress={() => handleSubmit()}
           endIcon={<MaterialIcons name="schedule" size={24} color="#fff" />}
           textStyle={"mr-2"}
+          isLoading={postLoading}
         />
       </View>
     </View>

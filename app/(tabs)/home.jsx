@@ -1,11 +1,10 @@
 import { View, Text, SafeAreaView, ScrollView } from 'react-native';
 import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { logoutUser } from '../../lib/Users/User';
 import HomeHeader from '../components/Home/HomeHeader';
-import { useCheckLoginStatus } from '../useCheckLoginStatus'; 
 import SchedulesCarousal from '../components/Home/SchedulesCarousal';
 import Blogs from '../components/Home/Blogs';
+import useCheckLoginStatus from '../useCheckLoginStatus';
 
 function HomeScreen() {
   const insets = useSafeAreaInsets();

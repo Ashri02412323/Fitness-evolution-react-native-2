@@ -1,5 +1,5 @@
 import { View, SafeAreaView, ScrollView, RefreshControl } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import HomeHeader from '../components/Home/HomeHeader';
 import ScheduleAttended from '../components/Admin/ScheduleAttended';

@@ -4,23 +4,51 @@ import FormDetailInstance from './FormDetailInstance';
 import { Picker } from '@react-native-picker/picker';
 import { useFormContext } from '../../../contexts/FormProivder';
 import CustomButton from '../CustomButton';
-import { MaterialIcons } from '@expo/vector-icons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import { useGlobalContext } from '../../../contexts/GlobalProvider';
+import { useScheduleContext } from '../../../contexts/ScheduleProvider';
 
 
 const ScheduleDetails = ({ values, touched, errors, handleNext, handleBack }) => {
-  const userNames= [ 'John Doe', 'Jane Smith', 'John Johnson', 'Jane Johnson' ];
-  const { subject, setSubject, description, setDescription, userName, setUserName, link, setLink } = useFormContext();
+  const { subject, setSubject, description, setDescription, userName, setUserName, link, setLink ,setUserId,selectedUser, setSelectedUser} = useFormContext();
+  const {allUsers} = useScheduleContext();
+  const [userNames, setUserNames] = useState([]);
   const [isNextDisabled, setIsNextDisabled] = useState(true);
+  const {user} = useGlobalContext();
+  useEffect(() => {
+    let userNamesTemp = [];
+    allUsers.map((user)=>{
+        let obj = {
+          fullName:user.fullName,
+          id:user._id
+        }
+        userNamesTemp.push(obj);
+    })
+    setUserNames(userNamesTemp);
+  }, [allUsers]);
 
+useEffect(()=>{
+  if(user?.role === 'user'){
+  console.log("hey")
+  setUserId(user._id);
+}
+},[])
   useEffect(() => {
     const checkFields = () => {
-      if (subject && userName && link) {
-        setIsNextDisabled(false);
-      } else {
-        setIsNextDisabled(true);
+      if(user?.role==="user"){
+        if (subject) {
+          setIsNextDisabled(false);
+        } else {
+          setIsNextDisabled(true);
+        }
+      }else {
+        if (subject && userName && link) {
+          setIsNextDisabled(false);
+        } else {
+          setIsNextDisabled(true)
+        }
       }
-    };
+    }
     checkFields();
   }, [subject, description, userName, link]);
   return (
@@ -41,18 +69,24 @@ const ScheduleDetails = ({ values, touched, errors, handleNext, handleBack }) =>
           setValue={setDescription}
           error={touched.description && errors.description}
         />
-
+        {user?.role ==='admin' && 
+        <>
         <View className="mt-4">
           <Text className="text-white_60 font-pop_Regular mb-2">Select User*</Text>
           <View className="bg-white_87 rounded">
             <Picker
-              selectedValue={userName}
-              onValueChange={(itemValue) => setUserName(itemValue)}
+              selectedValue={selectedUser}
+              onValueChange={(itemValue) => {
+                console.log("itemValue: ", itemValue);
+                setUserName(itemValue.fullName)
+                setUserId(itemValue.id)
+                setSelectedUser(itemValue);
+              }}
               className="border rounded p-2 px-4 bg-white_87 text-black font_inter_Regular"
             >
-              <Picker.Item label="Select a user" value="" />
-              {userNames.map((name, index) => (
-                <Picker.Item key={index} label={name} value={name} />
+              <Picker.Item label={selectedUser?selectedUser.fullName:"Select a user"} value={selectedUser??""} />
+              {userNames.map((item, index) => (
+                <Picker.Item key={index} label={item.fullName} value={item} />
               ))}
             </Picker>
           </View>
@@ -65,6 +99,8 @@ const ScheduleDetails = ({ values, touched, errors, handleNext, handleBack }) =>
           setValue={setLink}
           error={touched.link && errors.link}
         />
+        </>
+      }
       </View>
 
       <View className="flex items-center justify-end w-full flex-row px-1 mt-16">

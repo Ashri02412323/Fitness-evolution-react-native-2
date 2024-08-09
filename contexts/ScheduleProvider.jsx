@@ -7,8 +7,8 @@ import { allUsersUnderTrainer } from "../lib/Users/User";
 const ScheduleContext = createContext();
 export const useScheduleContext = () => useContext(ScheduleContext);
 
-const ScheduleProvider = ({ children }) => {
-  const { token } = useGlobalContext();
+export const ScheduleProvider = ({ children }) => {
+  const { token,user } = useGlobalContext();
   const [upcoming, setUpcoming] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [requested, setRequested] = useState([]);
@@ -20,6 +20,7 @@ const ScheduleProvider = ({ children }) => {
   const [requestedLength, setRequestedLength] = useState(0);
   const [userCount, setUserCount] = useState(0);
   const [userCountLoading, setUserCountLoading] = useState(true);
+  const [allUsers, setAllUsers] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
     const fetchUpcomingSchedules = async () => {
@@ -92,6 +93,7 @@ const ScheduleProvider = ({ children }) => {
       setUserCountLoading(true);
       try {
         let response = await allUsersUnderTrainer(token);
+        setAllUsers(response);
         let length = response.length;
         length = length < 10 ? `0${length}` : length;
         setUserCount(length);
@@ -109,17 +111,21 @@ const ScheduleProvider = ({ children }) => {
     };
 
     if (token) {
-      fetchUserCount();
       fetchUpcomingSchedules();
       fetchCompletedSchedules();
-      fetchRequestedSchedules();
+      if(user.role==='admin'){
+        fetchRequestedSchedules();
+        fetchUserCount();
+      }
     }
 
     if (refreshing) {
-      fetchUserCount();
       fetchUpcomingSchedules();
       fetchCompletedSchedules();
-      fetchRequestedSchedules();
+      if(user.role==='admin'){
+        fetchRequestedSchedules();
+        fetchUserCount();
+      }
       setRefreshing(false);
     }
   }, [token, refreshing]);
@@ -143,7 +149,7 @@ const ScheduleProvider = ({ children }) => {
         setUserCountLoading,
         upcomingLength, completedLength, requestedLength,
         setUpcomingLength, setCompletedLength, setRequestedLength, userCount, setUserCount,
-        refreshing, setRefreshing
+        refreshing, setRefreshing, allUsers, setAllUsers, 
       }}
     >
       {children}
@@ -151,5 +157,3 @@ const ScheduleProvider = ({ children }) => {
     </ScheduleContext.Provider>
   );
 };
-
-export default ScheduleProvider;

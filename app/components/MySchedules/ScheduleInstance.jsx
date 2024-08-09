@@ -3,12 +3,12 @@ import React from 'react'
 import profile from '../../../assets/images/profilePic.png'
 import { router } from 'expo-router'
 
-const handleNavigate = (title, date, time, link, userName, noLink, profileImg,descr,isUser,isProfileLink,status,id) => {
-    router.push({pathname: "/ScheduleDetail", params: {title, date, time, link, userName, noLink,profileImg,descr,isUser,isProfileLink,status,id}})
+const handleNavigate = (title, date, time, link, userName, noLink, profileImg,descr,isUser,isProfileLink,status,id,startTime,endTime,userId,rawDate) => {
+    router.push({pathname: "/ScheduleDetail", params: {title, date, time, link, userName, noLink,profileImg,descr,isUser,isProfileLink,status,id,startTime,endTime,userId,rawDate}})
 }
-const ScheduleInstance = ({title,date,time,link,userName,noLink,profileImg,descr,isUser,status,id }) => {
+const ScheduleInstance = ({title,date,time,link,userName,noLink,profileImg,descr,isUser,status,id,startTime,endTime ,userId ,rawDate}) => {
     const handlePress = () => {
-        handleNavigate(title,date,time,link,userName,noLink,profileImg??profile,descr,isUser,profileImg?true:false,status,id)
+        handleNavigate(title,date,time,link,userName,noLink,profileImg??profile,descr,isUser,profileImg?true:false,status,id,startTime,endTime,userId,rawDate)
     }
   return (  
     <Pressable onPress={handlePress} className="flex flex-row bg-secondary w-full items-center justify-start p-2 pl-0 rounded-lg mb-2">

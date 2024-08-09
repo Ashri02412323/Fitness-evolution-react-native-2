@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import dayjs from 'dayjs';
+import { router } from "expo-router";
 
 const FormContext = createContext();
 export const useFormContext = () => useContext(FormContext);
@@ -10,7 +11,7 @@ const getNextRoundedHour = (hourNext) => {
     now.setHours(now.getHours() + hourNext); // Add one hour
     return now.toTimeString().slice(0, 2) + ':00'; 
   };
-const FormProvider = ({ children }) => {
+export const FormProvider = ({ children }) => {
     const [selectedDate, setSelectedDate] = useState(dayjs());
     const currStartTime = getNextRoundedHour(1);
     const currEndTime = getNextRoundedHour(2);
@@ -21,16 +22,67 @@ const FormProvider = ({ children }) => {
     const [description, setDescription] = useState('');
     const [userName, setUserName] = useState('');
     const [link, setLink] = useState('');
+    const [userId, setUserId] = useState('');
     const [endTime, setEndTime] = useState(currEndTime);
-    const getIsoDateTimeString = (selectedDate, itemValue) => {
+  const [postLoading, setPostLoading] = useState(false);
+  const [selectedUser, setSelectedUser] = useState();
+
+  const [submitStatus,setSubmitStatus] = useState("createNew");
+
+  const [scheduleApprovedId, setScheduleApprovedId] = useState('');
+
+  const getIsoDateTimeString = (selectedDate, itemValue) => {
         
-        const combinedDateTime = new Date(selectedDate);
-        const [hours, minutes] = itemValue.split(':');
-        combinedDateTime.setHours(hours);
-        combinedDateTime.setMinutes(minutes);
-        // console.log("next rounded: ",combinedDateTime.toISOString()," : ", combinedDateTime.toLocaleString());
-        return combinedDateTime.toISOString();
-      };
+    const combinedDateTime = new Date(selectedDate);
+    const [hours, minutes] = itemValue.split(':');
+    combinedDateTime.setHours(hours);
+    combinedDateTime.setMinutes(minutes);
+    return combinedDateTime.toISOString();
+  };
+  const reverseFromIsoString = (isoString) => {
+    const date = new Date(isoString);
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${hours}:${minutes}`;
+  };
+
+  const handleApprove = async(id,date,startTime,endTime,scheduleLink,scheduleSubject,scheduleDescription,userId,userName) => {
+    let rawStartTime = reverseFromIsoString(startTime);
+    let rawEndTime = reverseFromIsoString(endTime);
+    setSelectedDate(date);
+    setStartTime(rawStartTime);
+    setEndTime(rawEndTime);
+    setLink(scheduleLink);
+    setSubject(scheduleSubject);
+    setDescription(scheduleDescription);
+    setUserName(userName);
+    setUserId(userId);
+    let obj = {
+      fullName: userName,
+      id: userId
+    }
+    console.log("obj: ", obj);
+    setSelectedUser(obj);
+    setScheduleApprovedId(id);
+    setSubmitStatus("toUpdate");
+    router.push('/addSchedule');
+  }
+const resetFormValues = () => {
+    setSelectedDate(dayjs());
+    setStartTime(currStartTime);
+    setStartTimeIso(currStartTimeIso);
+    setSubject('');
+    setDescription('');
+    setUserName('');
+    setLink('');
+    setUserId('');
+    setEndTime(currEndTime);
+    setSelectedUser(null);
+    setSubmitStatus("createNew");
+    setScheduleApprovedId('');
+    console.log("Form values reset");
+    router.back();
+  };
     const getTimeOptions = (ISODate) => {
       const timeOptions = [];
       let date = new Date(ISODate);
@@ -66,7 +118,7 @@ const FormProvider = ({ children }) => {
         setStartTimeIso,
         getTimeOptions,
         getIsoDateTimeString,
-        subject, setSubject, description, setDescription, userName, setUserName, link, setLink
+        subject, setSubject, description, setDescription, userName, setUserName, link, setLink, userId, setUserId, submitStatus, setSubmitStatus, scheduleApprovedId, setScheduleApprovedId, handleApprove, postLoading, setPostLoading,reverseFromIsoString, selectedUser, setSelectedUser,resetFormValues
       }}
     >
       {children}
@@ -74,4 +126,4 @@ const FormProvider = ({ children }) => {
   );
 };
 
-export default FormProvider;
+

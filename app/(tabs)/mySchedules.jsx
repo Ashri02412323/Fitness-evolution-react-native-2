@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { View, Text, SafeAreaView, Dimensions } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import React, { useEffect, useState } from 'react';
+import { Text, SafeAreaView, Dimensions } from 'react-native';
+import { useSafeAreaInsets} from 'react-native-safe-area-context';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import ScheduleHeader from '../components/MySchedules/ScheduleHeader';
 import UpcomingSchedules from '../components/MySchedules/UpcomingSchedule';
@@ -12,7 +12,15 @@ const MySchedules = () => {
   const insets = useSafeAreaInsets();
   const layout = Dimensions.get('window');
   const { index, setIndex, user } = useGlobalContext();
-  
+  if (!user || !UpcomingSchedules || !CompletedSchedules || !RequestedSchedules || !ScheduleHeader) {
+    return (
+      <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top, flex: 1 }}>
+       <View className="flex w-[98%] mx-auto px-2 flex-col items-center mt-4">
+        <Text className="text-lg text-center text-white font-dm_Medium">Loading...</Text>
+      </View>
+      </SafeAreaView>
+    );
+  }
   const [routes] = useState([
     { key: 'upcoming', title: 'Upcoming' },
     { key: 'completed', title: 'Completed' },
@@ -22,14 +30,14 @@ const MySchedules = () => {
   const renderScene = SceneMap({
     upcoming: UpcomingSchedules,
     completed: CompletedSchedules,
-    ...(user?.role === 'admin' && { requested: RequestedSchedules })
+    ...(user?.role === 'admin' ? { requested: RequestedSchedules } : {})
   });
 
   return (
     <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top, flex: 1 }}>
       <ScheduleHeader title={"My Schedules"} />
       
-      <TabView
+      {/* <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}
         onIndexChange={setIndex}
@@ -46,7 +54,7 @@ const MySchedules = () => {
             )}
           />
         )}
-      />
+      /> */}
     </SafeAreaView>
   );
 };

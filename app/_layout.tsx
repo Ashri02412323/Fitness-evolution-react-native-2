@@ -5,18 +5,17 @@ import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetConnection from './NoInternetConnection'; // Adjust the path as necessary
-import GlobalProvider from '../contexts/GlobalProvider'; // Adjust the path as necessary
-// Prevent the splash screen from auto-hiding before asset loading is complete.
+import {GlobalProvider} from '../contexts/GlobalProvider'; 
 import { NativeWindStyleSheet } from 'nativewind';
-import FormProvider from '../contexts/FormProivder';
-import ScheduleProvider from '../contexts/ScheduleProvider';
+import {FormProvider} from '../contexts/FormProivder';
+import {ScheduleProvider }from '../contexts/ScheduleProvider';
 
 SplashScreen.preventAutoHideAsync();
 
 NativeWindStyleSheet.setOutput({
     default: "native",
 });
-export default function RootLayout() {
+function RootLayout() {
   const [loaded] = useFonts({
     "Poppins-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
     "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
@@ -85,3 +84,5 @@ export default function RootLayout() {
     </GlobalProvider>
   );
 }
+
+export default RootLayout;

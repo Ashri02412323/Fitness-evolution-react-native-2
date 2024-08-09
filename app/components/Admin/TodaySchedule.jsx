@@ -42,9 +42,9 @@ const TodaySchedule = ({upcomingLength,completedLength,requestedLength,UserCount
           </View>
         </Pressable>
         <View className="w-[66%] rounded-lg h-full bg-white_87 py-4 px-2">
-          <ScheduleInstanc title="Upcoming" value={upcomingLength} color={"bg-upcoming"} subtitle={"Future Schedules"} route={0} isLoading={upcomingLoad} />
-          <ScheduleInstanc title="Completed" value={completedLength} color={"bg-completed"} subtitle={"Schedules Done"} route={1} isLoading={completedLoad} />
-          <ScheduleInstanc title="Requested" value={requestedLength} color={"bg-requested"} isLast={true} subtitle={"Requested by users"} route={2} isLoading={requestedLoad} />
+          <ScheduleInstanc title="Upcoming" value={upcomingLength} color={"bg-upcoming"} subtitle={"Future Schedules"} route={"Upcoming"} isLoading={upcomingLoad} />
+          <ScheduleInstanc title="Completed" value={completedLength} color={"bg-completed"} subtitle={"Schedules Done"} route={"Completed"} isLoading={completedLoad} />
+          <ScheduleInstanc title="Requested" value={requestedLength} color={"bg-requested"} isLast={true} subtitle={"Requested by users"} route={"Requested"} isLoading={requestedLoad} />
         </View>
       </View>
     </View>

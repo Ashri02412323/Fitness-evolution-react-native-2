@@ -1,8 +1,8 @@
 import { Redirect } from 'expo-router';
 import 'react-native-reanimated';
-import { useCheckLoginStatus } from './useCheckLoginStatus'; // Adjust the import path as needed
+import useCheckLoginStatus from './useCheckLoginStatus';
 
-export default function Index() {
+function Index() {
   const { isLoggedIn, delayCompleted, NotLoggedInComponent } = useCheckLoginStatus();
 
   if (isLoggedIn === null) {
@@ -19,3 +19,5 @@ export default function Index() {
     </>
   );
 }
+
+export default Index;

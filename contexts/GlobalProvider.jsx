@@ -3,7 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 const GlobalContext = createContext();
 export const useGlobalContext = () => useContext(GlobalContext);
 
-const GlobalProvider = ({ children }) => {
+export const GlobalProvider = ({ children }) => {
   const [isLogged, setIsLogged] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -20,6 +20,7 @@ const GlobalProvider = ({ children }) => {
   const [detailRole, setDetailRole] = useState('');
   const [detailProfile, setDetailProfile] = useState('');
   const [isDetailVisible, setIsDetailVisible] = useState(false);
+  const [intialRoute, setIntialRoute] = useState('Upcoming');
   const [token, setToken] = useState('');
   const [blogID, setBlogID] = useState('');
   const extractFirstLetter = (name) => {
@@ -50,7 +51,7 @@ useEffect(() => {
         firstLetter,
         setFirstLetter,
         index,
-        setIndex, chats, setChats, detailName, setDetailName, detailAge, setDetailAge, detailGender, setDetailGender, detailRole, setDetailRole, detailProfile, setDetailProfile, isDetailVisible, setIsDetailVisible, blogID, setBlogID, token, setToken
+        setIndex, chats, setChats, detailName, setDetailName, detailAge, setDetailAge, detailGender, setDetailGender, detailRole, setDetailRole, detailProfile, setDetailProfile, isDetailVisible, setIsDetailVisible, blogID, setBlogID, token, setToken, intialRoute, setIntialRoute
       }}
     >
       {children}
@@ -58,4 +59,3 @@ useEffect(() => {
   );
 };
 
-export default GlobalProvider;

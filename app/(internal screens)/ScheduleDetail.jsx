@@ -1,4 +1,4 @@
-import { useGlobalSearchParams } from 'expo-router';
+import { router, useGlobalSearchParams } from 'expo-router';
 import { View, Text, Image, SafeAreaView, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -11,25 +11,42 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { markAsCompleted } from '../../lib/Users/Schedule';
 import { useGlobalContext } from '../../contexts/GlobalProvider';
 import Toast from 'react-native-toast-message';
+import { useScheduleContext } from '../../contexts/ScheduleProvider';
+import Entypo from '@expo/vector-icons/Entypo';
+import { useFormContext } from '../../contexts/FormProivder';
 
 const ScheduleDetail = () => {
-  const { title, date, time, link, userName, noLink, profileImg,descr,isUser,isProfileLink,status,id } = useGlobalSearchParams();
+  const { title, date, time, link, userName, noLink, profileImg,descr,isUser,isProfileLink,status,id,startTime,endTime,userId,rawDate} = useGlobalSearchParams();
   const [markingLoad, setMarkingLoad] = useState(false);
-
+  const [currStatus, setCurrStatus] = useState(status);
   const {token} = useGlobalContext();
+  const {setRefreshing,setScheduleApprovedId} = useScheduleContext();
+  const {handleApprove} =useFormContext();
+
   const insets = useSafeAreaInsets();
 
-  const handleMarkCompleted = async() => {
+  const handleMarkCompleted = async(status) => {
     console.log("pressed")
     setMarkingLoad(true);
     try{
-    const response = await markAsCompleted(token,id);
+    const response = await markAsCompleted(token,id,status);
     if(response){
       console.log("Marked as Completed: ", response);
+      if(status === "completed"){
+        setCurrStatus("Completed");
+      }else {
+        setCurrStatus("Upcoming");
+      }
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: 'Marked as ' + status
+      });
+      setRefreshing(true);
     }
     } catch(err){
       console.log(err);
-      const errorMessage = err.response?.data?.message || 'Error marking as Completed';
+      const errorMessage = err.response?.data?.message || 'Error marking as ' + status;
       Toast.show({
         type: 'error',
         text1: 'Error',
@@ -38,6 +55,9 @@ const ScheduleDetail = () => {
     }finally{
       setMarkingLoad(false);
     }
+  }
+  const handleApproveHere = () => {
+    handleApprove(id,rawDate,startTime,endTime,link,title,descr,userId,userName);
   }
   return (
     <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top }}>
@@ -56,11 +76,11 @@ const ScheduleDetail = () => {
         }
           <DetailInstance title={isUser==="true"?"Trainer":"User"} value={userName}/>
           <DetailInstance title="Description" value={descr ?? "No Description Provided"}/>
-          <DetailInstance title="Status" value={status} isLast={true}/>
+          <DetailInstance title="Status" value={currStatus} isLast={true}/>
         </View>
         <View className="flex flex-col items-center justify-center mt-8 mb-8">
           {isUser==="true"?
-          <CustomButton title="Request Reschedule" onPress={()=>{}} isDetail={true} 
+          <CustomButton title="Request Reschedule" handlePress={()=> router.push("/chat")} isDetail={true} 
           customStyle={"bg-mint-87"}
           endIcon={<MaterialIcons name="restart-alt" 
             size={24} color="#fff" />}
@@ -68,22 +88,26 @@ const ScheduleDetail = () => {
           :
           <>
           { status==='Requested' ? 
-            <CustomButton title="Approve it" onPress={()=>{}} isDetail={true} 
+            <CustomButton title="Approve it" handlePress={handleApproveHere} isDetail={true} 
             customStyle={"bg-mint-87 mb-2"}
             textStyle={"mr-3"}
             endIcon={<FontAwesome6 name="circle-check" size={22} color="#fff" />}
               />
           :
-          <CustomButton title="Reschedule it" onPress={()=>{}} isDetail={true} 
+          <CustomButton title="Reschedule it" handlePress={handleApproveHere} isDetail={true} 
           customStyle={"bg-mint-87 mb-2"}
           endIcon={<MaterialIcons name="restart-alt" 
             size={24} color="#fff" />}
             />
           }
-          { status === "Upcoming" &&
-          <CustomButton title="Mark as Completed" onPress={async()=> await handleMarkCompleted()} isDetail={true}
+          { currStatus === "Upcoming" ?
+          <CustomButton title="Markd as Completed" handlePress={()=>handleMarkCompleted("completed")} isDetail={true}
             customStyle={"bg-mint-87"}
             endIcon={<Ionicons name="checkmark-done" size={24} color="#fff" />} isLoading={markingLoad}
+          />:
+          <CustomButton title="Mark as incompleted" handlePress={()=>handleMarkCompleted("pending")} isDetail={true}
+            customStyle={"bg-mint-87"}
+            endIcon={<Entypo name="cross" size={24} color="#fff" />} isLoading={markingLoad}
           />
           }
           </>

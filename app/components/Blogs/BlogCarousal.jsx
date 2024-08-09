@@ -26,10 +26,8 @@ const zoomOut = {
   },
 };
 
-const ScheduleCard = ({ activeItem, item,route }) => {
-const {setIndex} = useGlobalContext();
+const ScheduleCard = ({ activeItem, item }) => {
 
-const valuePaddingZero = item.value < 10 ? `0${item.value}` : item.value;
 const sampleData = [
   {
     "_key": "72b234323b70",
@@ -202,11 +200,11 @@ const BlogCaraousal = () => {
             bg: Dumbell
         },
     ]
-    const [activeItem, setActiveItem] = useState(data[0].title);
+    const [activeItem, setActiveItem] = useState(data[0]?.title);
       const handleScroll = (event) => {
       const offsetX = event.nativeEvent.contentOffset.x;
       const index = Math.round(offsetX / 300); // Assuming each item is 150px wide
-      setActiveItem(data[index]?.title || data[0].title);
+      setActiveItem(data[index]?.title || data[0]?.title);
     };
     const { width } = Dimensions.get('window');
     const ITEM_WIDTH = width * 0.85; 

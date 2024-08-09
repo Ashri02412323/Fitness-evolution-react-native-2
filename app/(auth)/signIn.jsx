@@ -1,6 +1,6 @@
 import { View, Text, SafeAreaView, ScrollView, Pressable } from 'react-native'
 import {Image} from 'expo-image'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SignInImg from '../../assets/images/SignInImg.png'
 import FormField from '../components/FormField';
@@ -19,7 +19,6 @@ const SignIn = () => {
   const [emailValid, setEmailValid] = useState(false);
   const [passwordValid, setPasswordValid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
   const handleLogin= ()=>{
     if(!email){
       setEmailValid("Email is required");

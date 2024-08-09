@@ -8,7 +8,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import DropDown from '../Profile/DropDown';
 import { logoutUser } from '../../../lib/Users/User';
 
-const ScheduleHeader = ({isDetail,isProfile,title}) => {
+const ScheduleHeader = ({isDetail,isProfile,title,onPress}) => {
   const {firstLetter} = useGlobalContext();
   const [isVisible, setIsVisible] = useState(false);
   const handleLogout = async () => {
@@ -26,7 +26,7 @@ const ScheduleHeader = ({isDetail,isProfile,title}) => {
       <View className="flex flex-row items-center gap-x-4 relative -left-2" style={{
         margin: 0,
       }}>
-        <Pressable onPress={()=> router.back()}>
+        <Pressable onPress={onPress?onPress:()=> router.back()}>
           <AntDesign name="arrowleft" size={24} color="#01AFA8" style={{margin:0}} />
         </Pressable>
         <View className="flex flex-col" style={{margin:0}}>

@@ -27,12 +27,12 @@ const zoomOut = {
 };
 
 const ScheduleCard = ({ activeItem, item,route }) => {
-const {setIndex} = useGlobalContext();
+const {setIntialRoute} = useGlobalContext();
 
 const valuePaddingZero = item.value < 10 ? `0${item.value}` : item.value;
   return (
     <Pressable onPress={()=>{
-      setIndex(route)
+      setIntialRoute(route)
       router.push("/mySchedules")
       }}>
     <Animatable.View
@@ -70,26 +70,20 @@ const SchedulesCarousal = () => {
             title: 'Upcoming Schedules',
             bg: UpcomingBg,
             value: 2,
-            tab:0
-        },
-        {
-            title: 'Requested Schedules',
-            bg: PendingBg,
-            value: 3,
-            tab:0
+            tab:"Upcoming"
         },
         {
             title: 'Completed Schedules',
             bg: CompletedBg,
             value: 5,
-            tab:1
+            tab:"Completed"
         }
     ]
-    const [activeItem, setActiveItem] = useState(data[0].title);
+    const [activeItem, setActiveItem] = useState(data[0]?.title);
       const handleScroll = (event) => {
       const offsetX = event.nativeEvent.contentOffset.x;
       const index = Math.round(offsetX / 300); // Assuming each item is 150px wide
-      setActiveItem(data[index]?.title || data[0].title);
+      setActiveItem(data[index]?.title || data[0]?.title);
     };
   return (
     <View className="mx-4" style={{

@@ -2,12 +2,15 @@ import { View, Text, Pressable, ActivityIndicator } from 'react-native';
 import React from 'react';
 import { router } from 'expo-router';
 import { useGlobalContext } from '../../../contexts/GlobalProvider';
+import { useNavigation } from '@react-navigation/native';
 
 const ScheduleInstanc = ({title, color, value, subtitle, isLast, route, isLoading = true}) => {
-  const { setIndex } = useGlobalContext();
+  const { setIntialRoute} = useGlobalContext();
+  const navigation = useNavigation();
   return (
     <Pressable onPress={() => {
-      setIndex(route ?? 0);
+      setIntialRoute(route);
+      console.log("route",route)
       router.push('/mySchedules');
     }}>
       <View className={`flex flex-row items-center justify-between ${!isLast && "mb-4"} px-2`}>

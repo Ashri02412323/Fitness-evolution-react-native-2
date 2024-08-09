@@ -4,7 +4,7 @@ import { checkIfLoggedIn, getToken } from '../lib/Users/User'; // Adjust the imp
 import { useGlobalContext } from '../contexts/GlobalProvider';
 import { ActivityIndicator, Text, View } from 'react-native';
 
-export const useCheckLoginStatus = () => {
+const useCheckLoginStatus = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(null);
   const [delayCompleted, setDelayCompleted] = useState(false);
   const { setUser,setToken } = useGlobalContext();
@@ -39,4 +39,6 @@ export const useCheckLoginStatus = () => {
   );
 
   return { isLoggedIn, delayCompleted, NotLoggedInComponent };
-};
+}
+
+export default useCheckLoginStatus;

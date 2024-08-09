@@ -2,10 +2,8 @@ import { View, Text, Pressable } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import CustomButton from '../CustomButton';
 import DatePicker from 'react-native-ui-datepicker';
-import { Picker } from '@react-native-picker/picker';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { Picker} from '@react-native-picker/picker';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-
 import { useFormContext } from '../../../contexts/FormProivder';
 
 const DateTime = ({ values, errors, handleNext}) => {
@@ -35,7 +33,7 @@ const DateTime = ({ values, errors, handleNext}) => {
 
   const onTimeChange = (itemValue, setSelectedTime, isStart) => {
     setSelectedTime(itemValue);
-
+    console.log("itemValue: ", itemValue);
     const isoDateTimeString = getIsoDateTimeString(selectedDate, itemValue);
     if (isStart) {
       setStartTimeIso(isoDateTimeString);
@@ -78,7 +76,6 @@ const DateTime = ({ values, errors, handleNext}) => {
           <Text className="text-red-500">Date is required</Text>
         )}
       </View>
-
       <View className="mt-4 flex flex-row items-center justify-between">
         <View>
           <Text className="text-white_60 text-base font-pop_Medium mb-2">Start Time</Text>

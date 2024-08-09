@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, StatusBar } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
@@ -6,8 +6,8 @@ import { useGlobalContext } from '../../contexts/GlobalProvider';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 // Import your tab screens explicitly
 import HomeScreen from './home';
-import MySchedulesScreen from './mySchedules';
-import AddScheduleScreen from './addSchedule';
+import MySchedulesScreen from './mySchedules2';
+import AddScheduleScreen from './addSchedules';
 import ChatScreen from './chat';
 import AdminScreen from './admin';
 
@@ -15,7 +15,6 @@ const Tabs = createBottomTabNavigator();
 
 const AuthLayout = () => {
   const { user } = useGlobalContext();
-
   return (
     <>
       <View className="absolute top-0 left-0 right-0 -z-20 bg-primary h-full" />

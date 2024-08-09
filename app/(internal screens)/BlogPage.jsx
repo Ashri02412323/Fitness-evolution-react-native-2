@@ -9,7 +9,6 @@ import {PortableText} from '@portabletext/react'
 import Octicons from '@expo/vector-icons/Octicons';
 const BlogPage = () => {
     const {title} = useGlobalSearchParams();
-  const [forceRender, setForceRender] = useState(false);
     const sampleData = [
       {
         "markDefs": [],
@@ -673,13 +672,6 @@ const BlogPage = () => {
     useEffect(() => {
       setWidth(Dimensions.get('window').width);
     }, [Dimensions.get('window').width]);
-    useEffect(() => {
-      setForceRender(true);
-      return () => {
-        setForceRender(false);
-      }
-
-    }, []);
     const customSerializers = {
       types: {
         block: (props) => {
@@ -764,11 +756,9 @@ const BlogPage = () => {
               </View>
               <View className="h-px opacity-50 bg-white_38 w-full mt-2"></View>
               <View className="flex flex-col mt-6">
-                { forceRender &&
                 <PortableText value={sampleData} components={customSerializers}
                 className="text-white_87 font-inter_Regular"
                 />
-              }
               </View>
             </View>
           </View>
