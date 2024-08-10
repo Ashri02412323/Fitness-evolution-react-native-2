@@ -9,10 +9,6 @@ const DataAnalytics = ({ upcoming, completed, requested }) => {
 
   const allValuesZero = useMemo(() => upcomingInt === 0 && completedInt === 0 && requestedInt === 0, [upcomingInt, completedInt, requestedInt]);
 
-  useEffect(() => {
-    console.log("allValuesZero: ", allValuesZero);
-  }, [allValuesZero]);
-
   const data = useMemo(() => ({
     labels: ['Upcoming', 'Completed', 'Requested'],
     datasets: [

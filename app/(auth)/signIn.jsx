@@ -24,7 +24,6 @@ const SignIn = () => {
       setEmailValid("Email is required");
       return;
     }else if(!validateEmail(email)){
-      console.log(validateEmail(email))
       setEmailValid("Email is invalid");
       return;
     }

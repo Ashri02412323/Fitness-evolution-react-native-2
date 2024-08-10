@@ -32,11 +32,7 @@ export const GlobalProvider = ({ children }) => {
       setFirstLetter(extractFirstLetter(fullName));
     }
   },[user?.fullName])
-    
-useEffect(() => {
-  if(user)
-  console.log("User: ", user);
-}, [user]);
+
   return (
     <GlobalContext.Provider
       value={{
