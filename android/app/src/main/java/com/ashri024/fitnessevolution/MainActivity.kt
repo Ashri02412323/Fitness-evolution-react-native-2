@@ -1,4 +1,4 @@
-package com.fitnessevolution
+package com.ashri024.fitnessevolution
 
 import android.os.Build
 import android.os.Bundle
