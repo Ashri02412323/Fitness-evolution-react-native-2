@@ -2,11 +2,9 @@ import { View, Text, Pressable, ActivityIndicator } from 'react-native';
 import React from 'react';
 import { router } from 'expo-router';
 import { useGlobalContext } from '../../../contexts/GlobalProvider';
-import { useNavigation } from '@react-navigation/native';
 
 const ScheduleInstanc = ({title, color, value, subtitle, isLast, route, isLoading = true}) => {
   const { setIntialRoute} = useGlobalContext();
-  const navigation = useNavigation();
   return (
     <Pressable onPress={() => {
       setIntialRoute(route);

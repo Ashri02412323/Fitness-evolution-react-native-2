@@ -4,7 +4,7 @@
     "slug": "fitness-evolution",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/fitnessLogoSmall2.png",
+    "icon": "./assets/images/fitnessLogoSmall3.png",
     "scheme": "fitness-evolution",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/fitnessLogoSmall2.png",
+        "foregroundImage": "./assets/images/fitnessLogoSmall3.png",
         "backgroundColor": "#0B1215"
       },
       "package": "com.ashri024.fitnessevolution"
@@ -25,7 +25,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/fitnessLogoSmall2.png"
+      "favicon": "./assets/images/fitnessLogoSmall3.png"
     },
     "plugins": [
       "expo-router"

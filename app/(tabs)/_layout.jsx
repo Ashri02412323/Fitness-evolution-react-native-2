@@ -72,7 +72,7 @@ const AuthLayout = () => {
           }}
         />
         <Tabs.Screen
-          name="addSchedule"
+          name="addSchedules"
           component={AddScheduleScreen}
           options={{
             title: "Add Schedule",

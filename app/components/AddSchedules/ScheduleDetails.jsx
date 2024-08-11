@@ -11,7 +11,7 @@ import { useScheduleContext } from '../../../contexts/ScheduleProvider';
 
 const ScheduleDetails = ({ values, touched, errors, handleNext, handleBack }) => {
   const { subject, setSubject, description, setDescription, userName, setUserName, link, setLink ,setUserId,selectedUser, setSelectedUser} = useFormContext();
-  const {allUsers} = useScheduleContext();
+  const {allUsers} = useGlobalContext();
   const [userNames, setUserNames] = useState([]);
   const [isNextDisabled, setIsNextDisabled] = useState(true);
   const {user} = useGlobalContext();

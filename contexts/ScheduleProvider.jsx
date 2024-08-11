@@ -8,7 +8,7 @@ const ScheduleContext = createContext();
 export const useScheduleContext = () => useContext(ScheduleContext);
 
 export const ScheduleProvider = ({ children }) => {
-  const { token,user } = useGlobalContext();
+  const { token,user,setAllUsers } = useGlobalContext();
   const [upcoming, setUpcoming] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [requested, setRequested] = useState([]);
@@ -20,7 +20,6 @@ export const ScheduleProvider = ({ children }) => {
   const [requestedLength, setRequestedLength] = useState(0);
   const [userCount, setUserCount] = useState(0);
   const [userCountLoading, setUserCountLoading] = useState(true);
-  const [allUsers, setAllUsers] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
     const fetchUpcomingSchedules = async () => {
@@ -149,7 +148,7 @@ export const ScheduleProvider = ({ children }) => {
         setUserCountLoading,
         upcomingLength, completedLength, requestedLength,
         setUpcomingLength, setCompletedLength, setRequestedLength, userCount, setUserCount,
-        refreshing, setRefreshing, allUsers, setAllUsers, 
+        refreshing, setRefreshing, 
       }}
     >
       {children}

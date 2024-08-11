@@ -6,10 +6,12 @@ import UserInstance from '../components/Admin/UserInstance';
 import Profile from '../../assets/images/profilePic.png';
 import UserDetails from '../components/Admin/UserDetails';
 import { useScheduleContext } from '../../contexts/ScheduleProvider';
+import { useGlobalContext } from '../../contexts/GlobalProvider';
 
 const AdminUsers = () => {
   const insets = useSafeAreaInsets();
-  const { allUsers, userCountLoading } = useScheduleContext();
+  const { userCountLoading } = useScheduleContext();
+  const { allUsers } = useGlobalContext();
 
   return (
     <SafeAreaView className="bg-primary h-full relative" style={{ paddingTop: insets.top }}>

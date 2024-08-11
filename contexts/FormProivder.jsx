@@ -65,7 +65,7 @@ export const FormProvider = ({ children }) => {
     setSelectedUser(obj);
     setScheduleApprovedId(id);
     setSubmitStatus("toUpdate");
-    router.push('/addSchedule');
+    router.push('/addSchedules');
   }
 const resetFormValues = () => {
     setSelectedDate(dayjs());

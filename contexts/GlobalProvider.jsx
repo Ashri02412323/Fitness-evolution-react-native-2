@@ -1,4 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import profileImg from "../assets/images/profilePic.png";
+import io from 'socket.io-client';
+
+const SOCKET_URL = 'https://evolution-erm4.onrender.com'; // Replace with your server URL
 
 const GlobalContext = createContext();
 export const useGlobalContext = () => useContext(GlobalContext);
@@ -10,10 +14,10 @@ export const GlobalProvider = ({ children }) => {
   const [forgottonEmail, setForgottonEmail] = useState(null);
   const [firstLetter, setFirstLetter] = useState('');
   const [index, setIndex] = useState(0);
+  const [currReceiver, setCurrReceiver] = useState(null);
   const [chats, setChats] = useState([
-    "Hello there!",
-    "Hello, how are you?",
   ]);
+  const [allUsers, setAllUsers] = useState([]);
   const [detailName, setDetailName] = useState('');
   const [detailAge, setDetailAge] = useState('');
   const [detailGender, setDetailGender] = useState('');
@@ -23,6 +27,39 @@ export const GlobalProvider = ({ children }) => {
   const [intialRoute, setIntialRoute] = useState('Upcoming');
   const [token, setToken] = useState('');
   const [blogID, setBlogID] = useState('');
+  const [chatUsers, setChatUsers] = useState([]);
+  const [socket, setSocket] = useState(null);
+  const [connectedUsers, setConnectedUsers] = useState([]);
+  const [received, setReceived] = useState([]);
+  const [lastMessages, setLastMessages] = useState([]);
+
+  useEffect(()=>{
+    if(!socket)
+        return;
+    const allUserIDs = chatUsers.map((user) => user.id);
+    socket?.emit("allUsers",allUserIDs);
+    socket?.on("lastMessages", (messages) => {
+        setLastMessages(messages);
+    });
+    socket?.on('user connected', (users, receivedMessages) => {
+        setConnectedUsers(users);
+        setReceived(receivedMessages);
+    });
+    socket?.on('user disconnected', (users) => {
+        setConnectedUsers(users);
+    });
+    
+},[allUsers, chatUsers, socket]);
+
+useEffect(() => {   
+    socket?.on('new msg', (msg) => {
+        setReceived((prevReceived) => {
+            let newReceived = [...prevReceived, msg];
+            return newReceived;
+        });
+    })
+},[socket])
+
   const extractFirstLetter = (name) => {
     return name.charAt(0).toUpperCase();
   }
@@ -32,6 +69,42 @@ export const GlobalProvider = ({ children }) => {
       setFirstLetter(extractFirstLetter(fullName));
     }
   },[user?.fullName])
+
+useEffect(() => {
+  if (user?.role === "user" && user?.trainerAssigned) {
+    setChatUsers([{
+      userName: user.trainerAssigned.fullName,
+      lastMessage: "Hello, how are you?",
+      profile: user.trainerAssigned.profileImg ?? profileImg,
+      role: "Trainer",
+      noOfMsg: 3,
+      id: user.trainerAssigned._id
+    }]);
+  } else if (user?.role === "admin" && Array.isArray(allUsers)) {
+    const chatUsers = allUsers.map(user => ({
+      userName: user.fullName,
+      lastMessage: "Hello, how are you?",
+      profile: user.profileImg ?? profileImg,
+      role: "User",
+      noOfMsg: 3,
+      id: user._id
+    }));
+    setChatUsers(chatUsers);
+  }
+}, [user, allUsers, profileImg, setChatUsers]);
+
+
+  useEffect(() => {
+    const newSocket = io(SOCKET_URL, {
+      transports: ['websocket'],
+      jsonp: false,
+      query:{
+        userId: user?._id
+      }
+    });
+    setSocket(newSocket);
+    // return () => newSocket.close();
+  }, [user]);
 
   return (
     <GlobalContext.Provider
@@ -47,7 +120,8 @@ export const GlobalProvider = ({ children }) => {
         firstLetter,
         setFirstLetter,
         index,
-        setIndex, chats, setChats, detailName, setDetailName, detailAge, setDetailAge, detailGender, setDetailGender, detailRole, setDetailRole, detailProfile, setDetailProfile, isDetailVisible, setIsDetailVisible, blogID, setBlogID, token, setToken, intialRoute, setIntialRoute
+        setIndex, chats, setChats, detailName, setDetailName, detailAge, setDetailAge, detailGender, setDetailGender, detailRole, setDetailRole, detailProfile, setDetailProfile, isDetailVisible, setIsDetailVisible, blogID, setBlogID, token, setToken, intialRoute, setIntialRoute, chatUsers, setChatUsers,
+        allUsers, setAllUsers, currReceiver, setCurrReceiver, socket, setSocket, connectedUsers, setConnectedUsers, received, setReceived, lastMessages, setLastMessages
       }}
     >
       {children}
