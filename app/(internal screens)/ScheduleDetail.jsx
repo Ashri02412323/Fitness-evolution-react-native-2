@@ -37,11 +37,6 @@ const ScheduleDetail = () => {
       }else {
         setCurrStatus("Upcoming");
       }
-      Toast.show({
-        type: 'success',
-        text1: 'Success',
-        text2: 'Marked as ' + status
-      });
       setRefreshing(true);
     }
     } catch(err){
@@ -56,9 +51,9 @@ const ScheduleDetail = () => {
       setMarkingLoad(false);
     }
   }
-  const handleApproveHere = () => {
-    handleApprove(id,rawDate,startTime,endTime,link,title,descr,userId,userName);
-  }
+  // const handleApproveHere = () => {
+  //   handleApprove(id,rawDate,startTime,endTime,link,title,descr,userId,userName);
+  // }
   return (
     <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top }}>
       <ScrollView className="h-full"> 
@@ -88,13 +83,17 @@ const ScheduleDetail = () => {
           :
           <>
           { status==='Requested' ? 
-            <CustomButton title="Approve it" handlePress={handleApproveHere} isDetail={true} 
+            <CustomButton title="Approve it" handlePress={()=>{
+              handleApprove(id,rawDate,startTime,endTime,link,title,descr,userId,userName,"toApprove");
+            }} isDetail={true} 
             customStyle={"bg-mint-87 mb-2"}
             textStyle={"mr-3"}
             endIcon={<FontAwesome6 name="circle-check" size={22} color="#fff" />}
               />
           :
-          <CustomButton title="Reschedule it" handlePress={handleApproveHere} isDetail={true} 
+          <CustomButton title="Reschedule it" handlePress={()=>{
+            handleApprove(id,rawDate,startTime,endTime,link,title,descr,userId,userName,"toReschedule");
+          }} isDetail={true} 
           customStyle={"bg-mint-87 mb-2"}
           endIcon={<MaterialIcons name="restart-alt" 
             size={24} color="#fff" />}

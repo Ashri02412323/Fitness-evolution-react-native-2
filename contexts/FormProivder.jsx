@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import dayjs from 'dayjs';
 import { router } from "expo-router";
+import Toast from "react-native-toast-message";
 
 const FormContext = createContext();
 export const useFormContext = () => useContext(FormContext);
@@ -46,12 +47,31 @@ export const FormProvider = ({ children }) => {
     return `${hours}:${minutes}`;
   };
 
-  const handleApprove = async(id,date,startTime,endTime,scheduleLink,scheduleSubject,scheduleDescription,userId,userName) => {
-    let rawStartTime = reverseFromIsoString(startTime);
-    let rawEndTime = reverseFromIsoString(endTime);
-    setSelectedDate(date);
-    setStartTime(rawStartTime);
-    setEndTime(rawEndTime);
+  const handleApprove = async(id,date,startTime,endTime,scheduleLink,scheduleSubject,scheduleDescription,userId,userName,reqStatus) => {
+    
+let finalStartTime = startTime;
+let finalEndTime = endTime;
+let finalDate = date;
+    // if the endtime is in past now, show a warning message throught toast
+    console.log("rawendtime is in past: ", endTime<=new Date().toISOString());
+    if(endTime<=new Date().toISOString() || date<new Date().toISOString()){
+      Toast.show({
+        type: 'info',
+        text1: 'Setting new start and end time',
+        text2: 'End time is in past. Setting next 2 hour as start and end time.'
+      });
+      finalStartTime = getNextRoundedHour(1);
+      finalEndTime = getNextRoundedHour(2);
+      finalDate = new Date();
+      console.log("finalStartTime: ", finalStartTime);
+      console.log("finalEndTime: ", finalEndTime);
+    }else{
+      finalStartTime = reverseFromIsoString(finalStartTime);
+      finalEndTime = reverseFromIsoString(finalEndTime);
+    }
+    setSelectedDate(finalDate);
+    setStartTime(finalStartTime);
+    setEndTime(finalEndTime);
     setLink(scheduleLink);
     setSubject(scheduleSubject);
     setDescription(scheduleDescription);
@@ -64,7 +84,7 @@ export const FormProvider = ({ children }) => {
     console.log("obj: ", obj);
     setSelectedUser(obj);
     setScheduleApprovedId(id);
-    setSubmitStatus("toUpdate");
+    setSubmitStatus(reqStatus)
     router.push('/addSchedules');
   }
 const resetFormValues = () => {

@@ -53,7 +53,7 @@ const ChatInstance = ({user,profile,role,userName}) => {
             <Image source={profile} style={{width: 50, height: 50, borderRadius: 50}}/>
             {userStatus && <View className="absolute bottom-0 right-[1px] w-3 h-3 bg-green-500 rounded-full"/>}
           </View>
-          <View className="flex flex-col gap-y-1 justify-center relative bottom-1">
+          <View className="flex flex-col gap-y-1 justify-center items-start relative bottom-1  w-[68%] ">
             <View className="flex flex-row gap-2 items-end justify-center ">
               <Text className="text-white_87 font-inter_Medium text-base">{userName}</Text>
               <View className="relative rounded w-14 h-5 flex items-center justify-center">
@@ -61,7 +61,7 @@ const ChatInstance = ({user,profile,role,userName}) => {
                 <Text className={`${role === 'Admin' ? 'text-rose-500' : 'text-blue-500'} font-inter_Medium text-[12px]`}>{role}</Text>
               </View>
             </View>
-            <Text className="text-white_60 font-inter_Regular text-sm">{lastMessage?.message??"No messages yet"}</Text>
+            <Text className="text-white_60 font-inter_Regular text-sm " numberOfLines={2}>{lastMessage?.message??"No messages yet"}</Text>
           </View>
         </View>
         { receivedMessages > 0 &&

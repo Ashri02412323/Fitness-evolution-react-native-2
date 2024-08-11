@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 import profileImg from "../assets/images/profilePic.png";
 import io from 'socket.io-client';
 
@@ -32,6 +32,7 @@ export const GlobalProvider = ({ children }) => {
   const [connectedUsers, setConnectedUsers] = useState([]);
   const [received, setReceived] = useState([]);
   const [lastMessages, setLastMessages] = useState([]);
+  const scrollRef = useRef(null);
 
   useEffect(()=>{
     if(!socket)
@@ -121,7 +122,7 @@ useEffect(() => {
         setFirstLetter,
         index,
         setIndex, chats, setChats, detailName, setDetailName, detailAge, setDetailAge, detailGender, setDetailGender, detailRole, setDetailRole, detailProfile, setDetailProfile, isDetailVisible, setIsDetailVisible, blogID, setBlogID, token, setToken, intialRoute, setIntialRoute, chatUsers, setChatUsers,
-        allUsers, setAllUsers, currReceiver, setCurrReceiver, socket, setSocket, connectedUsers, setConnectedUsers, received, setReceived, lastMessages, setLastMessages
+        allUsers, setAllUsers, currReceiver, setCurrReceiver, socket, setSocket, connectedUsers, setConnectedUsers, received, setReceived, lastMessages, setLastMessages, scrollRef
       }}
     >
       {children}

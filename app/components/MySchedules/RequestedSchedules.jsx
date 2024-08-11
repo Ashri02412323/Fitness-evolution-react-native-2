@@ -1,4 +1,4 @@
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList,RefreshControl } from 'react-native';
 import React from 'react';
 import ScheduleInstance from './ScheduleInstance';
 import { formatDate, formatTime } from '../../../lib/Users/Schedule';
@@ -7,7 +7,10 @@ import { useScheduleContext } from '../../../contexts/ScheduleProvider';
 
 const RequestedSchedules = () => {
   const {user} = useGlobalContext();
-  const {requestedLoading,requested} = useScheduleContext();
+  const {requestedLoading,requested,setRefreshing,refreshing} = useScheduleContext();
+  const onRefresh = () => {
+    setRefreshing(true);
+  };
   if(requestedLoading){
     return (
       <View className="flex w-full h-full bg-primary mx-auto px-2 flex-col items-center mt-0">
@@ -27,6 +30,9 @@ const RequestedSchedules = () => {
     <View className="flex bg-primary h-full w-full mx-auto px-2 flex-col items-center mt-0" style={{gap:10}}>
       <View className="mt-4">
       <FlatList
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
         data={requested}
         renderItem={({item}) => {
           const formattedDate = formatDate(item.date);

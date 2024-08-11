@@ -25,6 +25,7 @@ export const ScheduleProvider = ({ children }) => {
     const fetchUpcomingSchedules = async () => {
       setUpcomingLoading(true);
       try {
+        console.log("token:",token);
         let response = await fetchUpcoming(token);
         setUpcoming(response);
         
@@ -47,6 +48,7 @@ export const ScheduleProvider = ({ children }) => {
     const fetchCompletedSchedules = async () => {
       setCompletedLoading(true);
       try {
+        console.log("TOken while fetching completed:",token);
         let response = await fetchCompleted(token);
         setCompleted(response);
 

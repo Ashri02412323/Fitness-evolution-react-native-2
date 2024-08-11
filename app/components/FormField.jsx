@@ -55,7 +55,7 @@ const FormField = ({
         )}
       </View>
       {validationError && (
-        <Text className="text-red-500 text-sm mt-1">{validationError}</Text>
+        <Text className="text-red text-sm mt-1">{validationError}</Text>
       )}
     </View>
   );

@@ -1,7 +1,7 @@
 import { View, TextInput, SafeAreaView, ScrollView, Text, Pressable, ActivityIndicator } from 'react-native';
 import React, { useEffect, useRef, useState} from 'react';
 import ScheduleHeader from '../components/MySchedules/ScheduleHeader';
-import { useGlobalSearchParams } from 'expo-router';
+import { router, useGlobalSearchParams } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useGlobalContext } from '../../contexts/GlobalProvider';
@@ -14,22 +14,24 @@ const ChatScreen = () => {
   const insets = useSafeAreaInsets();
 
   const [msg, setMsg] = useState("");
-  const { chats, setChats ,user,socket,setLastMessages,setReceived} = useGlobalContext();
-  const scrollRef = useRef(null);
+  const { chats, setChats ,user,socket,setLastMessages,setReceived,scrollRef} = useGlobalContext();
   const userId1 = user?._id;
   const userId2 = objReceiver?.id;
   const [isSending, setIsSending] = useState(false);
+  const [loadingMessages, setLoadingMessages] = useState(true);
 useEffect(()=>{
   if (scrollRef.current) {
     scrollRef.current.scrollToEnd({ animated: true});
   }
+  if(loadingMessages){
+    setLoadingMessages(false);
+  }
 },[chats])
 useEffect(()=>{
-// mark receviedMessages as 0 now by finding the messages where msg.senderId === objReceiver.id
-setReceived((prevReceived) => {
-  let newReceived = prevReceived.filter((m) => m.senderId !== objReceiver.id);
-  return newReceived;
-});
+  setReceived((prevReceived) => {
+    let newReceived = prevReceived.filter((m) => m.senderId !== objReceiver.id);
+    return newReceived;
+  });
 },[])
   useEffect(() => {
     if (!socket) return;
@@ -70,7 +72,6 @@ setReceived((prevReceived) => {
         return newArr;
       });
     });
-console.log("hello")
     return () => {
       socket.off('messages');
       socket.off('chat message');
@@ -97,7 +98,7 @@ useEffect(()=>{
     if (scrollRef.current) {
       scrollRef.current.scrollToEnd({ animated: true });
     }
-  };
+  }
 
   const handleRead = (msg) => {
     if (msg.status !== 'read') {
@@ -105,6 +106,23 @@ useEffect(()=>{
     }
   };
 
+  if(loadingMessages){
+    return (
+      <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top }}>
+        <ScheduleHeader title={userName} onPress={()=>{
+          console.log("emptying chats");
+          setChats([])
+          router.back();
+          }}/>
+        <ActivityIndicator size="large" color="#00C7BE" style={{
+          marginTop: '50%'
+        }} />
+        <Text className="text-white_60 font-inter_Regular text-base w-1/2 mx-auto text-center mt-2">
+          Loading messages...
+        </Text>
+      </SafeAreaView>
+    );
+  }
   return (
     <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top }}>
       <ScheduleHeader title={userName} />

@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground, FlatList, Pressable } from 'react-native'
+import { View, Text, ImageBackground, FlatList, Pressable, ActivityIndicator } from 'react-native'
 import React, { useCallback, useState } from 'react'
 import UpcomingBg from '../../../assets/images/UpcomingBg.png'
 import PendingBg from '../../../assets/images/PendingBg.png'
@@ -7,6 +7,7 @@ import * as Animatable from "react-native-animatable";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { router } from 'expo-router'
 import { useGlobalContext } from '../../../contexts/GlobalProvider'
+import { useScheduleContext } from '../../../contexts/ScheduleProvider'
 
 const zoomIn = {
   0: {
@@ -26,10 +27,9 @@ const zoomOut = {
   },
 };
 
-const ScheduleCard = ({ activeItem, item,route }) => {
+const ScheduleCard = ({ activeItem, item,route}) => {
 const {setIntialRoute} = useGlobalContext();
-
-const valuePaddingZero = item.value < 10 ? `0${item.value}` : item.value;
+// const valuePaddingZero = item.value < 10 ? `0${item.value}` : item.value;
   return (
     <Pressable onPress={()=>{
       setIntialRoute(route)
@@ -47,7 +47,9 @@ const valuePaddingZero = item.value < 10 ? `0${item.value}` : item.value;
       >
         <View style={{margin:0, gap:20}} className="flex flex-col w-[170px] p-4 justify-center items-center h-full">
           <Text className="text-2xl text-white text-center font-dm_SemiBold" >{item.title}</Text>
-          <Text className="text-[50px] font-cinzel_Bold text-white text-center" >{valuePaddingZero}</Text>
+          {item.isLoading ? <ActivityIndicator size="large" color="#00C7BE" />:
+          <Text className="text-[50px] font-cinzel_Bold text-white text-center" >{item.value}</Text>
+        }
         </View>
       </ImageBackground>
     </Animatable.View>
@@ -65,18 +67,21 @@ const Indicator = ({ isActive }) => {
   );
 };
 const SchedulesCarousal = () => {
+  const {upcomingLoading,completedLoading,upcomingLength,completedLength} = useScheduleContext();
     const data = [
         {
             title: 'Upcoming Schedules',
             bg: UpcomingBg,
-            value: 2,
-            tab:"Upcoming"
+            value: upcomingLength,
+            tab:"Upcoming",
+            isLoading : upcomingLoading
         },
         {
             title: 'Completed Schedules',
             bg: CompletedBg,
-            value: 5,
-            tab:"Completed"
+            value: completedLength,
+            tab:"Completed",
+            isLoading: completedLoading
         }
     ]
     const [activeItem, setActiveItem] = useState(data[0]?.title);

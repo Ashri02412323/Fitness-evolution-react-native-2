@@ -8,7 +8,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useGlobalContext } from '../../../contexts/GlobalProvider';
 
 const Confirm = ({ values, handleBack,handleSubmit }) => {
-  const { selectedDate, startTime, endTime, subject, description, userName, link,postLoading } = useFormContext();
+  const { selectedDate, startTime, endTime, subject, description, userName, link,postLoading,submitStatus } = useFormContext();
   const {user} = useGlobalContext();
   const localDate = new Date(selectedDate).toLocaleDateString();
 
@@ -31,17 +31,17 @@ const Confirm = ({ values, handleBack,handleSubmit }) => {
       }
       </View>
 
-      <View className="flex items-center justify-end w-full flex-row px-0 mt-16 ">
+      <View className="flex items-center justify-center w-full flex-row px-0 mt-16 gap-x-0">
         <CustomButton
           title="Back"
-          customStyle={"mx-0 bg-mint-87 scale-90 px-6"}
+          customStyle={"mx-0 bg-mint-87 scale-90 px-4"}
           handlePress={() => handleBack(values)}
           startIcon={<FontAwesome5 name="chevron-left" size={20} color="#fff" />} textStyle={"ml-4"}
           
         />
         <CustomButton
-          title="Confirm"
-          customStyle={"mx-0 bg-mint-87 scale-90 px-6"}
+          title={user?.role==="user"?"Request Schedule": submitStatus==="toApprove"?"Approve it" : submitStatus==="toReschedule"?"Reschedule it":"Confirm Schedule"}
+          customStyle={"mx-0 bg-mint-87 scale-90 px-4"}
           handlePress={() => handleSubmit()}
           endIcon={<MaterialIcons name="schedule" size={24} color="#fff" />}
           textStyle={"mr-2"}

@@ -23,10 +23,10 @@ const ScheduleHeader = ({isDetail,isProfile,title,onPress}) => {
     <>
     {isVisible && <Pressable onPress={()=>setIsVisible(false)} className="absolute top-0 left-0 w-full bg-black h-full z-10 opacity-40"/>}
     <View className="flex flex-row items-center gap-2 justify-between h-20 px-2 relative z-20" style={{margin:0}}>
-      <View className="flex flex-row items-center gap-x-4 relative -left-2" style={{
+      <View className="flex flex-row items-center gap-x-2 relative -left-2" style={{
         margin: 0,
       }}>
-        <Pressable onPress={onPress?onPress:()=> router.back()}>
+        <Pressable className=" px-2 py-2" onPress={onPress?onPress:()=> router.back()}>
           <AntDesign name="arrowleft" size={24} color="#01AFA8" style={{margin:0}} />
         </Pressable>
         <View className="flex flex-col" style={{margin:0}}>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, SafeAreaView ,ScrollView} from 'react-native';
+import { View, Text, TextInput, Button, SafeAreaView ,ScrollView, ToastAndroid} from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -25,7 +25,7 @@ const AddSchedule = () => {
   const insets = useSafeAreaInsets();
   const [step, setStep] = useState(1);
   const {selectedDate, startTime,  endTime,subject, description, userName,link,userId,submitStatus,setPostLoading,scheduleApprovedId,getIsoDateTimeString,resetFormValues} = useFormContext();
-  const {token,user,setIntialRoute} = useGlobalContext();
+  const {token,user,setIntialRoute,socket,scrollRef} = useGlobalContext();
   const {setRefreshing} = useScheduleContext();
   const handleNext = (values) => {
     if (step < 3) {
@@ -60,10 +60,16 @@ const AddSchedule = () => {
   // }
   const trainerId = user?.role === 'admin' ? user?._id : user.trainerAssigned?._id;
   let startTimeFormatted,endTimeFormatted;
-  // time is in 24 hour format and i have date... so i need to combine them in a single date iso string
   if(selectedDate && startTime && endTime){
     startTimeFormatted = getIsoDateTimeString(selectedDate,startTime);
-    endTimeFormatted = getIsoDateTimeString(selectedDate,endTime);
+    if(endTime === '00:00'){
+      // extend plus one date then convert to isostring
+      const nextDay = new Date(selectedDate);
+      nextDay.setDate(nextDay.getDate() + 1);
+      endTimeFormatted = getIsoDateTimeString(nextDay,endTime);
+    }else{
+     endTimeFormatted = getIsoDateTimeString(selectedDate,endTime);
+  }
   }
   
   const data = {
@@ -76,19 +82,27 @@ const AddSchedule = () => {
     userId: userId,
     trainerId: trainerId,
   }
-  console.log("SUbmitSttus:   ",submitStatus);
-  console.log('Data:',data);
+  const trainer = user?.role=="admin"?user:user.trainerAssigned;
+  const userString = encodeURIComponent(JSON.stringify(trainer));
+  const trainerName = user?.role=="admin"?user?.fullName:user.trainerAssigned?.fullName;
+  const sendMessage = (msg) => {
+    const newMsg = {
+      senderName: trainerName,
+      receiverName: userName,
+      message: msg,
+      senderId: trainer?._id,
+      receiverId: userId,
+      status: 'pending'
+    };
+    console.log("newMsg: ",newMsg)
+    // socket?.emit('chat message', newMsg);
+  }
     if(submitStatus==='createNew'){
       setPostLoading(true);
       try{
       const response = await postSchedule(token,data);
         if(response){
         console.log('Schedule created:',response);
-        // Toast.show({
-        //   type: 'success',
-        //   text1: 'Success',
-        //   text2: 'Schedule created successfully'
-        // });
         }
         setRefreshing(true);
         setIntialRoute("Upcoming")
@@ -97,7 +111,9 @@ const AddSchedule = () => {
         if(user?.role === 'admin'){
         router.push('/mySchedules');
         }else{
-          router.push('/chat');
+          sendMessage("Thanks for scheduling a class with me. I am looking forward to it. I will approve the schedule soon :)");
+          ToastAndroid.show("Schedule requested successfully", ToastAndroid.SHORT);
+          router.push('/chat')
         }
       }catch (err){
         console.error('Error creating schedule:',err);
@@ -111,7 +127,7 @@ const AddSchedule = () => {
         setPostLoading(false);
       }
     }
-    else if(submitStatus==='toUpdate'){
+    else if(submitStatus==='toReschedule' || submitStatus==='toApprove'){
       if(!scheduleApprovedId){
         console.error('Schedule approved id not found');
         Toast.show({
@@ -127,17 +143,26 @@ const AddSchedule = () => {
         const response = await modifySchedule(token,scheduleApprovedId,data);
         if(response){
           console.log('Schedule modified:',response);
-          // Toast.show({
-          //   type: 'success',
-          //   text1: 'Success',
-          //   text2: 'Schedule modified successfully'
-          // });
         setRefreshing(true);
         setIntialRoute("Upcoming")
         setStep(1);
         resetFormValues();
-        router.push('/mySchedules');
+        if(submitStatus==='toReschedule'){
+          sendMessage("I have rescheduled the class. Please check the new schedule in your upcomings.");
+          // router.push({pathname: "/ChatScreen", params: {userName:userName,
+          //   receiver: userString
+          // }})
+          router.push('/chat')
+          ToastAndroid.show("Schedule rescheduled successfully", ToastAndroid.SHORT);
+        }else{
+          sendMessage("I have approved the schedule. Please check the schedule in your upcomings.");
+          // router.push({pathname: "/ChatScreen", params: {userName:userName,
+          //   receiver: userString
+          // }})
+          router.push('/chat')
+          ToastAndroid.show("Schedule approved successfully", ToastAndroid.SHORT);
         }
+      }
       }catch (err){
         console.error('Error modifying schedule:',err);
         const errorMessage = err.response?.data?.message || 'Error modifying schedule';
