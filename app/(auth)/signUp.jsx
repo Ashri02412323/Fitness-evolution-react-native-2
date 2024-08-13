@@ -8,7 +8,9 @@ import CustomButton from '../components/CustomButton';
 import { router } from 'expo-router';
 import { SignUpUser,validateEmail,validatePassword,validateFullName } from '../../lib/Users/User';
 import { useGlobalContext } from '../../contexts/GlobalProvider';
-import Toast from 'react-native-toast-message';
+// import Toast from 'react-native-toast-message';
+import {Toast} from 'toastify-react-native'
+import ToastManage from '../components/Home/ToastManage';
 
 const SignIn = () => {
 const insets = useSafeAreaInsets();
@@ -40,7 +42,6 @@ setPasswordValid(false);
     setEmailValid("Email is required");
     return;
   }else if(!validateEmail(email)){
-    console.log(validateEmail(email))
     setEmailValid("Email is invalid");
     return;
   }
@@ -54,10 +55,6 @@ setPasswordValid(false);
   }
 
   if(email && password && fullName){
-    console.log("Email: ", email);
-    console.log("Pass: " ,password);
-    console.log("Full Name: ", fullName);
-
     setIsLoading(true);
     setEmailValid(false);
     setPasswordValid(false);
@@ -65,22 +62,13 @@ setPasswordValid(false);
 
     SignUpUser(fullName, email, password)
     .then((response) => {
-      console.log(response);
       setUser(response);
-      Toast.show({
-        type: 'success',
-        text1: 'Sign Up Successful',
-        text2: 'Welcome To Fitness Evolution!',
-      });
+      Toast.success('Sign Up Successful','top');
     })
     .catch((error) => {
       console.error("Error: ",error);
       const errorMessage = error.response?.data?.message || 'Please try Again!';
-      Toast.show({
-        type: 'error',
-        text1: 'Sign Up Failed',
-        text2: errorMessage,
-      });
+      Toast.error(errorMessage,'top');
     })
     .finally(() => {
       setIsLoading(false);
@@ -131,7 +119,6 @@ setPasswordValid(false);
           </View>
         </View>
       </ScrollView>
-      <Toast/>
     </SafeAreaView>
   )
 }

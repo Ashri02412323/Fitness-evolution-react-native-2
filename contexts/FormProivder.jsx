@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import dayjs from 'dayjs';
 import { router } from "expo-router";
-import Toast from "react-native-toast-message";
+// import Toast from "react-native-toast-message";
+import { Toast } from "toastify-react-native";
 
 const FormContext = createContext();
 export const useFormContext = () => useContext(FormContext);
@@ -12,6 +13,7 @@ const getNextRoundedHour = (hourNext) => {
     now.setHours(now.getHours() + hourNext); // Add one hour
     return now.toTimeString().slice(0, 2) + ':00'; 
   };
+
 export const FormProvider = ({ children }) => {
     const [selectedDate, setSelectedDate] = useState(dayjs());
     const currStartTime = getNextRoundedHour(1);
@@ -25,9 +27,8 @@ export const FormProvider = ({ children }) => {
     const [link, setLink] = useState('');
     const [userId, setUserId] = useState('');
     const [endTime, setEndTime] = useState(currEndTime);
-  const [postLoading, setPostLoading] = useState(false);
-  const [selectedUser, setSelectedUser] = useState();
-
+    const [postLoading, setPostLoading] = useState(false);
+    const [selectedUser, setSelectedUser] = useState();
   const [submitStatus,setSubmitStatus] = useState("createNew");
 
   const [scheduleApprovedId, setScheduleApprovedId] = useState('');
@@ -49,22 +50,15 @@ export const FormProvider = ({ children }) => {
 
   const handleApprove = async(id,date,startTime,endTime,scheduleLink,scheduleSubject,scheduleDescription,userId,userName,reqStatus) => {
     
-let finalStartTime = startTime;
-let finalEndTime = endTime;
-let finalDate = date;
+    let finalStartTime = startTime;
+    let finalEndTime = endTime;
+    let finalDate = date;
     // if the endtime is in past now, show a warning message throught toast
-    console.log("rawendtime is in past: ", endTime<=new Date().toISOString());
     if(endTime<=new Date().toISOString() || date<new Date().toISOString()){
-      Toast.show({
-        type: 'info',
-        text1: 'Setting new start and end time',
-        text2: 'End time is in past. Setting next 2 hour as start and end time.'
-      });
+      Toast.info('End time is in past. Setting next 2 hour as start and end time.','top')
       finalStartTime = getNextRoundedHour(1);
       finalEndTime = getNextRoundedHour(2);
       finalDate = new Date();
-      console.log("finalStartTime: ", finalStartTime);
-      console.log("finalEndTime: ", finalEndTime);
     }else{
       finalStartTime = reverseFromIsoString(finalStartTime);
       finalEndTime = reverseFromIsoString(finalEndTime);
@@ -81,13 +75,12 @@ let finalDate = date;
       fullName: userName,
       id: userId
     }
-    console.log("obj: ", obj);
     setSelectedUser(obj);
     setScheduleApprovedId(id);
     setSubmitStatus(reqStatus)
     router.push('/addSchedules');
   }
-const resetFormValues = () => {
+  const resetFormValues = () => {
     setSelectedDate(dayjs());
     setStartTime(currStartTime);
     setStartTimeIso(currStartTimeIso);
@@ -100,7 +93,6 @@ const resetFormValues = () => {
     setSelectedUser(null);
     setSubmitStatus("createNew");
     setScheduleApprovedId('');
-    console.log("Form values reset");
     router.back();
   };
     const getTimeOptions = (ISODate) => {
@@ -119,8 +111,8 @@ const resetFormValues = () => {
       return timeOptions;
     };
     
-    const [startOptions, setStartOptions] = useState(getTimeOptions(selectedDate));
-    const [endOptions, setEndOptions] = useState(getTimeOptions(startTimeIso));
+  const [startOptions, setStartOptions] = useState(getTimeOptions(selectedDate));
+  const [endOptions, setEndOptions] = useState(getTimeOptions(startTimeIso));
   return (
     <FormContext.Provider
       value={{

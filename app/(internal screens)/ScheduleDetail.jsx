@@ -10,10 +10,11 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { markAsCompleted } from '../../lib/Users/Schedule';
 import { useGlobalContext } from '../../contexts/GlobalProvider';
-import Toast from 'react-native-toast-message';
 import { useScheduleContext } from '../../contexts/ScheduleProvider';
 import Entypo from '@expo/vector-icons/Entypo';
 import { useFormContext } from '../../contexts/FormProivder';
+// import Toast from 'react-native-toast-message';
+import ToastManager, { Toast } from 'toastify-react-native';
 
 const ScheduleDetail = () => {
   const { title, date, time, link, userName, noLink, profileImg,descr,isUser,isProfileLink,status,id,startTime,endTime,userId,rawDate} = useGlobalSearchParams();
@@ -26,12 +27,10 @@ const ScheduleDetail = () => {
   const insets = useSafeAreaInsets();
 
   const handleMarkCompleted = async(status) => {
-    console.log("pressed")
     setMarkingLoad(true);
     try{
     const response = await markAsCompleted(token,id,status);
     if(response){
-      console.log("Marked as Completed: ", response);
       if(status === "completed"){
         setCurrStatus("Completed");
       }else {
@@ -42,11 +41,7 @@ const ScheduleDetail = () => {
     } catch(err){
       console.log(err);
       const errorMessage = err.response?.data?.message || 'Error marking as ' + status;
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: errorMessage
-      });
+      Toast.error(errorMessage,'top')
     }finally{
       setMarkingLoad(false);
     }

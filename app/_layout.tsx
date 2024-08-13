@@ -9,6 +9,7 @@ import {GlobalProvider} from '../contexts/GlobalProvider';
 import { NativeWindStyleSheet } from 'nativewind';
 import {FormProvider} from '../contexts/FormProivder';
 import {ScheduleProvider }from '../contexts/ScheduleProvider';
+import ToastManage from './components/Home/ToastManage';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -50,10 +51,10 @@ function RootLayout() {
 
   useEffect(() => {
     if (loaded) {
-      setTimeout(() => {
+      // setTimeout(() => {
         setDelayCompleted(true);
         SplashScreen.hideAsync();
-      }, 3000); // 3 seconds delay
+      // }, 3000); // 3 seconds delay
     }
   }, [loaded]);
 
@@ -67,6 +68,7 @@ function RootLayout() {
 
   return (
     <GlobalProvider>
+      <ToastManage/>
       <FormProvider>
         <ScheduleProvider>
           <Stack>

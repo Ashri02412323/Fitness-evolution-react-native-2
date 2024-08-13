@@ -3,6 +3,7 @@ import React from 'react'
 import swimmingImg from '../../../assets/images/swimming.png'
 import ProfilePic from '../../../assets/images/profilePic.png'
 import BlogInstance from './BlogInstance'
+import { router } from 'expo-router'
 const Blogs = ({title ="Blogs",hideSeeAll,isBlogDetail}) => {
     const blogSample = [
         {
@@ -36,7 +37,7 @@ const Blogs = ({title ="Blogs",hideSeeAll,isBlogDetail}) => {
 
       <View className={`flex flex-row items-center justify-between mb-4 ${isBlogDetail && "mb-1 mt-2"}`}>
         <Text className={`text-white_87 text-xl font-inter_SemiBold ${isBlogDetail && "text-lg font-inter_Medium"}`}>{title}</Text>
-        <Pressable className="">
+        <Pressable className="" onPress={()=>router.push('/BlogDetails')}>
             <Text className={`text-blue-500 text-base font-inter_semiBold ${hideSeeAll && "hidden"}`}>
                 See All
             </Text>

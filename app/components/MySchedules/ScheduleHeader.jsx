@@ -7,8 +7,9 @@ import Entypo from '@expo/vector-icons/Entypo';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import DropDown from '../Profile/DropDown';
 import { logoutUser } from '../../../lib/Users/User';
+import ProfileDefault from '../Profile/ProfileDefault';
 
-const ScheduleHeader = ({isDetail,isProfile,title,onPress}) => {
+const ScheduleHeader = ({isDetail,isProfile,title,onPress,isIconVisible =true}) => {
   const {firstLetter} = useGlobalContext();
   const [isVisible, setIsVisible] = useState(false);
   const handleLogout = async () => {
@@ -42,15 +43,14 @@ const ScheduleHeader = ({isDetail,isProfile,title,onPress}) => {
       </Pressable>
       
       :
-
-      <Pressable onPress={()=> router.push("/profile")} className={`${!isProfile && "bg-lava"} h-12 w-12 flex-row justify-center items-center rounded-full `}
-        style={{ margin: 0 }}
-        >
-          <Text className="text-white font-pop_Medium text-2xl mt-0">{firstLetter ?? 'A'}</Text>
+      isIconVisible ?
+      <Pressable onPress={()=> router.push("/profile")} >
+        <ProfileDefault sizeClass={"h-12 w-12"} textStyle={"text-2xl bottom-0"} parentStyle={"mb-0 mt-3 mr-1"} />
       </Pressable>
+      : null
       }
     </View>
-    {isVisible && (
+    {(isVisible) ? (
         <View className="absolute top-12 right-5 z-30">
           <DropDown
             items={[
@@ -66,7 +66,9 @@ const ScheduleHeader = ({isDetail,isProfile,title,onPress}) => {
             setIsVisible={setIsVisible}
           />
         </View>
-      )}
+      ):
+      null
+    }
     </>
   )
 }

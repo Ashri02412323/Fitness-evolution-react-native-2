@@ -33,14 +33,12 @@ const DateTime = ({ values, errors, handleNext}) => {
 
   const onTimeChange = (itemValue, setSelectedTime, isStart) => {
     setSelectedTime(itemValue);
-    console.log("itemValue: ", itemValue);
     const isoDateTimeString = getIsoDateTimeString(selectedDate, itemValue);
     if (isStart) {
       setStartTimeIso(isoDateTimeString);
       let endOptions = getTimeOptions(isoDateTimeString);
       setEndOptions(endOptions);
     }
-    console.log("Start time iso: ", isoDateTimeString);
   };
 
   const yesterday = new Date();

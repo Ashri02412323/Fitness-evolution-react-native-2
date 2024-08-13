@@ -34,6 +34,14 @@ export const GlobalProvider = ({ children }) => {
   const [lastMessages, setLastMessages] = useState([]);
   const scrollRef = useRef(null);
 
+  // Profile states
+  const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [userRole, setUserRole] = useState('');
+  const [userGender, setUserGender] = useState('');
+  const [userAge, setUserAge] = useState('');
+  const [userProfile, setUserProfile] = useState('');
+  
   useEffect(()=>{
     if(!socket)
         return;
@@ -71,12 +79,23 @@ useEffect(() => {
     }
   },[user?.fullName])
 
+  useEffect(()=>{
+    if(user){
+      setUserName(user.fullName);
+      setUserEmail(user.email);
+      setUserRole(user.role);
+      setUserGender(user.gender);
+      setUserAge(user.age);
+      setUserProfile(user.profileImage);
+    }
+  },[user])
+
 useEffect(() => {
   if (user?.role === "user" && user?.trainerAssigned) {
     setChatUsers([{
       userName: user.trainerAssigned.fullName,
       lastMessage: "Hello, how are you?",
-      profile: user.trainerAssigned.profileImg ?? profileImg,
+      profile: user.trainerAssigned.profileImage,
       role: "Trainer",
       noOfMsg: 3,
       id: user.trainerAssigned._id
@@ -85,7 +104,7 @@ useEffect(() => {
     const chatUsers = allUsers.map(user => ({
       userName: user.fullName,
       lastMessage: "Hello, how are you?",
-      profile: user.profileImg ?? profileImg,
+      profile: user.profileImage,
       role: "User",
       noOfMsg: 3,
       id: user._id
@@ -122,7 +141,8 @@ useEffect(() => {
         setFirstLetter,
         index,
         setIndex, chats, setChats, detailName, setDetailName, detailAge, setDetailAge, detailGender, setDetailGender, detailRole, setDetailRole, detailProfile, setDetailProfile, isDetailVisible, setIsDetailVisible, blogID, setBlogID, token, setToken, intialRoute, setIntialRoute, chatUsers, setChatUsers,
-        allUsers, setAllUsers, currReceiver, setCurrReceiver, socket, setSocket, connectedUsers, setConnectedUsers, received, setReceived, lastMessages, setLastMessages, scrollRef
+        allUsers, setAllUsers, currReceiver, setCurrReceiver, socket, setSocket, connectedUsers, setConnectedUsers, received, setReceived, lastMessages, setLastMessages, scrollRef,
+        userName, setUserName, userEmail, setUserEmail, userRole, setUserRole, userGender, setUserGender, userAge, setUserAge, userProfile, setUserProfile,
       }}
     >
       {children}

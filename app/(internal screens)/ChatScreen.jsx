@@ -6,7 +6,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useGlobalContext } from '../../contexts/GlobalProvider';
 import MessageInstance from '../components/Chat/MessageInstance';
-import Toast from 'react-native-toast-message';
+// import Toast from 'react-native-toast-message';
+import { Toast } from 'toastify-react-native';
+import ToastManage from '../components/Home/ToastManage';
 
 const ChatScreen = () => {
   const { receiver, userName} = useGlobalSearchParams();
@@ -58,11 +60,7 @@ useEffect(()=>{
         socket.emit('message sent', msg._id);
       } else {
         console.log("Socket is not connected. Message delivered event not emitted.");
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Message delivered event not emitted.'
-        });
+        Toast.error('Message delivered event not emitted.','top')
       }
     });
 
@@ -110,7 +108,6 @@ useEffect(()=>{
     return (
       <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top }}>
         <ScheduleHeader title={userName} onPress={()=>{
-          console.log("emptying chats");
           setChats([])
           router.back();
           }}/>

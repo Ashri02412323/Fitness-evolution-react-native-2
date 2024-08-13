@@ -7,7 +7,7 @@ import FormField from '../components/FormField';
 import CustomButton from '../components/CustomButton';
 import { router } from 'expo-router';
 import {VerifyEmail,setNewPass,validateEmail,validatePassword} from '../../lib/Users/User';
-import Toast from 'react-native-toast-message';
+import {Toast} from 'toastify-react-native'
 import { useGlobalContext } from '../../contexts/GlobalProvider';
 
 const SignIn = () => {
@@ -25,7 +25,6 @@ const [confirmPasswordValid, setConfirmPasswordValid] = React.useState(false);
 
 const handleVerifyEmail = () => {
   setEmailValid(false);
-  console.log("Verify Email");
   if(!email){
     setEmailValid("Email is required");
     return;
@@ -36,25 +35,15 @@ const handleVerifyEmail = () => {
   setIsLoading(true);
   VerifyEmail(email)
   .then((response) => {
-    console.log(response);
     setVerified(true);
     setEmailValid(false);
     setForgottonEmail(email);
-    Toast.show({
-      type: 'success',
-      text1: 'Email Verified',
-      text2: 'Please enter new password',
-    });
-    // router.push('/signIn');
+    Toast.success('Email Verified','top')
   })
   .catch((error) => {
     console.error("Error: ",error);
     const errorMessage = error.response?.data?.message || 'Please try Again!';
-    Toast.show({
-      type: 'error',
-      text1: 'Error',
-      text2: errorMessage,
-    });
+    Toast.error(errorMessage,'top')
   })
   .finally(() => {
     setIsLoading(false);
@@ -64,7 +53,6 @@ const handleVerifyEmail = () => {
 const handleChangePass = async() => {
   setPasswordValid(false);
   setConfirmPasswordValid(false);
-  console.log("Change Password");
   if(!password){
     setPasswordValid("Password is required");
     return;
@@ -86,26 +74,15 @@ const handleChangePass = async() => {
     return;
   }
   setIsLoading(true);
-  console.log("Email: ", email);
-  console.log("Password: ", password);
   setNewPass(email, password)
   .then((response) => {
-    console.log(response);
-    Toast.show({
-      type: 'success',
-      text1: 'Password Changed',
-      text2: 'Please sign in with new password',
-    });
+    Toast.success('Password Changed','top')
     router.push('/signIn');
   })
   .catch((error) => {
     console.error("Error: ",error);
     const errorMessage = error.response?.data?.message || 'Please try Again!';
-    Toast.show({
-      type: 'error',
-      text1: 'Error',
-      text2: errorMessage,
-    });
+    Toast.error(errorMessage,'top')
   })
   .finally(() => {
     setIsLoading(false);
@@ -163,7 +140,6 @@ const handleChangePass = async() => {
           </View>
         </View>
       </ScrollView>
-      <Toast/>
     </SafeAreaView>
   )
 }

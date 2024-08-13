@@ -2,6 +2,7 @@ import { View, Text,Image, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { router } from 'expo-router'
 import { useGlobalContext } from '../../../contexts/GlobalProvider'
+import profileImg from "../../../assets/images/profilePic.png";
 
 const ChatInstance = ({user,profile,role,userName}) => {
     const handleNavigate = (userName,user) => {
@@ -50,7 +51,10 @@ const ChatInstance = ({user,profile,role,userName}) => {
       }} className="flex flex-row items-center justify-between py-4 px-2 mb-1 relative">
         <View className="flex flex-row items-center gap-x-4">
           <View className="flex flex-col items-center justify-center">
-            <Image source={profile} style={{width: 50, height: 50, borderRadius: 50}}/>
+            { profile ?
+            <Image source={{uri:profile}} style={{width: 50, height: 50, borderRadius: 50}}/>:
+            <Image source={profileImg} style={{width: 50, height: 50, borderRadius: 50}}/>
+          }
             {userStatus && <View className="absolute bottom-0 right-[1px] w-3 h-3 bg-green-500 rounded-full"/>}
           </View>
           <View className="flex flex-col gap-y-1 justify-center items-start relative bottom-1  w-[68%] ">

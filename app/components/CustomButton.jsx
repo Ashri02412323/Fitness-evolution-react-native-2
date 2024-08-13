@@ -1,9 +1,8 @@
-import { ActivityIndicator, Pressable, Text} from "react-native";
+import { ActivityIndicator, Pressable, Text, TouchableOpacity} from "react-native";
 
 const CustomButton = ({
   title,
   handlePress,
-//   containerStyles,
   isLoading,
   isDetail,
   customStyle,
@@ -13,7 +12,7 @@ const CustomButton = ({
   disabled
 }) => {
   return (
-    <Pressable
+    <TouchableOpacity
       onPress={handlePress}
       activeOpacity={0.7}
       className={`bg-lava rounded w-max min-h-[40px] flex flex-row justify-center items-center mx-auto ${isDetail?"px-4":"px-8"} ${isLoading ? "opacity-50" : ""} ${customStyle} ${disabled?"opacity-70":""}`}
@@ -32,7 +31,7 @@ const CustomButton = ({
           className="ml-2"
         />
       )}
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 

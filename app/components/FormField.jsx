@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, TextInput, Image, Pressable, Text } from "react-native";
 import eye_hide from "../../assets/images/eye-hide.png";
 import eye from "../../assets/images/eye.png";
@@ -16,15 +16,19 @@ const FormField = ({
   validationError,
   isPassword,
   keyboardType,
+  noMargin,
+  parentStyle,
+  isNumber,
   ...props
 }) => {
   const [showPassword, setShowPassword] = useState(false);
-
+ 
   return (
     <View className={`w-full`}>
-      {/* <Text className="text-base text-gray-100 mb-2">{title}</Text> */}
-
-      <View className="w-full bg-slate-100 rounded-md border-2 border-black-200 focus:border-secondary flex flex-row items-center">
+      { title &&
+      <Text className="text-base text-white_87 mb-2">{title}</Text>
+      }
+      <View className={`w-full bg-white_87 rounded-md border-2 border-black-200 focus:border-secondary flex flex-row items-center ${parentStyle}`}>
         {icon && iconType === 'fontAwesome'? 
         <View className="ml-3">
             <FontAwesome5 name={icon} size={22} color="#0B1215"/>
@@ -34,8 +38,8 @@ const FormField = ({
             marginLeft: 10,
         }} /> }
         <TextInput
-          className="flex-1 px-2 text-black font-psemibold text-base m-0 focus:outline-none focus:border-none font-inter_Regular relative -left-2 -top-2 pb-0 py-2"
-          value={value}
+          className={`flex-1 px-2 text-black font-psemibold text-base m-0 focus:outline-none focus:border-none font-inter_Regular relative ${!noMargin &&"-left-2 -top-2 pb-0 py-2"} ${otherStyles}`}
+          value={isNumber ? value?.toString() : value}
           placeholder={placeholder}
           placeholderTextColor="#7B7B8B"
           onChangeText={handleChangeText}
@@ -55,7 +59,7 @@ const FormField = ({
         )}
       </View>
       {validationError && (
-        <Text className="text-red text-sm mt-1">{validationError}</Text>
+        <Text className="text-rose-500 text-xs mt-1">{validationError}</Text>
       )}
     </View>
   );

@@ -1,14 +1,15 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useGlobalContext } from "./GlobalProvider";
 import { fetchCompleted, fetchRequested, fetchUpcoming } from "../lib/Users/Schedule";
-import Toast from 'react-native-toast-message';
-import { allUsersUnderTrainer } from "../lib/Users/User";
+// import Toast from 'react-native-toast-message';
+import ToastManager, {Toast} from 'toastify-react-native';
+import { allUsersUnderTrainer, checkIfLoggedIn } from "../lib/Users/User";
 
 const ScheduleContext = createContext();
 export const useScheduleContext = () => useContext(ScheduleContext);
 
 export const ScheduleProvider = ({ children }) => {
-  const { token,user,setAllUsers } = useGlobalContext();
+  const { token,user,setAllUsers,setUser } = useGlobalContext();
   const [upcoming, setUpcoming] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [requested, setRequested] = useState([]);
@@ -25,7 +26,6 @@ export const ScheduleProvider = ({ children }) => {
     const fetchUpcomingSchedules = async () => {
       setUpcomingLoading(true);
       try {
-        console.log("token:",token);
         let response = await fetchUpcoming(token);
         setUpcoming(response);
         
@@ -35,11 +35,12 @@ export const ScheduleProvider = ({ children }) => {
       } catch (error) {
         console.error('Error fetching upcoming schedules:', error);
         const errorMessage = error.response?.data?.message || 'Error fetching Upcoming schedules';
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: errorMessage
-        });
+        // Toast.show({
+        //   type: 'error',
+        //   text1: 'Error',
+        //   text2: errorMessage
+        // });
+        Toast.error(errorMessage,'top')
       } finally {
         setUpcomingLoading(false);
       }
@@ -48,7 +49,6 @@ export const ScheduleProvider = ({ children }) => {
     const fetchCompletedSchedules = async () => {
       setCompletedLoading(true);
       try {
-        console.log("TOken while fetching completed:",token);
         let response = await fetchCompleted(token);
         setCompleted(response);
 
@@ -58,11 +58,12 @@ export const ScheduleProvider = ({ children }) => {
       } catch (error) {
         console.error('Error fetching completed schedules:', error);
         const errorMessage = error.response?.data?.message || 'Error fetching Completed schedules';
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: errorMessage
-        });
+        // Toast.show({
+        //   type: 'error',
+        //   text1: 'Error',
+        //   text2: errorMessage
+        // });
+        Toast.error(errorMessage,'top')
       } finally {
         setCompletedLoading(false);
       }
@@ -80,11 +81,12 @@ export const ScheduleProvider = ({ children }) => {
       } catch (error) {
         console.error('Error fetching requested schedules:', error);
         const errorMessage = error.response?.data?.message || 'Error fetching requested schedules';
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: errorMessage
-        });
+        // Toast.show({
+        //   type: 'error',
+        //   text1: 'Error',
+        //   text2: errorMessage
+        // });
+        Toast.error(errorMessage,'top')
       } finally {
         setRequestedLoading(false);
       }
@@ -101,11 +103,12 @@ export const ScheduleProvider = ({ children }) => {
       } catch (error) {
         console.error('Error fetching user count:', error);
         const errorMessage = error.response?.data?.message || 'Error fetching user count';
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: errorMessage
-        });
+        // Toast.show({
+        //   type: 'error',
+        //   text1: 'Error',
+        //   text2: errorMessage
+        // });
+        Toast.error(errorMessage,'top')
       } finally {
         setUserCountLoading(false);
       }
@@ -114,6 +117,7 @@ export const ScheduleProvider = ({ children }) => {
     if (token) {
       fetchUpcomingSchedules();
       fetchCompletedSchedules();
+      checkIfLoggedIn(setUser)
       if(user.role==='admin'){
         fetchRequestedSchedules();
         fetchUserCount();
@@ -123,6 +127,7 @@ export const ScheduleProvider = ({ children }) => {
     if (refreshing) {
       fetchUpcomingSchedules();
       fetchCompletedSchedules();
+      checkIfLoggedIn(setUser)
       if(user.role==='admin'){
         fetchRequestedSchedules();
         fetchUserCount();
@@ -154,7 +159,7 @@ export const ScheduleProvider = ({ children }) => {
       }}
     >
       {children}
-      <Toast />
+      {/* <ToastManager /> */}
     </ScheduleContext.Provider>
   );
 };

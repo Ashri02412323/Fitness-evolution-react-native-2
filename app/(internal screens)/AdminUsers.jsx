@@ -3,7 +3,6 @@ import React from 'react';
 import ScheduleHeader from '../components/MySchedules/ScheduleHeader';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import UserInstance from '../components/Admin/UserInstance';
-import Profile from '../../assets/images/profilePic.png';
 import UserDetails from '../components/Admin/UserDetails';
 import { useScheduleContext } from '../../contexts/ScheduleProvider';
 import { useGlobalContext } from '../../contexts/GlobalProvider';
@@ -24,7 +23,7 @@ const AdminUsers = () => {
         <ScrollView>
           <View className="flex flex-col px-2">
             {allUsers.map((user, index) => (
-              <UserInstance key={index} index={index+1} gender={user.email} name={user.fullName} profile={Profile} />
+              <UserInstance key={index} index={index+1} gender={user.email} name={user.fullName} profile={user.profileImage} />
             ))}
           </View>
         </ScrollView>

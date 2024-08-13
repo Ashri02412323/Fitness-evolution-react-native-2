@@ -13,7 +13,7 @@ const useCheckLoginStatus = () => {
     SplashScreen.preventAutoHideAsync();
 
     const checkLoginStatus = async () => {
-      const loggedIn = await checkIfLoggedIn(setUser);
+      const loggedIn = await checkIfLoggedIn(setUser)
       setIsLoggedIn(loggedIn);
       if(loggedIn){
         const token = await getToken();
@@ -24,10 +24,10 @@ const useCheckLoginStatus = () => {
     checkLoginStatus();
 
     // Introduce a 3-second delay
-    setTimeout(() => {
+    // setTimeout(() => {
       setDelayCompleted(true);
       SplashScreen.hideAsync();
-    }, 3000);
+    // }, 3000);
   }, []);
 
   const NotLoggedInComponent = (

@@ -12,9 +12,8 @@ import Confirm from '../components/AddSchedules/Confirm';
 import { useScheduleContext } from '../../contexts/ScheduleProvider';
 import { modifySchedule, postSchedule } from '../../lib/Users/Schedule';
 import { useGlobalContext } from '../../contexts/GlobalProvider';
-import Toast from 'react-native-toast-message';
+import {Toast} from 'toastify-react-native';
 import { router } from 'expo-router';
-
 const validationSchema = Yup.object().shape({
   milestone1: Yup.string().required('Milestone 1 is required'),
   milestone2: Yup.string().required('Milestone 2 is required'),
@@ -31,14 +30,11 @@ const AddSchedule = () => {
     if (step < 3) {
       setStep(step + 1);
       if(step==1){
-        console.log('Form values:', selectedDate, startTime, endTime);
+
       }else if(step==2){
-        console.log('Form values:', subject, description, link,userId,userName);
       }
     } else {
       // Submit the form
-
-      console.log('Form values:', values);
     }
   };
 
@@ -94,83 +90,61 @@ const AddSchedule = () => {
       receiverId: userId,
       status: 'pending'
     };
-    console.log("newMsg: ",newMsg)
-    // socket?.emit('chat message', newMsg);
   }
     if(submitStatus==='createNew'){
       setPostLoading(true);
       try{
       const response = await postSchedule(token,data);
         if(response){
-        console.log('Schedule created:',response);
         }
         setRefreshing(true);
         setIntialRoute("Upcoming")
         setStep(1);
         resetFormValues();
         if(user?.role === 'admin'){
-        router.push('/mySchedules');
+          Toast.success('Schedule created successfully','top')
+          router.push('/mySchedules');
         }else{
+          Toast.success('Schedule requested successfully','top')
           sendMessage("Thanks for scheduling a class with me. I am looking forward to it. I will approve the schedule soon :)");
-          ToastAndroid.show("Schedule requested successfully", ToastAndroid.SHORT);
           router.push('/chat')
         }
       }catch (err){
+        Toast.error(errorMessage,'top')
         console.error('Error creating schedule:',err);
         const errorMessage = err.response?.data?.message || 'Error creating schedule';
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: errorMessage
-        });
       }finally{
         setPostLoading(false);
       }
     }
     else if(submitStatus==='toReschedule' || submitStatus==='toApprove'){
       if(!scheduleApprovedId){
+        Toast.error('Schedule approve id not found','top')
         console.error('Schedule approved id not found');
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Schedule approve id not found'
-        });
         return;
       }
       setPostLoading(true);
       try{
-        console.log("updating it");
         const response = await modifySchedule(token,scheduleApprovedId,data);
         if(response){
-          console.log('Schedule modified:',response);
         setRefreshing(true);
         setIntialRoute("Upcoming")
         setStep(1);
         resetFormValues();
         if(submitStatus==='toReschedule'){
+          Toast.success('Schedule rescheduled successfully','top')
           sendMessage("I have rescheduled the class. Please check the new schedule in your upcomings.");
-          // router.push({pathname: "/ChatScreen", params: {userName:userName,
-          //   receiver: userString
-          // }})
           router.push('/chat')
-          ToastAndroid.show("Schedule rescheduled successfully", ToastAndroid.SHORT);
         }else{
+          Toast.success('Schedule approved successfully','top')
           sendMessage("I have approved the schedule. Please check the schedule in your upcomings.");
-          // router.push({pathname: "/ChatScreen", params: {userName:userName,
-          //   receiver: userString
-          // }})
           router.push('/chat')
-          ToastAndroid.show("Schedule approved successfully", ToastAndroid.SHORT);
         }
       }
       }catch (err){
+        Toast.error(errorMessage,'top')
         console.error('Error modifying schedule:',err);
         const errorMessage = err.response?.data?.message || 'Error modifying schedule';
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: errorMessage
-        });
       }finally{
         setPostLoading(false);
       }

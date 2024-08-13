@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, ScrollView, Pressable } from 'react-native'
+import { View, Text, SafeAreaView, ScrollView, Pressable, ToastAndroid } from 'react-native'
 import {Image} from 'expo-image'
 import React, { useEffect, useState } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -6,10 +6,11 @@ import SignInImg from '../../assets/images/SignInImg.png'
 import FormField from '../components/FormField';
 import CustomButton from '../components/CustomButton';
 import { LoginUser,validatePassword,validateEmail } from '../../lib/Users/User';
-import Toast from 'react-native-toast-message';
+// import Toast from 'react-native-toast-message';
 import { useGlobalContext } from '../../contexts/GlobalProvider';
 import { router } from 'expo-router';
-
+import ToastManager, { Toast } from 'toastify-react-native'
+import ToastManage from '../components/Home/ToastManage';
 
 const SignIn = () => {
   const {setUser} = useGlobalContext();
@@ -37,29 +38,18 @@ const SignIn = () => {
     }
 
     if(email && password){
-      console.log("Email: ", email);
-      console.log("Pass: " ,password);
       setIsLoading(true);
       setEmailValid(false);
       setPasswordValid(false);
       LoginUser(email, password)
       .then((response) => {
-        console.log(response);
         setUser(response);
-        Toast.show({
-          type: 'success',
-          text1: 'Login Successful',
-          text2: 'Welcome back!',
-        });
+        Toast.success("Login Successful",'top')
       })
       .catch((error) => {
         console.error("Error: ",error);
-        const errorMessage = error.response?.data?.message || 'Please try Again!';
-        Toast.show({
-          type: 'error',
-          text1: 'Login Failed',
-          text2: errorMessage,
-        });
+        const errorMessage =  error.response?.data?.message || "An error occurred";
+        Toast.error(errorMessage,'top')
       })
       .finally(() => {
         setIsLoading(false);
@@ -110,7 +100,6 @@ const SignIn = () => {
           </View>
         </View>
       </ScrollView>
-      <Toast/>
     </SafeAreaView>
   )
 }

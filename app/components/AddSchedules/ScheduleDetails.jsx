@@ -29,7 +29,6 @@ const ScheduleDetails = ({ values, touched, errors, handleNext, handleBack }) =>
 
 useEffect(()=>{
   if(user?.role === 'user'){
-  console.log("hey")
   setUserId(user._id);
 }
 },[])

@@ -8,7 +8,6 @@ const ScheduleInstanc = ({title, color, value, subtitle, isLast, route, isLoadin
   return (
     <Pressable onPress={() => {
       setIntialRoute(route);
-      console.log("route",route)
       router.push('/mySchedules');
     }}>
       <View className={`flex flex-row items-center justify-between ${!isLast && "mb-4"} px-2`}>
