@@ -24,8 +24,8 @@ const AddSchedule = () => {
   const insets = useSafeAreaInsets();
   const [step, setStep] = useState(1);
   const {selectedDate, startTime,  endTime,subject, description, userName,link,userId,submitStatus,setPostLoading,scheduleApprovedId,getIsoDateTimeString,resetFormValues} = useFormContext();
-  const {token,user,setIntialRoute,socket,scrollRef} = useGlobalContext();
-  const {setRefreshing} = useScheduleContext();
+  const {token,user,setIntialRoute,} = useGlobalContext();
+  const {appendUpcoming} = useScheduleContext();
   const handleNext = (values) => {
     if (step < 3) {
       setStep(step + 1);
@@ -33,9 +33,7 @@ const AddSchedule = () => {
 
       }else if(step==2){
       }
-    } else {
-      // Submit the form
-    }
+    } 
   };
 
   const handleBack = () => {
@@ -89,15 +87,14 @@ const AddSchedule = () => {
       senderId: trainer?._id,
       receiverId: userId,
       status: 'pending'
-    };
+    }
   }
     if(submitStatus==='createNew'){
       setPostLoading(true);
       try{
       const response = await postSchedule(token,data);
-        if(response){
-        }
-        setRefreshing(true);
+        console.log("response: ",response);
+        appendUpcoming(response);
         setIntialRoute("Upcoming")
         setStep(1);
         resetFormValues();
@@ -127,10 +124,11 @@ const AddSchedule = () => {
       try{
         const response = await modifySchedule(token,scheduleApprovedId,data);
         if(response){
-        setRefreshing(true);
-        setIntialRoute("Upcoming")
-        setStep(1);
-        resetFormValues();
+          console.log("response: ",response);
+          appendUpcoming(response);
+          setIntialRoute("Upcoming")
+          setStep(1);
+          resetFormValues();
         if(submitStatus==='toReschedule'){
           Toast.success('Schedule rescheduled successfully','top')
           sendMessage("I have rescheduled the class. Please check the new schedule in your upcomings.");

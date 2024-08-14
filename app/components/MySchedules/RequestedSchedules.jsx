@@ -50,7 +50,7 @@ const RequestedSchedules = () => {
               noLink={true}
               isUser={user?.role==="user"}
               descr={item?.scheduleDescription}
-              profileImg={item?.scheduleImg}
+              profileImg={item?.trainerId?.profileImage}
               status={"Requested"}
               id={item?._id}
               startTime={item?.startTime}

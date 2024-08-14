@@ -51,10 +51,10 @@ function RootLayout() {
 
   useEffect(() => {
     if (loaded) {
-      // setTimeout(() => {
+      setTimeout(() => {
         setDelayCompleted(true);
         SplashScreen.hideAsync();
-      // }, 3000); // 3 seconds delay
+      }, 1500); // 1.5 seconds delay
     }
   }, [loaded]);
 
@@ -68,7 +68,7 @@ function RootLayout() {
 
   return (
     <GlobalProvider>
-      {/* <ToastManage/> */}
+      <ToastManage/>
       <FormProvider>
         <ScheduleProvider>
           <Stack>

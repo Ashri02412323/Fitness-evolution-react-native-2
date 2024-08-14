@@ -24,7 +24,24 @@ export const ScheduleProvider = ({ children }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [profileRefetch, setProfileRefetch] = useState(false);
   const [chatsRefresh, setChatsRefresh] = useState(false);
-
+  const appendUpcoming = (schedule) => {
+    setUpcoming((prev)=>{
+      let newUpcoming = prev.filter((item)=>item._id!==schedule._id);
+      return [schedule,...newUpcoming];
+    })
+  };
+  const appendCompleted = (schedule) => {
+    setCompleted((prev)=>{
+      let newCompleted = prev.filter((item)=>item._id!==schedule._id);
+      return [schedule,...newCompleted];
+    })
+  };
+  const appendRequested = (schedule) => {
+    setRequested((prev)=>{
+      let newRequested = prev.filter((item)=>item._id!==schedule._id);
+      return [schedule,...newRequested];
+    })
+  };
   const fetchUpcomingSchedules = async () => {
     setUpcomingLoading(true);
     try {
@@ -95,7 +112,6 @@ export const ScheduleProvider = ({ children }) => {
       setUserCountLoading(false);
     }
   };
-
   useEffect(() => {
     if (token) {
       fetchUpcomingSchedules();
@@ -106,7 +122,9 @@ export const ScheduleProvider = ({ children }) => {
         fetchUserCount();
       }
     }
+  }, [token, user?.role]);
 
+  useEffect(() => {
     if (refreshing) {
       fetchUpcomingSchedules();
       fetchCompletedSchedules();
@@ -128,7 +146,7 @@ export const ScheduleProvider = ({ children }) => {
       }
       setChatsRefresh(false);
     }
-  }, [token, refreshing, profileRefetch, chatsRefresh]);
+  }, [refreshing, profileRefetch, chatsRefresh,user?.role]);
 
   return (
     <ScheduleContext.Provider
@@ -151,7 +169,8 @@ export const ScheduleProvider = ({ children }) => {
         setUpcomingLength, setCompletedLength, setRequestedLength, userCount, setUserCount,
         refreshing, setRefreshing, 
         profileRefetch, setProfileRefetch,
-        chatsRefresh, setChatsRefresh
+        chatsRefresh, setChatsRefresh,appendUpcoming,
+        appendCompleted, appendRequested
       }}
     >
       {children}

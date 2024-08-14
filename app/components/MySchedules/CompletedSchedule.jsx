@@ -52,7 +52,7 @@ const CompletedSchedule = () => {
               noLink={true}
               isUser={user?.role === "user"}
               descr={item.scheduleDescription}
-              profileImg={item.scheduleImg}
+              profileImg={item.trainerId.profileImage}
               status={"Completed"}
               id={item._id}
               startTime={item.startTime}

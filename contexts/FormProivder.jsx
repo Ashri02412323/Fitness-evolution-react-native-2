@@ -55,7 +55,7 @@ export const FormProvider = ({ children }) => {
     let finalDate = date;
     // if the endtime is in past now, show a warning message throught toast
     if(endTime<=new Date().toISOString() || date<new Date().toISOString()){
-      Toast.info('End time is in past. Setting next 2 hour as start and end time.','top')
+      Toast.warn('End time is in past. Setting next 2 hour as start and end time.','top')
       finalStartTime = getNextRoundedHour(1);
       finalEndTime = getNextRoundedHour(2);
       finalDate = new Date();

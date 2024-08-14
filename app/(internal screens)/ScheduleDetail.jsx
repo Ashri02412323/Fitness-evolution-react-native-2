@@ -21,7 +21,7 @@ const ScheduleDetail = () => {
   const [markingLoad, setMarkingLoad] = useState(false);
   const [currStatus, setCurrStatus] = useState(status);
   const {token} = useGlobalContext();
-  const {setRefreshing,setScheduleApprovedId} = useScheduleContext();
+  const {setUpcoming,appendUpcoming,appendCompleted,setCompleted} = useScheduleContext();
   const {handleApprove} =useFormContext();
 
   const insets = useSafeAreaInsets();
@@ -33,10 +33,13 @@ const ScheduleDetail = () => {
     if(response){
       if(status === "completed"){
         setCurrStatus("Completed");
+        setUpcoming((prev)=>prev.filter((item)=>item._id!==id));
+        appendCompleted(response);
       }else {
         setCurrStatus("Upcoming");
+        setCompleted((prev)=>prev.filter((item)=>item._id!==id));
+        appendUpcoming(response);
       }
-      setRefreshing(true);
     }
     } catch(err){
       console.log(err);

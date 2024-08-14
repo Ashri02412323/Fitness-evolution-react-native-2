@@ -13,7 +13,8 @@
       "backgroundColor": "#0B1215"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ashri024.fitnessevolution"
     },
     "android": {
       "adaptiveIcon": {
