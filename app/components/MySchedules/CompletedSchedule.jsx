@@ -39,7 +39,9 @@ const CompletedSchedule = () => {
         renderItem={({ item }) => {
           const formattedDate = formatDate(item.date);
           const formattedTime = formatTime(item.startTime, item.endTime);
-
+          if(!item?.userId){
+            return null;
+          }
           return (
             <ScheduleInstance
               title={item.scheduleSubject}

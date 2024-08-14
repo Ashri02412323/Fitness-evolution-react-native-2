@@ -5,8 +5,8 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useGlobalContext } from '../../../contexts/GlobalProvider';
 import Profile from '../../../assets/images/profilePic.png';
 
-const UserInstance = ({isLast,name,gender,profile,index,age,role}) => {
-    const {setDetailName,setDetailGender,setDetailRole,setDetailAge,setDetailProfile,setIsDetailVisible} = useGlobalContext();
+const UserInstance = ({isLast,name,gender,profile,index,age,role,email}) => {
+    const {setDetailName,setDetailGender,setDetailRole,setDetailAge,setDetailProfile,setIsDetailVisible,setDetailEmail} = useGlobalContext();
     const handleOnPress = () => {
         setDetailName(name);
         setDetailAge(age);
@@ -14,6 +14,7 @@ const UserInstance = ({isLast,name,gender,profile,index,age,role}) => {
         setDetailRole(role);
         setDetailProfile(profile);
         setIsDetailVisible(true);
+        setDetailEmail(email);
     }
   return (
     <Pressable onPress={handleOnPress}>
@@ -22,9 +23,9 @@ const UserInstance = ({isLast,name,gender,profile,index,age,role}) => {
             <Text className="text-white_87 font-inter_Medium text-lg mr-4">{index}.</Text>
             <View className="flex flex-row items-center">
                 {profile ? <Image source={{uri:profile}} className="h-12 w-12 mr-3 rounded-full" /> : <Image source={Profile} className="h-12 w-12 mr-3 rounded-full" />}
-                <View>
+                <View className="w-[70%]">
                     <Text className="text-white_87 font-dm_Medium text-base capitalize" numberOfLines={1}>{name}</Text>
-                    <Text className="text-white_60 font-inter_Regular text-md">{gender}</Text>
+                    <Text className="text-white_60 font-inter_Regular text-md w-full" numberOfLines={1}>{email}</Text>
                 </View>
             </View>
         </View>

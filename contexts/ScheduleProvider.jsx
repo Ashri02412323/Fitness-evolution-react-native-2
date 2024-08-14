@@ -22,98 +22,81 @@ export const ScheduleProvider = ({ children }) => {
   const [userCount, setUserCount] = useState(0);
   const [userCountLoading, setUserCountLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [profileRefetch, setProfileRefetch] = useState(false);
+  const [chatsRefresh, setChatsRefresh] = useState(false);
+
+  const fetchUpcomingSchedules = async () => {
+    setUpcomingLoading(true);
+    try {
+      let response = await fetchUpcoming(token);
+      setUpcoming(response);
+      
+      let length = response.length;
+      length = length < 10 ? `0${length}` : length;
+      setUpcomingLength(length);
+    } catch (error) {
+      console.error('Error fetching upcoming schedules:', error);
+      const errorMessage = error.response?.data?.message || 'Error fetching Upcoming schedules';
+      Toast.error(errorMessage,'top')
+    } finally {
+      setUpcomingLoading(false);
+    }
+  };
+
+  const fetchCompletedSchedules = async () => {
+    setCompletedLoading(true);
+    try {
+      let response = await fetchCompleted(token);
+      setCompleted(response);
+
+      let length = response.length;
+      length = length < 10 ? `0${length}` : length;
+      setCompletedLength(length);
+    } catch (error) {
+      console.error('Error fetching completed schedules:', error);
+      const errorMessage = error.response?.data?.message || 'Error fetching Completed schedules';
+      Toast.error(errorMessage,'top')
+    } finally {
+      setCompletedLoading(false);
+    }
+  };
+
+  const fetchRequestedSchedules = async () => {
+    setRequestedLoading(true);
+    try {
+      let response = await fetchRequested(token);
+      setRequested(response);
+      
+      let length = response.length;
+      length = length < 10 ? `0${length}` : length;
+      setRequestedLength(length);
+    } catch (error) {
+      console.error('Error fetching requested schedules:', error);
+      const errorMessage = error.response?.data?.message || 'Error fetching requested schedules';
+      Toast.error(errorMessage,'top')
+    } finally {
+      setRequestedLoading(false);
+    }
+  };
+
+  const fetchUserCount = async () => {
+    setUserCountLoading(true);
+    try {
+      let response = await allUsersUnderTrainer(token);
+      setAllUsers(response);
+      let length = response.length;
+      length = length < 10 ? `0${length}` : length;
+      setUserCount(length);
+    } catch (error) {
+      console.error('Error fetching user count:', error);
+      const errorMessage = error.response?.data?.message || 'Error fetching user count';
+      Toast.error(errorMessage,'top')
+    } finally {
+      setUserCountLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchUpcomingSchedules = async () => {
-      setUpcomingLoading(true);
-      try {
-        let response = await fetchUpcoming(token);
-        setUpcoming(response);
-        
-        let length = response.length;
-        length = length < 10 ? `0${length}` : length;
-        setUpcomingLength(length);
-      } catch (error) {
-        console.error('Error fetching upcoming schedules:', error);
-        const errorMessage = error.response?.data?.message || 'Error fetching Upcoming schedules';
-        // Toast.show({
-        //   type: 'error',
-        //   text1: 'Error',
-        //   text2: errorMessage
-        // });
-        Toast.error(errorMessage,'top')
-      } finally {
-        setUpcomingLoading(false);
-      }
-    };
-
-    const fetchCompletedSchedules = async () => {
-      setCompletedLoading(true);
-      try {
-        let response = await fetchCompleted(token);
-        setCompleted(response);
-
-        let length = response.length;
-        length = length < 10 ? `0${length}` : length;
-        setCompletedLength(length);
-      } catch (error) {
-        console.error('Error fetching completed schedules:', error);
-        const errorMessage = error.response?.data?.message || 'Error fetching Completed schedules';
-        // Toast.show({
-        //   type: 'error',
-        //   text1: 'Error',
-        //   text2: errorMessage
-        // });
-        Toast.error(errorMessage,'top')
-      } finally {
-        setCompletedLoading(false);
-      }
-    };
-
-    const fetchRequestedSchedules = async () => {
-      setRequestedLoading(true);
-      try {
-        let response = await fetchRequested(token);
-        setRequested(response);
-        
-        let length = response.length;
-        length = length < 10 ? `0${length}` : length;
-        setRequestedLength(length);
-      } catch (error) {
-        console.error('Error fetching requested schedules:', error);
-        const errorMessage = error.response?.data?.message || 'Error fetching requested schedules';
-        // Toast.show({
-        //   type: 'error',
-        //   text1: 'Error',
-        //   text2: errorMessage
-        // });
-        Toast.error(errorMessage,'top')
-      } finally {
-        setRequestedLoading(false);
-      }
-    };
-
-    const fetchUserCount = async () => {
-      setUserCountLoading(true);
-      try {
-        let response = await allUsersUnderTrainer(token);
-        setAllUsers(response);
-        let length = response.length;
-        length = length < 10 ? `0${length}` : length;
-        setUserCount(length);
-      } catch (error) {
-        console.error('Error fetching user count:', error);
-        const errorMessage = error.response?.data?.message || 'Error fetching user count';
-        // Toast.show({
-        //   type: 'error',
-        //   text1: 'Error',
-        //   text2: errorMessage
-        // });
-        Toast.error(errorMessage,'top')
-      } finally {
-        setUserCountLoading(false);
-      }
-    };
-
     if (token) {
       fetchUpcomingSchedules();
       fetchCompletedSchedules();
@@ -134,7 +117,18 @@ export const ScheduleProvider = ({ children }) => {
       }
       setRefreshing(false);
     }
-  }, [token, refreshing]);
+
+    if(profileRefetch){
+      checkIfLoggedIn(setUser)
+      setProfileRefetch(false);
+    }
+    if(chatsRefresh){
+      if(user.role==='admin'){
+        fetchUserCount();
+      }
+      setChatsRefresh(false);
+    }
+  }, [token, refreshing, profileRefetch, chatsRefresh]);
 
   return (
     <ScheduleContext.Provider
@@ -156,6 +150,8 @@ export const ScheduleProvider = ({ children }) => {
         upcomingLength, completedLength, requestedLength,
         setUpcomingLength, setCompletedLength, setRequestedLength, userCount, setUserCount,
         refreshing, setRefreshing, 
+        profileRefetch, setProfileRefetch,
+        chatsRefresh, setChatsRefresh
       }}
     >
       {children}

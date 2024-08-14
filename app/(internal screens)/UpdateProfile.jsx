@@ -9,26 +9,25 @@ import { useGlobalContext } from '../../contexts/GlobalProvider';
 import { Picker } from '@react-native-picker/picker';
 import { updateUser, validateEmail } from '../../lib/Users/User';
 import { router } from 'expo-router';
-import { useScheduleContext } from '../../contexts/ScheduleProvider';
 import {Toast} from 'toastify-react-native';
+import { useScheduleContext } from '../../contexts/ScheduleProvider';
 
 const UpdateProfile = () => {
     const insets = useSafeAreaInsets();
-    const {userName,userEmail,userAge,userGender,userProfile,token} = useGlobalContext();
-    const {setRefreshing} = useScheduleContext()
+    const {userName,userEmail,userAge,userGender,userProfile,token,} = useGlobalContext();
     const [isValidAge, setIsValidAge] = useState(false);
     const [isValidEmail, setIsValidEmail] = useState(false);
     const [isValidName , setIsValidName] = useState(false);
     const [disabled, setDisabled] = useState(true);
     const [updating, setUpdating] = useState(false);
-
+    const {setProfileRefetch} = useScheduleContext();
     const [tempUserName, setTempUserName] = useState(userName);
     const [tempUserEmail, setTempUserEmail] = useState(userEmail);
     const [tempUserAge, setTempUserAge] = useState(userAge);
     const [tempUserGender, setTempUserGender] = useState(userGender);
     const [selectedImage, setSelectedImage] = useState(userProfile);
-
-    const genderOptions =['male', 'female', 'gay'];
+    
+    const genderOptions =['male', 'female', 'others'];
     const handleSubmit = async() => {
       const data = {
         fullName: tempUserName,
@@ -39,14 +38,13 @@ const UpdateProfile = () => {
       }
       try{
         setUpdating(true);
-        const response = await updateUser(token,data,userProfile);
+        await updateUser(token,data,userProfile);
         Toast.success("Profile Updated Successfully", 'top');
-        router.push('/home');
-        setRefreshing(true)
+        router.push('/profile');
+        setProfileRefetch(true)
     }catch(error){
         console.log("Error: ", error);
         const errorMsg = error?.response?.data?.message || "An error occurred, please try again";
-        // ToastAndroid.show(errorMsg, ToastAndroid.SHORT);
         Toast.error(errorMsg, 'top');
     }finally{
         setUpdating(false);

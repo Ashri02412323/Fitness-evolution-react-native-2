@@ -6,9 +6,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useGlobalContext } from '../../contexts/GlobalProvider';
 import MessageInstance from '../components/Chat/MessageInstance';
-// import Toast from 'react-native-toast-message';
 import { Toast } from 'toastify-react-native';
-import ToastManage from '../components/Home/ToastManage';
 
 const ChatScreen = () => {
   const { receiver, userName} = useGlobalSearchParams();
@@ -46,7 +44,6 @@ useEffect(()=>{
     socket.on('chat message', (msg) => {
       if (objReceiver.id === msg.senderId || user._id === msg.senderId) {
         setChats((prevChats) => [...prevChats, msg]);
-        // remove the existing last msg wehre receiver.id === msg.senderId or receiver.id === msg.receiverId and then add the new msg
         setLastMessages((prevMessages) => {
           let newMessages = prevMessages.filter((m) => m.senderId !== userId2 && m.receiverId !== userId2);
           newMessages.push(msg);

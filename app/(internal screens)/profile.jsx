@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, Pressable, ScrollView } from 'react-native'
+import { View, Text, SafeAreaView, Pressable, ScrollView, RefreshControl } from 'react-native'
 import React from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ScheduleHeader from '../components/MySchedules/ScheduleHeader';
@@ -9,13 +9,22 @@ import InfoInstance from '../components/Profile/InfoInstance';
 import ProfileDefault from '../components/Profile/ProfileDefault';
 
 import { router } from 'expo-router';
+import { useScheduleContext } from '@/contexts/ScheduleProvider';
 
 const profile = () => {
     const insets = useSafeAreaInsets();
     const {userName,userEmail,userRole,userAge,userGender} = useGlobalContext();
+    const {profileRefetch, setProfileRefetch} = useScheduleContext()
+    const onRefresh = () => {
+        setProfileRefetch(true);
+      };
   return (
     <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top }}>
-        <ScrollView className="h-full">
+        <ScrollView className="h-full"
+        refreshControl={
+            <RefreshControl refreshing={profileRefetch} onRefresh={onRefresh} />
+          }
+        >
             
         <ScheduleHeader title={"My Profile"} isProfile isThreeDots />
         <View className="flex items-center justify-start flex-col mt-4">

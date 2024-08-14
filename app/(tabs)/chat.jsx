@@ -1,23 +1,34 @@
-import { View, Text, SafeAreaView, Image, ScrollView } from 'react-native';
+import { View, Text, SafeAreaView, Image, ScrollView, RefreshControl } from 'react-native';
 import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import ScheduleHeader from '../components/MySchedules/ScheduleHeader';
 import ChatInstance from '../components/Chat/ChatInstance';
 import { useGlobalContext } from '../../contexts/GlobalProvider';
+import { useScheduleContext } from '../../contexts/ScheduleProvider';
 
 
 const Chat = () => {
   const insets = useSafeAreaInsets();
   const {chatUsers} = useGlobalContext();
-  
+  const {chatsRefresh, setChatsRefresh} = useScheduleContext();
+  const onRefresh = () => {
+    setChatsRefresh(true);
+  }
   return (
     <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top }}>
       <ScheduleHeader title="Chat" />
-        <ScrollView>
+        <ScrollView 
+        refreshControl={
+          <RefreshControl refreshing={chatsRefresh} onRefresh={onRefresh} />
+        }>
       <View className="flex flex-col px-2">
-        {chatUsers.map((user,index) => (
-          <ChatInstance key={index} 
+        {chatUsers.map((user,index) => {
+          if(!user || !user.userName){
+            return null;
+          }
+
+         return <ChatInstance key={index} 
           profile={user.profile}
           userName={user.userName}
           user={user}
@@ -25,7 +36,7 @@ const Chat = () => {
           role={user.role}
           noOfMsg={user.noOfMsg}
           />
-        ))}
+        })}
       </View>
       </ScrollView>
     </SafeAreaView>

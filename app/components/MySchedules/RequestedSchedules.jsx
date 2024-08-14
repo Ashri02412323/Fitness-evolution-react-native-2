@@ -37,23 +37,26 @@ const RequestedSchedules = () => {
         renderItem={({item}) => {
           const formattedDate = formatDate(item.date);
           const formattedTime = formatTime(item.startTime, item.endTime);
+          if(!item?.userId){
+            return null;
+          }
           return (
             <ScheduleInstance 
-              title={item.scheduleSubject} 
+              title={item?.scheduleSubject} 
               date={formattedDate} 
               time={formattedTime} 
-              link={item.scheduleLink} 
-              userName={user?.role==="user"?item.trainerId.fullName:item.userId.fullName} 
+              link={item?.scheduleLink} 
+              userName={user?.role==="user"?item?.trainerId?.fullName:item?.userId?.fullName} 
               noLink={true}
               isUser={user?.role==="user"}
-              descr={item.scheduleDescription}
-              profileImg={item.scheduleImg}
+              descr={item?.scheduleDescription}
+              profileImg={item?.scheduleImg}
               status={"Requested"}
-              id={item._id}
-              startTime={item.startTime}
-              endTime={item.endTime}
-              userId={user?.role==="user"?item.userId:item.userId._id}
-              rawDate={item.date}
+              id={item?._id}
+              startTime={item?.startTime}
+              endTime={item?.endTime}
+              userId={user?.role==="user"?item?.userId:item?.userId?._id}
+              rawDate={item?.date}
 
             />
           );
