@@ -93,7 +93,6 @@ const AddSchedule = () => {
       setPostLoading(true);
       try{
       const response = await postSchedule(token,data);
-        console.log("response: ",response);
         appendUpcoming(response);
         setIntialRoute("Upcoming")
         setStep(1);
@@ -117,14 +116,12 @@ const AddSchedule = () => {
     else if(submitStatus==='toReschedule' || submitStatus==='toApprove'){
       if(!scheduleApprovedId){
         Toast.error('Schedule approve id not found','top')
-        console.error('Schedule approved id not found');
         return;
       }
       setPostLoading(true);
       try{
         const response = await modifySchedule(token,scheduleApprovedId,data);
         if(response){
-          console.log("response: ",response);
           appendUpcoming(response);
           setIntialRoute("Upcoming")
           setStep(1);

@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useRef, useState } from "r
 import profileImg from "../assets/images/profilePic.png";
 import io from 'socket.io-client';
 
-const SOCKET_URL = 'http://192.168.1.4:3000'; // Replace with your server URL
+const SOCKET_URL = 'http://192.168.1.5:3000'; // Replace with your server URL
 
 const GlobalContext = createContext();
 export const useGlobalContext = () => useContext(GlobalContext);

@@ -76,7 +76,6 @@ useEffect(()=>{
             <Picker
               selectedValue={selectedUser}
               onValueChange={(itemValue) => {
-                console.log("itemValue: ", itemValue);
                 setUserName(itemValue.fullName)
                 setUserId(itemValue.id)
                 setSelectedUser(itemValue);
