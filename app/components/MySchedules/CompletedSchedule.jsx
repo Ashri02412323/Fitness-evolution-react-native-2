@@ -59,6 +59,7 @@ const CompletedSchedule = () => {
               endTime={item.endTime}
               userId={user?.role === "user" ? item.userId : item.userId._id}
               rawDate={item.date}
+              affectedArea={item.affectedArea}
             />
           );
         }}

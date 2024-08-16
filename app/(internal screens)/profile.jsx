@@ -7,26 +7,67 @@ import CustomButton from '../components/CustomButton';
 import Feather from '@expo/vector-icons/Feather';
 import InfoInstance from '../components/Profile/InfoInstance';
 import ProfileDefault from '../components/Profile/ProfileDefault';
+import DeleteDialogBox from '../components/Admin/DeleteDialogBox';
 
 import { router } from 'expo-router';
 import { useScheduleContext } from '@/contexts/ScheduleProvider';
+import { deleteMyAccount, logoutUser } from '@/lib/Users/User';
 
 const profile = () => {
     const insets = useSafeAreaInsets();
     const {userName,userEmail,userRole,userAge,userGender} = useGlobalContext();
     const {profileRefetch, setProfileRefetch} = useScheduleContext()
+    const [fullName, setFullName] = React.useState("");
+    const [inputError, setInputError] = React.useState("");
+    const [isDeleting, setIsDeleting] = React.useState(false);
+    const [isDeleteVisible, setIsDeleteVisible] = React.useState(false);
+    const {token,setToken} = useGlobalContext();
     const onRefresh = () => {
         setProfileRefetch(true);
       };
+      const handleDelete = async() => {
+        if (!fullName) {
+          setInputError('Full Name is required');
+          return;
+        }
+      
+        if (fullName.trim() !== userName) {
+          console.log("Full Name:",fullName);
+          console.log("Name:",userName);
+          setInputError('Full Name does not match');
+          return;
+        }
+        try {
+          setIsDeleting(true);
+          const response = await deleteMyAccount(token);
+          if(response){
+            logoutUser(setToken);
+          }  
+        } catch (error) {
+          console.log(error);
+        }finally{
+            setIsDeleting(false);
+            setIsDeleteVisible(false);
+        }
+      }
   return (
     <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top }}>
-        <ScrollView className="h-full"
-        refreshControl={
+            
+        <ScheduleHeader title={"My Profile"} isProfile isThreeDots setDeleteVisible={setIsDeleteVisible}/>
+        <ScrollView className="h-full relative"
+            refreshControl={
             <RefreshControl refreshing={profileRefetch} onRefresh={onRefresh} />
           }
         >
-            
-        <ScheduleHeader title={"My Profile"} isProfile isThreeDots />
+            {isDeleteVisible &&
+            <DeleteDialogBox
+            setDeleteVisible={setIsDeleteVisible}
+            handleDeleteUser={handleDelete}
+            fullName={fullName}
+            setFullName={setFullName}
+            inputError={inputError}
+            isDeleting={isDeleting}
+            />}
         <View className="flex items-center justify-start flex-col mt-4">
             <ProfileDefault sizeClass={"h-40 w-40"} />
             <CustomButton title="Update Profile" handlePress={()=>{

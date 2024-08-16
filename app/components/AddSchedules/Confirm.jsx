@@ -8,7 +8,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useGlobalContext } from '../../../contexts/GlobalProvider';
 
 const Confirm = ({ values, handleBack,handleSubmit }) => {
-  const { selectedDate, startTime, endTime, subject, description, userName, link,postLoading,submitStatus } = useFormContext();
+  const { selectedDate, startTime, endTime, subject, description, userName, link,postLoading,submitStatus,selectedArea } = useFormContext();
   const {user} = useGlobalContext();
   const localDate = new Date(selectedDate).toLocaleDateString();
 
@@ -18,6 +18,7 @@ const Confirm = ({ values, handleBack,handleSubmit }) => {
       <View>
         <DetailInstance title="Schedule Subject" value={subject} />
         <DetailInstance title="Schedule Description" value={description} />
+        <DetailInstance title="Affected Area" value={selectedArea} />
         <DetailInstance title="Date" value={localDate} />
         <DetailInstance title="Time" value={formattedTime} />
         { user.role==="user" &&

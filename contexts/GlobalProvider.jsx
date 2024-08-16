@@ -25,6 +25,7 @@ export const GlobalProvider = ({ children }) => {
   const [detailProfile, setDetailProfile] = useState('');
   const [isDetailVisible, setIsDetailVisible] = useState(false);
   const [detailEmail, setDetailEmail] = useState('');
+  const [detailId, setDetailId] = useState('');
   const [intialRoute, setIntialRoute] = useState('Upcoming');
   const [token, setToken] = useState('');
   const [blogID, setBlogID] = useState('');
@@ -143,7 +144,8 @@ useEffect(() => {
         setIndex, chats, setChats, detailName, setDetailName, detailAge, setDetailAge, detailGender, setDetailGender, detailRole, setDetailRole, detailProfile, setDetailProfile, isDetailVisible, setIsDetailVisible, blogID, setBlogID, token, setToken, intialRoute, setIntialRoute, chatUsers, setChatUsers,
         allUsers, setAllUsers, currReceiver, setCurrReceiver, socket, setSocket, connectedUsers, setConnectedUsers, received, setReceived, lastMessages, setLastMessages, scrollRef,
         userName, setUserName, userEmail, setUserEmail, userRole, setUserRole, userGender, setUserGender, userAge, setUserAge, userProfile, setUserProfile,
-        detailEmail, setDetailEmail
+        detailEmail, setDetailEmail,
+        detailId, setDetailId,
       }}
     >
       {children}

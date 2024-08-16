@@ -9,12 +9,12 @@ import DropDown from '../Profile/DropDown';
 import { logoutUser } from '../../../lib/Users/User';
 import ProfileDefault from '../Profile/ProfileDefault';
 
-const ScheduleHeader = ({isDetail,isProfile,title,onPress,isIconVisible =true,textColor}) => {
-  const {firstLetter} = useGlobalContext();
+const ScheduleHeader = ({isDetail,isProfile,title,onPress,isIconVisible =true,textColor,setDeleteVisible}) => {
+  const {setToken} = useGlobalContext();
   const [isVisible, setIsVisible] = useState(false);
   const handleLogout = async () => {
     try {
-      await logoutUser();
+      await logoutUser(setToken);
     } catch (error) {
       console.error('Logout failed', error);
     }
@@ -57,9 +57,9 @@ const ScheduleHeader = ({isDetail,isProfile,title,onPress,isIconVisible =true,te
             items={[
               { label: 'Logout', value: 'logout',icon:<MaterialIcons name="logout" size={24} color="#DFE0E1" />,
                onSelect:handleLogout },
-              { label: 'Deactivate Account', value: 'deactivate',isRed:true,
+              { label: 'Delete Account', value: 'deactivate',isRed:true,
                 icon:<AntDesign name="warning" size={24} color="#FF3B30" />,
-                onSelect:()=>console.log("Deactivate account")
+                onSelect:()=>setDeleteVisible(true)
                },
             ]}
             placeholder="Select an option"

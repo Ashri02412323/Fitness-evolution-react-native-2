@@ -1,18 +1,21 @@
 import { View, Text, TextInput } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import FormDetailInstance from './FormDetailInstance';
-import { Picker } from '@react-native-picker/picker';
+
 import { useFormContext } from '../../../contexts/FormProivder';
 import CustomButton from '../CustomButton';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useGlobalContext } from '../../../contexts/GlobalProvider';
-import { useScheduleContext } from '../../../contexts/ScheduleProvider';
+import PickerInstance from './PickerInstance';
 
 
 const ScheduleDetails = ({ values, touched, errors, handleNext, handleBack }) => {
-  const { subject, setSubject, description, setDescription, userName, setUserName, link, setLink ,setUserId,selectedUser, setSelectedUser} = useFormContext();
+  const { subject, setSubject, description, setDescription, userName, setUserName, link, setLink ,setUserId,selectedUser, setSelectedUser,selectedArea,setSelectedArea,submitStatus} = useFormContext();
   const {allUsers} = useGlobalContext();
   const [userNames, setUserNames] = useState([]);
+  const painAreas = useMemo(() => {
+    return ["None","Shoulder", "Knee", "Back", "Neck", "Hip", "Ankle", "Wrist", "Elbow", "Foot", "Hand"];
+  }, []);
   const [isNextDisabled, setIsNextDisabled] = useState(true);
   const {user} = useGlobalContext();
   useEffect(() => {
@@ -32,6 +35,12 @@ useEffect(()=>{
   setUserId(user._id);
 }
 },[])
+useEffect(()=>{
+  if(user?.role === 'admin'){
+  setUserName(selectedUser?.fullName);
+  setUserId(selectedUser?.id);
+}
+},[selectedUser])
   useEffect(() => {
     const checkFields = () => {
       if(user?.role==="user"){
@@ -49,7 +58,7 @@ useEffect(()=>{
       }
     }
     checkFields();
-  }, [subject, description, userName, link]);
+  }, [subject, userName, link]);
   return (
     <View className="mt-0">
       <View>
@@ -68,28 +77,25 @@ useEffect(()=>{
           setValue={setDescription}
           error={touched.description && errors.description}
         />
+          <PickerInstance
+          title="Select Affected Area (if any)"
+          selectedUser={selectedArea}
+          userNames={painAreas}
+          onUserChange={setSelectedArea}
+          defaultOption="None"
+          itemNotObj={true}
+          
+        />
         {user?.role ==='admin' && 
         <>
-        <View className="mt-4">
-          <Text className="text-white_60 font-pop_Regular mb-2">Select User*</Text>
-          <View className="bg-white_87 rounded">
-            <Picker
-              selectedValue={selectedUser}
-              onValueChange={(itemValue) => {
-                setUserName(itemValue.fullName)
-                setUserId(itemValue.id)
-                setSelectedUser(itemValue);
-              }}
-              className="border rounded p-2 px-4 bg-white_87 text-black font_inter_Regular"
-            >
-              <Picker.Item label={selectedUser?selectedUser.fullName:"Select a user"} value={selectedUser??""} />
-              {userNames.map((item, index) => (
-                <Picker.Item key={index} label={item.fullName} value={item} />
-              ))}
-            </Picker>
-          </View>
-        </View>
-
+        <PickerInstance
+          title="Select User*"
+          selectedUser={selectedUser}
+          userNames={userNames}
+          onUserChange={setSelectedUser}
+          defaultOption="Select User"
+          isDisable={submitStatus!=='createNew'}
+        />
         <FormDetailInstance
           title="Schedule Link*"
           placeholder="Add a link to the schedule"

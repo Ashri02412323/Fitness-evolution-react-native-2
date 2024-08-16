@@ -1,11 +1,22 @@
-import React, { memo, useMemo, useEffect } from 'react';
+import React, { memo, useMemo } from 'react';
 import { View, Text, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 
 const DataAnalytics = ({ upcoming, completed, requested }) => {
-  const upcomingInt = useMemo(() => parseInt(upcoming, 10), [upcoming]);
-  const completedInt = useMemo(() => parseInt(completed, 10), [completed]);
-  const requestedInt = useMemo(() => parseInt(requested, 10), [requested]);
+  const upcomingInt = useMemo(() => {
+    const value = parseInt(upcoming, 10);
+    return isNaN(value) ? 0 : value;
+  }, [upcoming]);
+
+  const completedInt = useMemo(() => {
+    const value = parseInt(completed, 10);
+    return isNaN(value) ? 0 : value;
+  }, [completed]);
+
+  const requestedInt = useMemo(() => {
+    const value = parseInt(requested, 10);
+    return isNaN(value) ? 0 : value;
+  }, [requested]);
 
   const allValuesZero = useMemo(() => upcomingInt === 0 && completedInt === 0 && requestedInt === 0, [upcomingInt, completedInt, requestedInt]);
 

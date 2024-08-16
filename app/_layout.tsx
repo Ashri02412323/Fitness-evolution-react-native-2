@@ -69,8 +69,8 @@ function RootLayout() {
   return (
     <GlobalProvider>
       <ToastManage/>
-      <FormProvider>
         <ScheduleProvider>
+      <FormProvider>
           <Stack>
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="(auth)" options={{ headerShown: false }} />
@@ -81,8 +81,8 @@ function RootLayout() {
               headerShown: false,
             }} />
           </Stack>
-        </ScheduleProvider>
     </FormProvider>
+        </ScheduleProvider>
     </GlobalProvider>
   );
 }

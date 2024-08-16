@@ -15,6 +15,7 @@ const getNextRoundedHour = (hourNext) => {
   };
 
 export const FormProvider = ({ children }) => {
+  const [step, setStep] = useState(1);
     const [selectedDate, setSelectedDate] = useState(dayjs());
     const currStartTime = getNextRoundedHour(1);
     const currEndTime = getNextRoundedHour(2);
@@ -29,6 +30,7 @@ export const FormProvider = ({ children }) => {
     const [endTime, setEndTime] = useState(currEndTime);
     const [postLoading, setPostLoading] = useState(false);
     const [selectedUser, setSelectedUser] = useState();
+    const [selectedArea, setSelectedArea] = useState();
   const [submitStatus,setSubmitStatus] = useState("createNew");
 
   const [scheduleApprovedId, setScheduleApprovedId] = useState('');
@@ -48,7 +50,7 @@ export const FormProvider = ({ children }) => {
     return `${hours}:${minutes}`;
   };
 
-  const handleApprove = async(id,date,startTime,endTime,scheduleLink,scheduleSubject,scheduleDescription,userId,userName,reqStatus) => {
+  const handleApprove = async(id,date,startTime,endTime,scheduleLink,scheduleSubject,scheduleDescription,userId,userName,reqStatus,affectedArea) => {
     
     let finalStartTime = startTime;
     let finalEndTime = endTime;
@@ -71,6 +73,7 @@ export const FormProvider = ({ children }) => {
     setDescription(scheduleDescription);
     setUserName(userName);
     setUserId(userId);
+    setSelectedArea(affectedArea);
     let obj = {
       fullName: userName,
       id: userId
@@ -93,6 +96,8 @@ export const FormProvider = ({ children }) => {
     setSelectedUser(null);
     setSubmitStatus("createNew");
     setScheduleApprovedId('');
+    setSelectedArea('None');
+    setStep(1);
     router.back();
   };
     const getTimeOptions = (ISODate) => {
@@ -130,7 +135,8 @@ export const FormProvider = ({ children }) => {
         setStartTimeIso,
         getTimeOptions,
         getIsoDateTimeString,
-        subject, setSubject, description, setDescription, userName, setUserName, link, setLink, userId, setUserId, submitStatus, setSubmitStatus, scheduleApprovedId, setScheduleApprovedId, handleApprove, postLoading, setPostLoading,reverseFromIsoString, selectedUser, setSelectedUser,resetFormValues
+        subject, setSubject, description, setDescription, userName, setUserName, link, setLink, userId, setUserId, submitStatus, setSubmitStatus, scheduleApprovedId, setScheduleApprovedId, handleApprove, postLoading, setPostLoading,reverseFromIsoString, selectedUser, setSelectedUser,resetFormValues, selectedArea, setSelectedArea,
+        step, setStep
       }}
     >
       {children}

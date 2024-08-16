@@ -22,9 +22,8 @@ const validationSchema = Yup.object().shape({
 
 const AddSchedule = () => {
   const insets = useSafeAreaInsets();
-  const [step, setStep] = useState(1);
-  const {selectedDate, startTime,  endTime,subject, description, userName,link,userId,submitStatus,setPostLoading,scheduleApprovedId,getIsoDateTimeString,resetFormValues} = useFormContext();
-  const {token,user,setIntialRoute,} = useGlobalContext();
+  const {selectedDate, startTime,  endTime,subject, description, userName,link,userId,submitStatus,setPostLoading,scheduleApprovedId,getIsoDateTimeString,resetFormValues,step, setStep,selectedArea} = useFormContext();
+  const {token,user,setIntialRoute} = useGlobalContext();
   const {appendUpcoming} = useScheduleContext();
   const handleNext = (values) => {
     if (step < 3) {
@@ -74,6 +73,7 @@ const AddSchedule = () => {
     scheduleSubject: subject,
     scheduleDescription: description,
     userId: userId,
+    affectedArea: selectedArea,
     trainerId: trainerId,
   }
   const trainer = user?.role=="admin"?user:user.trainerAssigned;
@@ -93,7 +93,9 @@ const AddSchedule = () => {
       setPostLoading(true);
       try{
       const response = await postSchedule(token,data);
+      if(user?.role === 'admin'){
         appendUpcoming(response);
+      }
         setIntialRoute("Upcoming")
         setStep(1);
         resetFormValues();

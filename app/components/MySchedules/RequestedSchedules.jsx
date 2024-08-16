@@ -57,8 +57,8 @@ const RequestedSchedules = () => {
               endTime={item?.endTime}
               userId={user?.role==="user"?item?.userId:item?.userId?._id}
               rawDate={item?.date}
-
-            />
+              affectedArea={item?.affectedArea}
+            />  
           );
         }}
         keyExtractor={item => item._id}

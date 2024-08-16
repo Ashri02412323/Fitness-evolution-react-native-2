@@ -17,7 +17,7 @@ import { useFormContext } from '../../contexts/FormProivder';
 import ToastManager, { Toast } from 'toastify-react-native';
 
 const ScheduleDetail = () => {
-  const { title, date, time, link, userName, noLink, profileImg,descr,isUser,isProfileLink,status,id,startTime,endTime,userId,rawDate} = useGlobalSearchParams();
+  const { title, date, time, link, userName, noLink, profileImg,descr,isUser,isProfileLink,status,id,startTime,endTime,userId,rawDate,affectedArea} = useGlobalSearchParams();
   const [markingLoad, setMarkingLoad] = useState(false);
   const [currStatus, setCurrStatus] = useState(status);
   const {token} = useGlobalContext();
@@ -49,9 +49,7 @@ const ScheduleDetail = () => {
       setMarkingLoad(false);
     }
   }
-  // const handleApproveHere = () => {
-  //   handleApprove(id,rawDate,startTime,endTime,link,title,descr,userId,userName);
-  // }
+ 
   return (
     <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top }}>
       <ScrollView className="h-full"> 
@@ -62,6 +60,7 @@ const ScheduleDetail = () => {
         
         <Text className="text-white_87 font-dm_Medium text-2xl capitalize text-center mt-4 px-4">{title}</Text>
         <View className="mt-6 px-4">
+          <DetailInstance title="Affected Area" value={affectedArea} />
           <DetailInstance title="Date" value={date} />
           <DetailInstance title="Time" value={time} />
           { (!noLink || noLink === "false") &&
@@ -82,7 +81,7 @@ const ScheduleDetail = () => {
           <>
           { status==='Requested' ? 
             <CustomButton title="Approve it" handlePress={()=>{
-              handleApprove(id,rawDate,startTime,endTime,link,title,descr,userId,userName,"toApprove");
+              handleApprove(id,rawDate,startTime,endTime,link,title,descr,userId,userName,"toApprove",affectedArea);
             }} isDetail={true} 
             customStyle={"bg-mint-87 mb-2"}
             textStyle={"mr-3"}
@@ -90,7 +89,7 @@ const ScheduleDetail = () => {
               />
           :
           <CustomButton title="Reschedule it" handlePress={()=>{
-            handleApprove(id,rawDate,startTime,endTime,link,title,descr,userId,userName,"toReschedule");
+            handleApprove(id,rawDate,startTime,endTime,link,title,descr,userId,userName,"toReschedule",affectedArea);
           }} isDetail={true} 
           customStyle={"bg-mint-87 mb-2"}
           endIcon={<MaterialIcons name="restart-alt" 

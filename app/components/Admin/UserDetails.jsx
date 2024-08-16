@@ -3,12 +3,20 @@ import React from 'react'
 import UserDetailInstance from './UserDetailInstance'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useGlobalContext } from '../../../contexts/GlobalProvider';
-import ProfilePic from '../../../assets/images/profilePic.png';
+
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AboutProfile from '../Profile/AboutProfile';
+import { router } from 'expo-router';
 
 const UserDetails = () => {
-    const {isDetailVisible,setIsDetailVisible,detailName,detailAge,detailGender,detailRole,detailProfile,detailEmail} = useGlobalContext();
+    const {isDetailVisible,setIsDetailVisible,detailName,detailAge,detailGender,detailRole,detailProfile,detailEmail,detailId} = useGlobalContext();
+
+    const handleNavigate = () => {
+      router.push({
+          pathname: '/UserAbout',
+          params: {name:detailName,gender:detailGender,profile: detailProfile,age: detailAge,role: detailRole,email: detailEmail,id: detailId}
+      });
+  }
   return (
     <View className={` top-0 left-0 right-0 bottom-0 z-10 flex items-center justify-center ${isDetailVisible ?"absolute":"hidden"}`}>
       <Pressable className="absolute top-0 left-0 right-0 bottom-0 bg-black opacity-80 z-0" onPress={()=> setIsDetailVisible(false)}/>
@@ -26,7 +34,7 @@ const UserDetails = () => {
             <Pressable className="py-4 px-4">
                 <Ionicons name="chatbox-ellipses-outline" size={22} color="#01AFA8" />
             </Pressable>
-            <Pressable className="py-2 px-2" >
+            <Pressable className="py-2 px-2" onPress={handleNavigate} >
                 <MaterialCommunityIcons name="account-details-outline" size={24} color="#01AFA8" />
             </Pressable>
         </View>

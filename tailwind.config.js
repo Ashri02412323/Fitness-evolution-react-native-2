@@ -19,7 +19,8 @@ module.exports = {
         requested: "#1F67FF",
         upcoming:"#D8730A",
         completed: "#73C34D",
-        red: "#FF3B30"
+        red: "#FF3B30",
+        tertiary: "#131B1E",
       },
       fontFamily:{
         pop_Bold:['Poppins-Bold'],

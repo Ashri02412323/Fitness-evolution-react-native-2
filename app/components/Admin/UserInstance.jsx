@@ -8,7 +8,7 @@ import { router } from 'expo-router';
 import AboutProfile from '../Profile/AboutProfile';
 
 const UserInstance = ({isLast,name,gender,profile,index,age,role,email,id}) => {
-    const {setDetailName,setDetailGender,setDetailRole,setDetailAge,setDetailProfile,setIsDetailVisible,setDetailEmail} = useGlobalContext();
+    const {setDetailName,setDetailGender,setDetailRole,setDetailAge,setDetailProfile,setIsDetailVisible,setDetailEmail,setDetailId} = useGlobalContext();
     const handleOnPress = () => {
         setDetailName(name);
         setDetailAge(age);
@@ -17,6 +17,7 @@ const UserInstance = ({isLast,name,gender,profile,index,age,role,email,id}) => {
         setDetailProfile(profile);
         setIsDetailVisible(true);
         setDetailEmail(email);
+        setDetailId(id);
     }
     const handleNavigate = () => {
         router.push({

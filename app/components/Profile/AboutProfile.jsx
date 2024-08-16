@@ -3,7 +3,7 @@ import React from 'react'
 
 const AboutProfile = ({sizeClass,textStyle, parentStyle,name,profileImg}) => {
     const extractFirstLetter = (name) => {
-        return name.charAt(0).toUpperCase();
+        return name?.charAt(0)?.toUpperCase();
       }
     const firstLetter = extractFirstLetter(name);
 
