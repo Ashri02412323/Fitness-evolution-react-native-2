@@ -9,7 +9,7 @@ import DropDown from '../Profile/DropDown';
 import { logoutUser } from '../../../lib/Users/User';
 import ProfileDefault from '../Profile/ProfileDefault';
 
-const ScheduleHeader = ({isDetail,isProfile,title,onPress,isIconVisible =true}) => {
+const ScheduleHeader = ({isDetail,isProfile,title,onPress,isIconVisible =true,textColor}) => {
   const {firstLetter} = useGlobalContext();
   const [isVisible, setIsVisible] = useState(false);
   const handleLogout = async () => {
@@ -28,10 +28,11 @@ const ScheduleHeader = ({isDetail,isProfile,title,onPress,isIconVisible =true}) 
         margin: 0,
       }}>
         <Pressable className=" px-2 py-2" onPress={onPress?onPress:()=> router.back()}>
-          <AntDesign name="arrowleft" size={24} color="#01AFA8" style={{margin:0}} />
+          <AntDesign name="arrowleft" size={24} color={textColor?textColor:"#01AFA8"} style={{margin:0}} />
         </Pressable>
         <View className="flex flex-col" style={{margin:0}}>
-          <Text className="text-mint-87 font-dm_SemiBold text-xl capitalize">{title}</Text>
+          <Text className={`font-dm_SemiBold text-xl capitalize `} style={{color:textColor?textColor:"#01AFA8"}}
+          >{title}</Text>
         </View>
       </View>
 
@@ -39,7 +40,7 @@ const ScheduleHeader = ({isDetail,isProfile,title,onPress,isIconVisible =true}) 
       <Pressable onPress={()=> setIsVisible(true)} className={`${!isProfile && "bg-lava"} h-12 w-12 flex-row justify-center items-center rounded-full `}
       style={{ margin: 0 }}
       >
-        <Entypo name="dots-three-vertical" size={20} color="#DFE0E1" />
+        <Entypo name="dots-three-vertical" size={20} color={textColor?textColor:"#DFE0E1"} />
       </Pressable>
       
       :

@@ -29,7 +29,7 @@ const AdminUsers = () => {
         >
           <View className="flex flex-col px-2">
             {allUsers.map((user, index) => (
-              <UserInstance key={index} index={index+1} gender={user.gender} name={user.fullName} profile={user.profileImage} age={user.age} email={user.email} role={user.role} />
+              <UserInstance key={index} index={index+1} gender={user.gender} name={user.fullName} profile={user.profileImage} age={user.age} email={user.email} role={user.role} id={user._id} />
             ))}
           </View>
         </ScrollView>
