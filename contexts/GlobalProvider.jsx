@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useRef, useState } from "r
 import profileImg from "../assets/images/profilePic.png";
 import io from 'socket.io-client';
 
-const SOCKET_URL = 'http://192.168.1.2:3000'; // Replace with your server URL
+const SOCKET_URL = 'https://evolution-erm4.onrender.com'; // Replace with your server URL
 
 const GlobalContext = createContext();
 export const useGlobalContext = () => useContext(GlobalContext);
@@ -135,7 +135,11 @@ export const GlobalProvider = ({ children }) => {
             socket.once('messages', handleMessages); 
           }
           else{
-          let newArr = (prevChats[msg.senderId] || []).concat(msg);
+            let ifExisted = prevChats[msg.senderId].find((m) => m.timeStamp === msg.timeStamp);
+            if (ifExisted) {
+              return prevChats;
+            }
+            let newArr = (prevChats[msg.senderId]).concat(msg);
           return { ...prevChats, [msg.senderId]: newArr };
         }});
       
