@@ -33,8 +33,6 @@ const handleDeleteUser = async() => {
   }
 
   if (fullName.trim() !== name) {
-    console.log("Full Name:",fullName);
-    console.log("Name:",name);
     setInputError('Full Name does not match');
     return;
   }
@@ -51,7 +49,18 @@ const handleDeleteUser = async() => {
     console.log(error);
   }
 }
-
+const handleRedirect = () => {
+  const receiver = {
+    userName: name,
+    id: id
+  }
+  const userString = encodeURIComponent(JSON.stringify(receiver));
+  console.log("Receiver: ",receiver);
+  router.push({
+    pathname: "/ChatScreen",
+    params: {receiver:userString,userName:name}
+  });
+}
 const handleRoleChange = async() => {
 
   // setConfirmRole(roleTemp);
@@ -89,7 +98,7 @@ const handleRoleChange = async() => {
             icon={<MaterialIcons name="published-with-changes" size={22} color="#01AFA8" />} onPress={()=>setRoleVisible(true)}
             />
             <UserSettings title={"Chat"}
-            icon={<Ionicons name="chatbox-ellipses-outline" size={22} color="#01AFA8" />}
+            icon={<Ionicons name="chatbox-ellipses-outline" size={22} color="#01AFA8" />} onPress={handleRedirect}
             />
             <UserSettings title={"Delete"}
             icon={<Ionicons name="warning-outline" size={22} color="#FF3B30" />} onPress={()=>setDeleteVisible(true)}  isRed={true} isLast={true}

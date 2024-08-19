@@ -25,6 +25,18 @@ const UserInstance = ({isLast,name,gender,profile,index,age,role,email,id}) => {
             params: {name,gender,profile,index,age,role,email,id}
         });
     }
+    const handleRedirect = () => {
+        const receiver = {
+          userName: name,
+          id: id
+        }
+        const userString = encodeURIComponent(JSON.stringify(receiver));
+        console.log("Receiver: ",receiver);
+        router.push({
+          pathname: "/ChatScreen",
+          params: {receiver:userString,userName:name}
+        });
+      }
   return (
     <Pressable onPress={handleOnPress}>
     <View className="flex flex-row space-between items-center p-2 pr-0 relative mb-4 ">
@@ -39,7 +51,7 @@ const UserInstance = ({isLast,name,gender,profile,index,age,role,email,id}) => {
             </View>
         </View>
         <View className="flex flex-row w-[25%] items-center  ">
-        <Pressable className="py-2 px-2 ">
+        <Pressable className="py-2 px-2 " onPress={handleRedirect}>
             <Ionicons name="chatbox-ellipses-outline" size={20} color="#01AFA8" />
         </Pressable>
         <Pressable className="py-2 px-2 " onPress={handleNavigate}>

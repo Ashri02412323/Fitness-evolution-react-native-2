@@ -113,11 +113,14 @@ export const ScheduleProvider = ({ children }) => {
     }
   };
   useEffect(() => {
+    if(!user){
+      return;
+    }
     if (token) {
       fetchUpcomingSchedules();
       fetchCompletedSchedules();
       checkIfLoggedIn(setUser)
-      if(user.role==='admin'){
+      if(user?.role==='admin'){
         fetchRequestedSchedules();
         fetchUserCount();
       }
@@ -125,6 +128,9 @@ export const ScheduleProvider = ({ children }) => {
   }, [token, user?.role]);
 
   useEffect(() => {
+    if(!user){
+      return;
+    }
     if (refreshing) {
       fetchUpcomingSchedules();
       fetchCompletedSchedules();

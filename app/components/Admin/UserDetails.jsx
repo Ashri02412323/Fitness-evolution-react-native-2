@@ -10,7 +10,18 @@ import { router } from 'expo-router';
 
 const UserDetails = () => {
     const {isDetailVisible,setIsDetailVisible,detailName,detailAge,detailGender,detailRole,detailProfile,detailEmail,detailId} = useGlobalContext();
-
+    const handleRedirect = () => {
+      const receiver = {
+        userName: detailName,
+        id: detailId
+      }
+      const userString = encodeURIComponent(JSON.stringify(receiver));
+      console.log("Receiver: ",receiver);
+      router.push({
+        pathname: "/ChatScreen",
+        params: {receiver:userString,userName:detailName}
+      });
+    }
     const handleNavigate = () => {
       router.push({
           pathname: '/UserAbout',
@@ -31,7 +42,7 @@ const UserDetails = () => {
             <UserDetailInstance title="Role" value={detailRole} />
         </View>
         <View className="flex flex-row items-center justify-around w-full bg-primary">
-            <Pressable className="py-4 px-4">
+            <Pressable className="py-4 px-4" onPress={handleRedirect}>
                 <Ionicons name="chatbox-ellipses-outline" size={22} color="#01AFA8" />
             </Pressable>
             <Pressable className="py-2 px-2" onPress={handleNavigate} >

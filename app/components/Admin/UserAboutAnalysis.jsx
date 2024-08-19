@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { View, Text, Dimensions, ImageBackground, Image } from 'react-native';
+import { View, Text, Dimensions, ImageBackground, Image, ActivityIndicator } from 'react-native';
 import { PieChart } from 'react-native-chart-kit';
 import Wave2 from '../../../assets/images/Wave2.png';
 import { fetchUserCompleted, fetchUserRequested, fetchUserUpcoming } from '../../../lib/Users/Schedule';
@@ -24,13 +24,18 @@ const UserAboutAnalysis = ({id}) => {
   const [requested, setRequested] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const {token} = useGlobalContext();
+  const [loadingStatus, setLoadingStatus] = useState(0);
   const fetchSchedules = useCallback(async () => {
     if (!id) return;
     try {
       setIsLoading(true);
+      setLoadingStatus(1);
       const upcoming = await fetchUserUpcoming(token, id);
+      setLoadingStatus(2);
       const completed = await fetchUserCompleted(token, id);
+      setLoadingStatus(3);
       const requested = await fetchUserRequested(token, id);
+      setLoadingStatus(4);
 
       setUpcoming(upcoming.length);
       setCompleted(completed.length);
@@ -45,7 +50,6 @@ const UserAboutAnalysis = ({id}) => {
 
   useEffect(() => {
     fetchSchedules();
-    console.log('fetching schedule');
     // unmount
     return () => {
       setUpcoming(0);
@@ -88,9 +92,18 @@ const UserAboutAnalysis = ({id}) => {
             <Image  source={Wave2} style={{width: '110%', height: 280,}} className="absolute bottom-0 -left-2 right-0"
              />
              {upcoming === 0 && completed === 0 && requested === 0 ? 
-             <View className="w-full flex items-center h-full justify-center">
+             <View className="w-full flex flex-col items-center h-full justify-center">
               { isLoading ?
-                <Text className="text-white_87 text-lg font-inter_Regular mt-2  text-center relative bottom-4">Loading...</Text>
+              <>
+              <ActivityIndicator size="large" color="#00C7BE" className="mb-4" />
+                <Text className="text-white_87 text-base font-inter_Regular mt-2  text-center relative bottom-4 w-[80%] ">{
+                  loadingStatus === 0 ? 'Fetching Schedules...' :
+                  loadingStatus === 1 ? 'Fetching upcoming schedules...' :
+                  loadingStatus === 2 ? 'Fetching completed schedules...' :
+                  loadingStatus === 3 ? 'Fetching requested schedules...' :
+                  loadingStatus === 4 ? 'Almost Done' : 'Loading...'
+                }</Text>
+                </>
                 :
                 <>
                 <Image source={NotFound} className="w-[200px] h-[200px]" />

@@ -39,6 +39,8 @@ module.exports = {
         dm_SemiBold:['DMSans-SemiBold'],
         dm_Light:['DMSans-Light'],
         cinzel_Bold:['Cinzel-Bold'],
+        dm_italic:['DMSans-Italic'],
+        mono_regular:['Mono-Regular'],
       }
     },
   },

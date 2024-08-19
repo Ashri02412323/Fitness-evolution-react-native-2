@@ -21,6 +21,7 @@ const MySchedules2 = () => {
       navigation.navigate('mySchedules', { screen: intialRoute });
     }
   }, [intialRoute, navigation]);
+  if (!user) return null;
 
   return (
     <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top }}>

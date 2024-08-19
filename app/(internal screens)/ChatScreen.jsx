@@ -10,40 +10,77 @@ import { Toast } from 'toastify-react-native';
 
 const ChatScreen = () => {
   const { receiver, userName} = useGlobalSearchParams();
-  let objReceiver = JSON.parse(receiver);
+  let objReceiver ;
+  try {
+    if(receiver){
+    objReceiver = JSON.parse(receiver);
+    }
+  } catch (error) {
+    console.error("Failed to parse receiver JSON:", error,receiver);
+    objReceiver = null;
+  }
+  let objReeiverRef = useRef(objReceiver);
   const insets = useSafeAreaInsets();
-
+  const { chats, setChats ,user,socket,setLastMessages,setReceived,scrollRef,setCurrentReceiver} = useGlobalContext();
   const [msg, setMsg] = useState("");
-  const { chats, setChats ,user,socket,setLastMessages,setReceived,scrollRef} = useGlobalContext();
   const userId1 = user?._id;
   const userId2 = objReceiver?.id;
   const [isSending, setIsSending] = useState(false);
   const [loadingMessages, setLoadingMessages] = useState(true);
+
+  useEffect(() => {
+    const checkScrollRef = setInterval(() => {
+      if (scrollRef.current) {
+        scrollRef.current.scrollToEnd({ animated: true });
+        clearInterval(checkScrollRef);
+      }
+    }, 100); // Check every 100ms
+
+    return () => clearInterval(checkScrollRef);
+  }, [scrollRef.current]);
+  useEffect(() => {
+    setCurrentReceiver(objReceiver);
+    return () => {
+      setCurrentReceiver(null);
+    }
+  }, []);
 useEffect(()=>{
   if (scrollRef.current) {
     scrollRef.current.scrollToEnd({ animated: true});
   }
   if(loadingMessages){
     setLoadingMessages(false);
+    if (scrollRef.current) {
+      scrollRef.current.scrollToEnd({ animated: true});
+    }
   }
 },[chats])
 useEffect(()=>{
   setReceived((prevReceived) => {
-    let newReceived = prevReceived.filter((m) => m.senderId !== objReceiver.id);
+    let newReceived = prevReceived.filter((m) => m.senderId !== objReeiverRef.current.id);
     return newReceived;
   });
 },[])
   useEffect(() => {
     if (!socket) return;
-    socket.emit('loadMessages', { userId1, userId2 });
-
-    socket.on('messages', (fetchedMessages) => {
-      setChats(fetchedMessages);
+    let ifChatAlreadyExists = chats[userId2];
+    if (!ifChatAlreadyExists){
+    socket.emit('loadMessages', { userId1, userId2 })
+  }
+     socket.on('messages', (fetchedMessages) => {
+      setChats((prev) => {
+        let newObj = { ...prev, [userId2]: fetchedMessages };
+        return newObj;
+      }
+    )
     });
 
     socket.on('chat message', (msg) => {
       if (objReceiver.id === msg.senderId || user._id === msg.senderId) {
-        setChats((prevChats) => [...prevChats, msg]);
+        setChats((prevChats) => {
+        let newArr = [...prevChats[userId2], msg];
+          return { ...prevChats, [userId2]: newArr };
+        });
         setLastMessages((prevMessages) => {
           let newMessages = prevMessages.filter((m) => m.senderId !== userId2 && m.receiverId !== userId2);
           newMessages.push(msg);
@@ -63,36 +100,55 @@ useEffect(()=>{
 
     socket.on('message status', (msg) => {
       setChats((prevChats) => {
-        let newArr = prevChats.map((m) => (m._id === msg._id ? msg : m));
-        return newArr;
+        let newArr = prevChats[userId2].map((m) => {
+          return (m.timeStamp === msg.timeStamp ? msg : m)});
+        return { ...prevChats, [userId2]: newArr };
       });
+    });
+
+    socket.on('msg_ID received', (msgT) => {
+      if (socket?.connected) {
+        socket.emit('message sent', msgT._id);
+      } else {
+        console.log("Socket is not connected. Message delivered event not emitted.");
+      }
     });
     return () => {
       socket.off('messages');
       socket.off('chat message');
       socket.off('message status');
     };
-  }, [objReceiver?._id, socket, user._id, userId1, userId2]);
+  }, [socket, userId1, userId2]);
 useEffect(()=>{
   if(isSending){
     setIsSending(false);
   }
 },[chats])
-  const sendMessage = () => {
+  const sendMessage = (msgTemp) => {
     setIsSending(true);
     const newMsg = {
       senderName: user.fullName,
       receiverName: objReceiver.userName,
-      message: msg,
+      message: msgTemp,
       senderId: userId1,
       receiverId: userId2,
-      status: 'pending'
+      status: 'pending',
+      timeStamp: new Date().toISOString(),
     };
+    setChats((prevChats) => {
+      let newArr = [...prevChats[userId2], newMsg];
+      return { ...prevChats, [userId2]: newArr };
+    });
     socket?.emit('chat message', newMsg);
     setMsg(""); 
     if (scrollRef.current) {
       scrollRef.current.scrollToEnd({ animated: true });
     }
+    // setLastMessages((prevMessages) => {
+    //   let newMessages = prevMessages.filter((m) => m.senderId !== userId2 && m.receiverId !== userId2);
+    //   newMessages.push(newMsg);
+    //   return newMessages;
+    // });
   }
 
   const handleRead = (msg) => {
@@ -105,7 +161,6 @@ useEffect(()=>{
     return (
       <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top }}>
         <ScheduleHeader title={userName} onPress={()=>{
-          setChats([])
           router.back();
           }}/>
         <ActivityIndicator size="large" color="#00C7BE" style={{
@@ -125,7 +180,7 @@ useEffect(()=>{
           Our chats are end-to-end encrypted
         </Text>
         <View className="flex flex-col mt-4">
-          {chats.map((chat, index) => (
+          {chats[userId2]?.map((chat, index) => (
             <MessageInstance key={index} msg={chat} user={user} onRead={handleRead} />
           ))}
         </View>
@@ -137,7 +192,7 @@ useEffect(()=>{
           value={msg}
           onChangeText={(text) => setMsg(text)}
         />
-        <Pressable onPress={sendMessage} className="py-3 px-2 pl-3">
+        <Pressable onPress={()=>sendMessage(msg)} className={`py-3 px-2 pl-3 ${!msg && "opacity-60"}`} disabled={!msg}>
           {isSending ? <ActivityIndicator size="small" color="#00C7BE" />:
           <Ionicons name="send" size={26} color="#00C7BE" />
         }

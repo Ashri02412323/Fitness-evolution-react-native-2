@@ -34,6 +34,8 @@ function RootLayout() {
     "DMSans-SemiBold": require("../assets/fonts/DMSans-SemiBold.ttf"),
     "DMSans-Light": require("../assets/fonts/DMSans-Light.ttf"),
     "Cinzel-Bold": require("../assets/fonts/Cinzel-Bold.ttf"),
+    "DMSans-Italic": require("../assets/fonts/DMSans-Italic.ttf"),
+    "Mono-Regular": require("../assets/fonts/Mono-Regular.ttf"),
   });
 
   const [isConnected, setIsConnected] = useState(true);

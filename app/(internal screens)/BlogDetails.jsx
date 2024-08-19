@@ -1,13 +1,12 @@
-import { View, Text, SafeAreaView, ScrollView } from 'react-native'
-import React from 'react'
+import { RefreshControl, SafeAreaView, ScrollView } from 'react-native'
+import React, { useCallback, useEffect } from 'react'
 import ScheduleHeader from '../components/MySchedules/ScheduleHeader'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BlogCarousal from '../components/Blogs/BlogCarousal';
-import CreateBlogCard from '../components/Blogs/CreateBlogCard';
-import BlogInstance from '../components/Home/BlogInstance';
 import swimmingImg from '../../assets/images/swimming.png'
 import ProfilePic from '../../assets/images/profilePic.png'
 import Blogs from '../components/Home/Blogs';
+import { fetchBlogs } from '../../lib/Users/Blog';
 
 const BlogDetails = () => {
   const insets = useSafeAreaInsets();
@@ -37,13 +36,57 @@ const BlogDetails = () => {
         blogImage: swimmingImg
     },
 ];
+const [blogs, setBlogs] = React.useState([])
+const [recentThreeBlogs, setRecentThreeBlogs] = React.useState([])
+const [otherBlogs, setOtherBlogs] = React.useState([])
+const [refresh, setRefresh] = React.useState(false)
+
+const fetchBlogsHere = useCallback(async () => {
+  try {
+    const response = await fetchBlogs();
+    setBlogs(response);
+  } catch (error) {
+    console.error("Blogs error: ", error);
+  }
+}, []);
+
+useEffect(() => {
+  let isMounted = true;
+  fetchBlogsHere().then(() => {
+    if (isMounted) {
+      // Only update state if the component is still mounted
+    }
+  });
+
+  return () => {
+    isMounted = false;
+  };
+}, [fetchBlogsHere]);
+
+useEffect(() => {
+  if (refresh) {
+    fetchBlogsHere().then(() => {
+      setRefresh(false);
+    });
+  }
+}, [refresh, fetchBlogsHere]);
+
+useEffect(() => {
+  if(blogs.length > 0){
+    setRecentThreeBlogs(blogs.slice(0,3))
+    setOtherBlogs(blogs.slice(3,blogs.length))
+  }
+}, [blogs])
   return (
     <SafeAreaView className="bg-primary h-full relative" style={{ paddingTop: insets.top }}>
       <ScheduleHeader title="Blogs" />
-        <ScrollView className="">
-          <BlogCarousal />
-          {/* <CreateBlogCard /> */}
-          <Blogs title="Other Blogs" hideSeeAll={true} isBlogDetail/>
+        <ScrollView className=""
+        refreshControl={
+          <RefreshControl refreshing={refresh} onRefresh={()=>setRefresh(true)} />
+        }
+        >
+          <BlogCarousal blogs={recentThreeBlogs} />
+          <Blogs title="Other Blogs" hideSeeAll={true} isBlogDetail blogs={otherBlogs}/>
         </ScrollView>
     </SafeAreaView>
   )

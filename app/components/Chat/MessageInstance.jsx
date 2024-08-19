@@ -24,9 +24,8 @@ const textStyle = (status) => {
 
 const MessageInstance = ({ msg, user, onRead }) => {
   const memoizedOnRead = useCallback(onRead, [onRead]);
-
   useEffect(() => {
-    if (msg.senderId !== user._id && msg.status !== 'read') {
+    if (msg.senderId !== user?._id && msg?.status !== 'read' && msg?._id) {
       memoizedOnRead(msg);
     }
   }, [msg, user, memoizedOnRead]);
@@ -45,7 +44,7 @@ const MessageInstance = ({ msg, user, onRead }) => {
       
         <View className={`mt-2 self-end flex flex-row items-center`}>
           <Text className="text-white_60 text-xs mr-2">{formatTime(msg.timeStamp)}</Text>
-          {isSender && textStyle(msg.status)}
+          {isSender && textStyle(msg?.status)}
         </View>
     </View>
   );

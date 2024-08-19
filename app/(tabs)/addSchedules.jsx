@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, SafeAreaView ,ScrollView, ToastAndroid} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, SafeAreaView ,ScrollView, } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -22,9 +22,11 @@ const validationSchema = Yup.object().shape({
 
 const AddSchedule = () => {
   const insets = useSafeAreaInsets();
-  const {selectedDate, startTime,  endTime,subject, description, userName,link,userId,submitStatus,setPostLoading,scheduleApprovedId,getIsoDateTimeString,resetFormValues,step, setStep,selectedArea} = useFormContext();
-  const {token,user,setIntialRoute} = useGlobalContext();
-  const {appendUpcoming} = useScheduleContext();
+  const {selectedDate, startTime,  endTime,subject, description, userName,link,userId,submitStatus,setPostLoading,scheduleApprovedId,getIsoDateTimeString,resetFormValues,step, setStep,selectedArea,selectedUser,setSelectedUser} = useFormContext();
+  const [fetching, setFetching] = useState(false);
+  const [redirect, setRedirect] = useState(false);
+  const {token,user,setIntialRoute,currReceiver,setCurrentReceiver,setChats,socket,} = useGlobalContext();
+  const {appendUpcoming,setRequested} = useScheduleContext();
   const handleNext = (values) => {
     if (step < 3) {
       setStep(step + 1);
@@ -40,17 +42,30 @@ const AddSchedule = () => {
       setStep(step - 1);
     }
   };
+  useEffect(() => {
+    const currentUser = user?.role=="admin"?{
+      userName: selectedUser?.fullName,
+      id: selectedUser?.id
+    }:{
+      userName: user?.fullName,
+      id: user?._id
+    };
+    const userString = encodeURIComponent(JSON.stringify(currentUser));
+    setCurrentReceiver(currentUser);
+
+    if(!fetching && redirect){
+      router.push({
+        pathname: "/ChatScreen",
+        params: {
+          userName: currentUser?.userName,
+          receiver: userString
+        },
+      });
+      setRedirect(false);
+      setSelectedUser(null);
+}
+},[fetching,redirect,selectedUser,userName,user,setCurrentReceiver])
   const handleSubmit = async() => {
-  //   {
-  //     "date": "2024-09-18T00:00:00.000Z",
-  //     "startTime": "2024-09-18T21:50:00.000Z",
-  //     "endTime": "2024-09-18T21:52:00.000Z",
-  //     "scheduleLink": "https://example.com/meeting-link-8",
-  //     "scheduleSubject": "Another Classes",
-  //     "scheduleDescription": "A another class it is.It is gonna be fun. Lets talk all about anything.",
-  //     "userId": "66a9073fa5ee023b22478122",
-  //     "trainerId": "66a9004cb1a81ce392c54cdf"
-  // }
   const trainerId = user?.role === 'admin' ? user?._id : user.trainerAssigned?._id;
   let startTimeFormatted,endTimeFormatted;
   if(selectedDate && startTime && endTime){
@@ -77,7 +92,9 @@ const AddSchedule = () => {
     trainerId: trainerId,
   }
   const trainer = user?.role=="admin"?user:user.trainerAssigned;
-  const userString = encodeURIComponent(JSON.stringify(trainer));
+  // const userString = encodeURIComponent(JSON.stringify(trUiner));
+  
+
   const trainerName = user?.role=="admin"?user?.fullName:user.trainerAssigned?.fullName;
   const sendMessage = (msg) => {
     const newMsg = {
@@ -86,8 +103,37 @@ const AddSchedule = () => {
       message: msg,
       senderId: trainer?._id,
       receiverId: userId,
-      status: 'pending'
+      status: 'pending',
+      timeStamp: new Date().toISOString(),
     }
+
+    setChats((prevChats) =>{
+    let userId1 = newMsg.senderId;
+    let userId2 = newMsg.receiverId;
+
+    if (!prevChats[userId2]) {
+      setFetching(true);
+      socket.emit('loadMessages', { userId1, userId2 });
+
+      // Move the event listener outside of the state update function
+      const handleMessages = (fetchedMessages) => {
+        fetchedMessages.push(newMsg);
+        setChats((prev) => {
+          let newObj = { ...prev, [userId2]: fetchedMessages };
+          return newObj;
+        });
+        setFetching(false);
+        setRedirect(true);
+      };
+      socket.once('messages', handleMessages); 
+    }
+    else{
+    let newArr = (prevChats[newMsg.receiverId]).concat(newMsg);
+    setRedirect(true);
+    return { ...prevChats, [newMsg.receiverId]: newArr };
+  }
+})
+    socket?.emit('chat message', newMsg);
   }
     if(submitStatus==='createNew'){
       setPostLoading(true);
@@ -101,11 +147,10 @@ const AddSchedule = () => {
         resetFormValues();
         if(user?.role === 'admin'){
           Toast.success('Schedule created successfully','top')
-          router.push('/mySchedules');
+          sendMessage(`Yo ${userName} ! I have scheduled a class named "${subject}" with you. Please check the schedule in your upcomings.`);
         }else{
           Toast.success('Schedule requested successfully','top')
-          sendMessage("Thanks for scheduling a class with me. I am looking forward to it. I will approve the schedule soon :)");
-          router.push('/chat')
+          sendMessage(`Yo ${userName} ! Thanks for scheduling a class "${subject}" with me. I am looking forward to it. I will approve the schedule soon :)`);
         }
       }catch (err){
         Toast.error(errorMessage,'top')
@@ -130,12 +175,14 @@ const AddSchedule = () => {
           resetFormValues();
         if(submitStatus==='toReschedule'){
           Toast.success('Schedule rescheduled successfully','top')
-          sendMessage("I have rescheduled the class. Please check the new schedule in your upcomings.");
-          router.push('/chat')
+          sendMessage(`Hey ${userName}, I have rescheduled the class "${subject}". Please check the new schedule in your upcomings.`);
         }else{
           Toast.success('Schedule approved successfully','top')
-          sendMessage("I have approved the schedule. Please check the schedule in your upcomings.");
-          router.push('/chat')
+          sendMessage(`Hey ${userName}, I have approved the schedule "${subject}". Please check the schedule in your upcomings.`);
+          setRequested((prev)=>{
+            let newRequested = prev.filter((item)=>item._id!==scheduleApprovedId);
+            return newRequested;
+          })
         }
       }
       }catch (err){

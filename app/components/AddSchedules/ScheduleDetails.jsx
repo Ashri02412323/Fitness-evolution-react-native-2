@@ -39,6 +39,8 @@ useEffect(()=>{
   if(user?.role === 'admin'){
   setUserName(selectedUser?.fullName);
   setUserId(selectedUser?.id);
+}else {
+  setUserName(user?.fullName);
 }
 },[selectedUser])
   useEffect(() => {

@@ -1,39 +1,25 @@
 import { View, Text, Pressable } from 'react-native'
-import React from 'react'
-import swimmingImg from '../../../assets/images/swimming.png'
-import ProfilePic from '../../../assets/images/profilePic.png'
+import React, { useEffect, useMemo, useState } from 'react'
 import BlogInstance from './BlogInstance'
 import { router } from 'expo-router'
-const Blogs = ({title ="Blogs",hideSeeAll,isBlogDetail}) => {
-    const blogSample = [
-        {
-            title: "Blog Title1 This is a long blo title. How are you doing?",
-            date: "12/12/2021",
-            authorProfile: ProfilePic,
-            authorName: "Author Name",
-            slugs: ["blog-title"],
-            blogImage: swimmingImg
-        },
-        {
-            title: "Blog Title 2",
-            date: "12/12/2021",
-            authorProfile: ProfilePic,
-            authorName: "Author Name",
-            slugs: ["blog-title", "blog-title-2"],
-            blogImage: swimmingImg
-        },
-        {
-            title: "Blog Title 3",
-            date: "12/12/2021",
-            authorProfile: ProfilePic,
-            authorName: "Author Name",
-            slugs: ["blog-title"],
-            blogImage: swimmingImg
-        },
-    ];
-    const blogsToDisplay = !isBlogDetail ? blogSample.slice(0, 2) : blogSample;
+import { formatDate2 } from '../../../lib/Users/Schedule'
+const Blogs = ({title ="Blogs",hideSeeAll,isBlogDetail,blogs}) => {
+  const [blogsToDisplay, setBlogsToDisplay] = useState([]);
+
+  const memoizedBlogsToDisplay = useMemo(() => {
+    if (isBlogDetail) {
+      return blogs.slice(0, 3);
+    } else {
+      return blogs;
+    }
+  }, [blogs, isBlogDetail]);
+
+  useEffect(() => {
+    setBlogsToDisplay(memoizedBlogsToDisplay);
+  }, [memoizedBlogsToDisplay]);
+    if (!blogs) return null;
   return (
-    <View className="mx-4 mt-4">
+    <View className="mx-4 mt-4 ">
 
       <View className={`flex flex-row items-center justify-between mb-4 ${isBlogDetail && "mb-1 mt-2"}`}>
         <Text className={`text-white_87 text-xl font-inter_SemiBold ${isBlogDetail && "text-lg font-inter_Medium"}`}>{title}</Text>
@@ -49,12 +35,13 @@ const Blogs = ({title ="Blogs",hideSeeAll,isBlogDetail}) => {
           <BlogInstance
             key={`${blog.title}${index}`}
             title={blog.title}
-            date={blog.date}
-            profileImg={blog.authorProfile}
-            authorName={blog.authorName}
-            slugs={blog.slugs}
-            blogImg={blog.blogImage}
-            isLast={index === blogsToDisplay.length - 1}
+            date={formatDate2(blog.publishedAt)}
+            profileImg={blog.authorImage}
+            authorName={blog.name}
+            slugs={[blog.slug?.current]}
+            blogImg={blog.mainImage}
+            isLast={index === blogs.length - 1}
+            id = {blog._id}
           />
         ))}
       </View>

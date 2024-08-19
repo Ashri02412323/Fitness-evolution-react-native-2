@@ -15,13 +15,12 @@ import { deleteMyAccount, logoutUser } from '@/lib/Users/User';
 
 const profile = () => {
     const insets = useSafeAreaInsets();
-    const {userName,userEmail,userRole,userAge,userGender} = useGlobalContext();
+    const {userName,userEmail,userRole,userAge,userGender,setUser,token,setToken} = useGlobalContext();
     const {profileRefetch, setProfileRefetch} = useScheduleContext()
     const [fullName, setFullName] = React.useState("");
     const [inputError, setInputError] = React.useState("");
     const [isDeleting, setIsDeleting] = React.useState(false);
     const [isDeleteVisible, setIsDeleteVisible] = React.useState(false);
-    const {token,setToken} = useGlobalContext();
     const onRefresh = () => {
         setProfileRefetch(true);
       };
@@ -32,8 +31,6 @@ const profile = () => {
         }
       
         if (fullName.trim() !== userName) {
-          console.log("Full Name:",fullName);
-          console.log("Name:",userName);
           setInputError('Full Name does not match');
           return;
         }
@@ -41,7 +38,7 @@ const profile = () => {
           setIsDeleting(true);
           const response = await deleteMyAccount(token);
           if(response){
-            logoutUser(setToken);
+            logoutUser(setToken,setUser);
           }  
         } catch (error) {
           console.log(error);

@@ -93,7 +93,7 @@ export const FormProvider = ({ children }) => {
     setLink('');
     setUserId('');
     setEndTime(currEndTime);
-    setSelectedUser(null);
+    // setSelectedUser(null);
     setSubmitStatus("createNew");
     setScheduleApprovedId('');
     setSelectedArea('None');

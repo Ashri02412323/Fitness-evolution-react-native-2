@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useRef, useState } from "r
 import profileImg from "../assets/images/profilePic.png";
 import io from 'socket.io-client';
 
-const SOCKET_URL = 'http://192.168.1.12:3000'; // Replace with your server URL
+const SOCKET_URL = 'http://192.168.1.2:3000'; // Replace with your server URL
 
 const GlobalContext = createContext();
 export const useGlobalContext = () => useContext(GlobalContext);
@@ -15,8 +15,7 @@ export const GlobalProvider = ({ children }) => {
   const [firstLetter, setFirstLetter] = useState('');
   const [index, setIndex] = useState(0);
   const [currReceiver, setCurrReceiver] = useState(null);
-  const [chats, setChats] = useState([
-  ]);
+  const [chats, setChats] = useState({});
   const [allUsers, setAllUsers] = useState([]);
   const [detailName, setDetailName] = useState('');
   const [detailAge, setDetailAge] = useState('');
@@ -42,33 +41,120 @@ export const GlobalProvider = ({ children }) => {
   const [userGender, setUserGender] = useState('');
   const [userAge, setUserAge] = useState('');
   const [userProfile, setUserProfile] = useState('');
+  const [currentReceiver, setCurrentReceiver] = useState(null);
   
-  useEffect(()=>{
-    if(!socket)
-        return;
-    const allUserIDs = chatUsers.map((user) => user.id);
-    socket?.emit("allUsers",allUserIDs);
-    socket?.on("lastMessages", (messages) => {
-        setLastMessages(messages);
-    });
-    socket?.on('user connected', (users, receivedMessages) => {
-        setConnectedUsers(users);
-        setReceived(receivedMessages);
-    });
-    socket?.on('user disconnected', (users) => {
-        setConnectedUsers(users);
-    });
-    
-},[allUsers, chatUsers, socket]);
+  useEffect(() => {
+      if (!socket) return;
+  
+      const allUserIDs = chatUsers.map((user) => user.id);
+      socket.emit("allUsers", allUserIDs);
+  
+      const handleLastMessages = (messages) => {
+          setLastMessages(messages);
+      };
+  
+      const handleUserConnected = (users, receivedMessages) => {
+          setConnectedUsers(users);
+          setReceived(receivedMessages);
+      };
+  
+      const handleUserDisconnected = (users) => {
+          setConnectedUsers(users);
+      };
+  
+      socket.on("lastMessages", handleLastMessages);
+      socket.on("user connected", handleUserConnected);
+      socket.on("user disconnected", handleUserDisconnected);
+  
+      return () => {
+          socket.off("lastMessages", handleLastMessages);
+          socket.off("user connected", handleUserConnected);
+          socket.off("user disconnected", handleUserDisconnected);
+      };
+  }, [chatUsers, socket]);
 
-useEffect(() => {   
-    socket?.on('new msg', (msg) => {
+  
+  useEffect(() => {
+    if (!user?._id) return;
+    const newSocket = io(SOCKET_URL, {
+      transports: ["polling", "websocket", "webtransport"],
+      upgrade: false,
+      jsonp: false,
+      query: {
+        userId: user?._id
+      },
+      reconnection: true, 
+      reconnectionAttempts: Infinity, 
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+    });
+
+
+    newSocket.on('disconnect', (reason, details) => {
+      console.log('Disconnected from socket server:', reason, details);
+    });
+
+    newSocket.on('connect_error', (error) => {
+      console.error('Connection error:', error);
+    });
+
+    newSocket.on('reconnect_attempt', (attemptNumber) => {
+      console.log(`Reconnection attempt #${attemptNumber}`);
+    });
+
+    newSocket.on('reconnect', (attemptNumber) => {
+      console.log(`Reconnected on attempt #${attemptNumber}`);
+    });
+
+    setSocket(newSocket);
+
+    return () => {
+    };
+  }, [user]);
+  useEffect(() => {
+    const handleMessage = (msg) => {
+      if (msg.senderId === currentReceiver?.id) {
+        return;
+      } else {
+        setChats((prevChats) => {
+          let userId1 = msg.receiverId;
+          let userId2 = msg.senderId;
+      
+          if (!prevChats[msg.senderId]) {
+            console.log('Loading messages as it was not loaded before');
+            socket.emit('loadMessages', { userId1, userId2 });
+      
+            // Move the event listener outside of the state update function
+            const handleMessages = (fetchedMessages) => {
+              console.log("messages fetched!!");
+              setChats((prev) => {
+                let newObj = { ...prev, [userId2]: fetchedMessages };
+                return newObj;
+              });
+            };
+            socket.once('messages', handleMessages); 
+          }
+          else{
+          let newArr = (prevChats[msg.senderId] || []).concat(msg);
+          return { ...prevChats, [msg.senderId]: newArr };
+        }});
+      
         setReceived((prevReceived) => {
-            let newReceived = [...prevReceived, msg];
-            return newReceived;
+          let ifExisted = prevReceived.find((m) => m.timeStamp === msg.timeStamp);
+          if (ifExisted) {
+            return prevReceived;
+          }
+          let newReceived = [...prevReceived, msg];
+          return newReceived;
         });
-    })
-},[socket])
+      }
+    }
+    socket?.on('new msg', handleMessage);
+  
+    return () => {
+      socket?.off('new msg', handleMessage);
+    };
+  }, [socket, currentReceiver, user]);
 
   const extractFirstLetter = (name) => {
     return name.charAt(0).toUpperCase();
@@ -115,17 +201,6 @@ useEffect(() => {
 }, [user, allUsers, profileImg, setChatUsers]);
 
 
-  useEffect(() => {
-    const newSocket = io(SOCKET_URL, {
-      transports: ['websocket'],
-      jsonp: false,
-      query:{
-        userId: user?._id
-      }
-    });
-    setSocket(newSocket);
-    // return () => newSocket.close();
-  }, [user]);
 
   return (
     <GlobalContext.Provider
@@ -146,6 +221,7 @@ useEffect(() => {
         userName, setUserName, userEmail, setUserEmail, userRole, setUserRole, userGender, setUserGender, userAge, setUserAge, userProfile, setUserProfile,
         detailEmail, setDetailEmail,
         detailId, setDetailId,
+        currentReceiver, setCurrentReceiver,
       }}
     >
       {children}
