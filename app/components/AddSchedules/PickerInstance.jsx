@@ -15,7 +15,6 @@ const PickerInstance  = ({ selectedUser, userNames, onUserChange,title,defaultOp
              enabled={!isDisable}
               selectedValue={selectedUser}
               onValueChange={(itemValue) => {
-                console.log(itemValue)
                 onUserChange(itemValue);
               }}
               className="border rounded p-2 px-4 bg-white_87 text-black font_inter_Regular"

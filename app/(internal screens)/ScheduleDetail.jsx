@@ -96,7 +96,7 @@ const ScheduleDetail = () => {
             />
           }
           { currStatus === "Upcoming" ?
-          <CustomButton title="Markd as Completed" handlePress={()=>handleMarkCompleted("completed")} isDetail={true}
+          <CustomButton title="Mark as Completed" handlePress={()=>handleMarkCompleted("completed")} isDetail={true}
             customStyle={"bg-mint-87"}
             endIcon={<Ionicons name="checkmark-done" size={24} color="#fff" />} isLoading={markingLoad}
           />: currStatus === "Completed" &&

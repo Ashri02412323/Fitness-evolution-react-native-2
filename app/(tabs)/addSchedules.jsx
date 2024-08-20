@@ -126,7 +126,6 @@ const AddSchedule = () => {
       socket.once('messages', handleMessages); 
     }
     else{
-      console.log("Appebded new message: ",user?.fullName);
     let newArr = (prevChats[newMsg.receiverId]).concat(newMsg);
     setRedirect(true);
     return { ...prevChats, [newMsg.receiverId]: newArr };

@@ -71,7 +71,6 @@ useEffect(()=>{
     checkFields();
   }, [subject, userName, link]);
   useEffect(()=>{
-    console.log("setting selectedArea: ",selectedArea);
     setSubject(selectedArea);
   },[selectedArea])
   return (
