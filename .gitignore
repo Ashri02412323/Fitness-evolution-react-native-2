@@ -54,3 +54,7 @@ yarn-error.*
 
 expo-env.d.ts
 # @end expo-cli
+
+# adding android and ios folders
+android/
+ios/
