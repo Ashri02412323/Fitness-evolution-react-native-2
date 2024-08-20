@@ -73,7 +73,7 @@ export const FormProvider = ({ children }) => {
     setDescription(scheduleDescription);
     setUserName(userName);
     setUserId(userId);
-    setSelectedArea(affectedArea);
+    setSelectedArea(scheduleSubject);
     let obj = {
       fullName: userName,
       id: userId
@@ -96,7 +96,7 @@ export const FormProvider = ({ children }) => {
     // setSelectedUser(null);
     setSubmitStatus("createNew");
     setScheduleApprovedId('');
-    setSelectedArea('None');
+    setSelectedArea('');
     setStep(1);
     router.back();
   };

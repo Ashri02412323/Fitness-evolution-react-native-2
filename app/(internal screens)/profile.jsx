@@ -15,7 +15,7 @@ import { deleteMyAccount, logoutUser } from '@/lib/Users/User';
 
 const profile = () => {
     const insets = useSafeAreaInsets();
-    const {userName,userEmail,userRole,userAge,userGender,setUser,token,setToken} = useGlobalContext();
+    const {userName,userEmail,userRole,userAge,userGender,setUser,token,setToken,setChats,setAllUsers,setChatUsers,setLastMessages} = useGlobalContext();
     const {profileRefetch, setProfileRefetch} = useScheduleContext()
     const [fullName, setFullName] = React.useState("");
     const [inputError, setInputError] = React.useState("");
@@ -38,7 +38,7 @@ const profile = () => {
           setIsDeleting(true);
           const response = await deleteMyAccount(token);
           if(response){
-            logoutUser(setToken,setUser);
+            logoutUser(setToken,setUser,setChats,setAllUsers,setChatUsers,setLastMessages);
           }  
         } catch (error) {
           console.log(error);

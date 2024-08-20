@@ -20,7 +20,7 @@ const PickerInstance  = ({ selectedUser, userNames, onUserChange,title,defaultOp
               }}
               className="border rounded p-2 px-4 bg-white_87 text-black font_inter_Regular"
             >
-            <Picker.Item label={selectedUser ? selectedUser :defaultOption} value={selectedUser ?? ""} />
+            <Picker.Item label={selectedUser ? selectedUser :defaultOption} value={selectedUser ?? ''} />
             {userNames.map((item, index) => (
                 item !== selectedUser &&
               <Picker.Item key={index} label={item} value={item} />

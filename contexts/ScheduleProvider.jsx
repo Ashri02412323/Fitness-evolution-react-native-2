@@ -9,7 +9,7 @@ const ScheduleContext = createContext();
 export const useScheduleContext = () => useContext(ScheduleContext);
 
 export const ScheduleProvider = ({ children }) => {
-  const { token,user,setAllUsers,setUser } = useGlobalContext();
+  const { token,user,setAllUsers,setUser,setIsChatUsersLoading,allUsers } = useGlobalContext();
   const [upcoming, setUpcoming] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [requested, setRequested] = useState([]);
@@ -24,6 +24,28 @@ export const ScheduleProvider = ({ children }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [profileRefetch, setProfileRefetch] = useState(false);
   const [chatsRefresh, setChatsRefresh] = useState(false);
+  useEffect(()=>{
+    let length = upcoming.length;
+    length = length < 10 ? `0${length}` : length;
+    setUpcomingLength(length);
+  },[upcoming])
+  useEffect(()=>{
+    let length = completed.length;
+    length = length < 10 ? `0${length}` : length;
+    setCompletedLength(length);
+  },[completed])
+  useEffect(()=>{
+    let length = requested.length;
+    length = length < 10 ? `0${length}` : length;
+    setRequestedLength(length);
+  },[requested])
+
+  useEffect(()=>{
+    let length = allUsers.length;
+    length = length < 10 ? `0${length}` : length;
+    setUserCount(length);
+  },[allUsers])
+
   const appendUpcoming = (schedule) => {
     setUpcoming((prev)=>{
       let newUpcoming = prev.filter((item)=>item._id!==schedule._id);
@@ -50,7 +72,6 @@ export const ScheduleProvider = ({ children }) => {
       
       let length = response.length;
       length = length < 10 ? `0${length}` : length;
-      setUpcomingLength(length);
     } catch (error) {
       console.error('Error fetching upcoming schedules:', error);
       const errorMessage = error.response?.data?.message || 'Error fetching Upcoming schedules';
@@ -68,7 +89,6 @@ export const ScheduleProvider = ({ children }) => {
 
       let length = response.length;
       length = length < 10 ? `0${length}` : length;
-      setCompletedLength(length);
     } catch (error) {
       console.error('Error fetching completed schedules:', error);
       const errorMessage = error.response?.data?.message || 'Error fetching Completed schedules';
@@ -98,12 +118,12 @@ export const ScheduleProvider = ({ children }) => {
 
   const fetchUserCount = async () => {
     setUserCountLoading(true);
+    setIsChatUsersLoading(true);
+
     try {
       let response = await allUsersUnderTrainer(token);
       setAllUsers(response);
-      let length = response.length;
-      length = length < 10 ? `0${length}` : length;
-      setUserCount(length);
+      setIsChatUsersLoading(false);
     } catch (error) {
       console.error('Error fetching user count:', error);
       const errorMessage = error.response?.data?.message || 'Error fetching user count';

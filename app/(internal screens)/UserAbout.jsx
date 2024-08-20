@@ -12,6 +12,7 @@ import { useGlobalContext } from '../../contexts/GlobalProvider'
 import { deleteUser, updateRole } from '../../lib/Users/User'
 import DeleteDialogBox from '../components/Admin/DeleteDialogBox'
 import RoleDialogBox from '../components/Admin/RoleDialogBox'
+import { useScheduleContext } from '../../contexts/ScheduleProvider'
 
 
 
@@ -19,6 +20,7 @@ const UserAbout = () => {
 const {name,gender,profile,age,role,email,id} = useGlobalSearchParams();
 const [fullName,setFullName] = useState('');
 const {token,setAllUsers} = useGlobalContext();
+const {setUpcoming,setCompleted,setRequested,setUpcomingLength,setCompletedLength,setRequestedLength} = useScheduleContext();
 const [deleteVisible,setDeleteVisible] = useState(false);
 const [inputError,setInputError] = useState(false);
 const [isDeleting,setIsDeleting] = useState(false);
@@ -41,6 +43,9 @@ const handleDeleteUser = async() => {
     const response = await deleteUser(token,id);
     if(response){
       setAllUsers((prev)=>prev.filter((user)=>user._id!==id));
+      setUpcoming((prev)=>prev.filter((schedule)=>schedule.userId._id!==id));
+      setCompleted((prev)=>prev.filter((schedule)=>schedule.userId._id!==id));
+      setRequested((prev)=>prev.filter((schedule)=>schedule.userId._id!==id));
       setIsDeleting(false);
       setDeleteVisible(false);
       router.push('/AdminUsers');
@@ -62,9 +67,6 @@ const handleRedirect = () => {
   });
 }
 const handleRoleChange = async() => {
-
-  // setConfirmRole(roleTemp);
-  // setRoleVisible(false);
   try {
     setIsChangingRole(true);
     const response = await updateRole(token,id,roleTemp);

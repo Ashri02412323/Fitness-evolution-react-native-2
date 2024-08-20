@@ -10,11 +10,11 @@ import { logoutUser } from '../../../lib/Users/User';
 import ProfileDefault from '../Profile/ProfileDefault';
 
 const ScheduleHeader = ({isDetail,isProfile,title,onPress,isIconVisible =true,textColor,setDeleteVisible}) => {
-  const {setToken,setUser} = useGlobalContext();
+  const {setToken,setUser,setChats,setAllUsers,setChatUsers,setLastMessages} = useGlobalContext();
   const [isVisible, setIsVisible] = useState(false);
   const handleLogout = async () => {
     try {
-      await logoutUser(setToken,setUser);
+      await logoutUser(setToken,setUser,setChats,setAllUsers,setChatUsers,setLastMessages);
     } catch (error) {
       console.error('Logout failed', error);
     }

@@ -60,7 +60,6 @@ const ScheduleDetail = () => {
         
         <Text className="text-white_87 font-dm_Medium text-2xl capitalize text-center mt-4 px-4">{title}</Text>
         <View className="mt-6 px-4">
-          <DetailInstance title="Affected Area" value={affectedArea} />
           <DetailInstance title="Date" value={date} />
           <DetailInstance title="Time" value={time} />
           { (!noLink || noLink === "false") &&
@@ -100,7 +99,7 @@ const ScheduleDetail = () => {
           <CustomButton title="Markd as Completed" handlePress={()=>handleMarkCompleted("completed")} isDetail={true}
             customStyle={"bg-mint-87"}
             endIcon={<Ionicons name="checkmark-done" size={24} color="#fff" />} isLoading={markingLoad}
-          />:
+          />: currStatus === "Completed" &&
           <CustomButton title="Mark as incompleted" handlePress={()=>handleMarkCompleted("pending")} isDetail={true}
             customStyle={"bg-mint-87"}
             endIcon={<Entypo name="cross" size={24} color="#fff" />} isLoading={markingLoad}

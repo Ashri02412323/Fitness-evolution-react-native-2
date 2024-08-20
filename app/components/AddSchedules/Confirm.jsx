@@ -18,7 +18,6 @@ const Confirm = ({ values, handleBack,handleSubmit }) => {
       <View>
         <DetailInstance title="Schedule Subject" value={subject} />
         <DetailInstance title="Schedule Description" value={description} />
-        <DetailInstance title="Affected Area" value={selectedArea} />
         <DetailInstance title="Date" value={localDate} />
         <DetailInstance title="Time" value={formattedTime} />
         { user.role==="user" &&

@@ -14,7 +14,16 @@ const ScheduleDetails = ({ values, touched, errors, handleNext, handleBack }) =>
   const {allUsers} = useGlobalContext();
   const [userNames, setUserNames] = useState([]);
   const painAreas = useMemo(() => {
-    return ["None","Shoulder", "Knee", "Back", "Neck", "Hip", "Ankle", "Wrist", "Elbow", "Foot", "Hand"];
+        return [
+        "Yoga",
+      "Strength and conditioning",
+      "Fat loss / weight loss",
+      "Homebased body weight workout",
+      "CrossFit",
+      "High intensity interval training",
+      "Kettlebell workout",
+      "Fitness kickboxing"
+    ];
   }, []);
   const [isNextDisabled, setIsNextDisabled] = useState(true);
   const {user} = useGlobalContext();
@@ -45,7 +54,7 @@ useEffect(()=>{
 },[selectedUser])
   useEffect(() => {
     const checkFields = () => {
-      if(user?.role==="user"){
+      if(user?.role==="user" || user?.role==="trainer"){
         if (subject) {
           setIsNextDisabled(false);
         } else {
@@ -61,15 +70,28 @@ useEffect(()=>{
     }
     checkFields();
   }, [subject, userName, link]);
+  useEffect(()=>{
+    console.log("setting selectedArea: ",selectedArea);
+    setSubject(selectedArea);
+  },[selectedArea])
   return (
     <View className="mt-0">
       <View>
-        <FormDetailInstance
+        {/* <FormDetailInstance
           title={"Schedule Subject*"}
           placeholder={"What is this schedule for?"}
           value={subject}
           setValue={setSubject}
           error={touched.subject && errors.subject}
+        /> */}
+          <PickerInstance
+          title="Subject*"
+          selectedUser={selectedArea}
+          userNames={painAreas}
+          onUserChange={setSelectedArea}
+          defaultOption="Select Subject"
+          itemNotObj={true}
+          
         />
         <FormDetailInstance
           title={"Schedule Description(optional)"}
@@ -78,15 +100,6 @@ useEffect(()=>{
           value={description}
           setValue={setDescription}
           error={touched.description && errors.description}
-        />
-          <PickerInstance
-          title="Select Affected Area (if any)"
-          selectedUser={selectedArea}
-          userNames={painAreas}
-          onUserChange={setSelectedArea}
-          defaultOption="None"
-          itemNotObj={true}
-          
         />
         {user?.role ==='admin' && 
         <>

@@ -77,37 +77,43 @@ setPasswordValid(false);
 }
   return (
     <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top }}>
-      <ScrollView>
-        <View className="w-full relative h-[300px]">
-          <Image source={SignUpImg} 
-          contentFit='cover'
-          contentPosition={'center'}
-          className="w-full h-full scale-110"
-          
-          />
+      <ScrollView className="flex flex-col  h-full" contentContainerStyle={{
+          justifyContent: 'space-between',
+          flexGrow: 1,
+        }}>
+        <View className="">
+          <View className="w-full relative h-[300px]">
+            <Image source={SignUpImg} 
+            contentFit='cover'
+            contentPosition={'center'}
+            className="w-full h-full scale-110"
+            
+            />
+          </View>
+
+          <View className="flex items-center justify-center gap-1 mt-0">
+            <Text className="text-white font-pop_SemiBold text-3xl">Fitness Evolution</Text>
+            <Text className="text-white font-pop_Medium text-lg">Evolve Beyond Limits</Text>
+          </View>
+
+          <View className="flex items-center justify-center gap-4 mt-4 px-4 w-full mx-auto" style={{gap:16}}>
+            <FormField title="Enter Your Full Name" placeholder="Enter your full name" icon={"user-alt"} iconType={"fontAwesome"} value={fullName}
+            handleChangeText={(e)=>setFullName(e)} validationError={fullNameValid}
+            />
+
+            <FormField title="Email" placeholder="Enter your email" icon={"email"} value={email} handleChangeText={(e)=>setEmail(e)} validationError={emailValid} keyboardType={"email-address"}/>
+
+            <FormField title="Password" placeholder="Enter your password" icon='password' isPassword 
+            value={password} handleChangeText={(e)=>setPassword(e)} validationError={passwordValid}
+            />
+
+          </View>
+
+          <View className={"mt-10"}>
+            <CustomButton title="Sign Up" handlePress={handleSignUp} isLoading={isLoading} />
+          </View>
         </View>
-
-        <View className="flex items-center justify-center gap-1 mt-0">
-          <Text className="text-white font-pop_SemiBold text-3xl">Fitness Evolution</Text>
-          <Text className="text-white font-pop_Medium text-lg">Evolve Beyond Limits</Text>
-        </View>
-
-        <View className="flex items-center justify-center gap-4 mt-4 px-4 w-full mx-auto" style={{gap:16}}>
-          <FormField title="Enter Your Full Name" placeholder="Enter your full name" icon={"user-alt"} iconType={"fontAwesome"} value={fullName}
-          handleChangeText={(e)=>setFullName(e)} validationError={fullNameValid}
-          />
-
-          <FormField title="Email" placeholder="Enter your email" icon={"email"} value={email} handleChangeText={(e)=>setEmail(e)} validationError={emailValid} keyboardType={"email-address"}/>
-
-          <FormField title="Password" placeholder="Enter your password" icon='password' isPassword 
-          value={password} handleChangeText={(e)=>setPassword(e)} validationError={passwordValid}
-           />
-
-        </View>
-
-        <View className={"mt-10"}>
-          <CustomButton title="Sign Up" handlePress={handleSignUp} isLoading={isLoading} />
-
+        <View className="justify-self-end self-end w-full">
           <View style={{ height: 1, backgroundColor: '#E5E7EB', marginTop: 25,opacity: 0.8}} />
           <View className="py-6 flex flex-row mx-auto">
             <Text className="text-white text-base text-center ">Already have an account? {" "} 

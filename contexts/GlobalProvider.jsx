@@ -2,8 +2,7 @@ import React, { createContext, useContext, useEffect, useRef, useState } from "r
 import profileImg from "../assets/images/profilePic.png";
 import io from 'socket.io-client';
 
-const SOCKET_URL = 'https://evolution-erm4.onrender.com'; // Replace with your server URL
-
+const SOCKET_URL = 'https://evolution-erm4.onrender.com'; 
 const GlobalContext = createContext();
 export const useGlobalContext = () => useContext(GlobalContext);
 
@@ -29,6 +28,7 @@ export const GlobalProvider = ({ children }) => {
   const [token, setToken] = useState('');
   const [blogID, setBlogID] = useState('');
   const [chatUsers, setChatUsers] = useState([]);
+  const [isChatUsersLoading, setIsChatUsersLoading] = useState(true);
   const [socket, setSocket] = useState(null);
   const [connectedUsers, setConnectedUsers] = useState([]);
   const [received, setReceived] = useState([]);
@@ -45,8 +45,9 @@ export const GlobalProvider = ({ children }) => {
   
   useEffect(() => {
       if (!socket) return;
-  
-      const allUserIDs = chatUsers.map((user) => user.id);
+    if(!user) return;
+    if(!user?._id) return;
+      const allUserIDs = chatUsers.map((user) => user.id)
       socket.emit("allUsers", allUserIDs);
   
       const handleLastMessages = (messages) => {
@@ -71,7 +72,7 @@ export const GlobalProvider = ({ children }) => {
           socket.off("user connected", handleUserConnected);
           socket.off("user disconnected", handleUserDisconnected);
       };
-  }, [chatUsers, socket]);
+  }, [chatUsers, socket,user]);
 
   
   useEffect(() => {
@@ -191,6 +192,7 @@ useEffect(() => {
       noOfMsg: 3,
       id: user.trainerAssigned._id
     }]);
+    setIsChatUsersLoading(false);
   } else if (user?.role === "admin" && Array.isArray(allUsers)) {
     const chatUsers = allUsers.map(user => ({
       userName: user.fullName,
@@ -202,7 +204,7 @@ useEffect(() => {
     }));
     setChatUsers(chatUsers);
   }
-}, [user, allUsers, profileImg, setChatUsers]);
+}, [user, allUsers, profileImg, setChatUsers, setIsChatUsersLoading]);
 
 
 
@@ -225,7 +227,7 @@ useEffect(() => {
         userName, setUserName, userEmail, setUserEmail, userRole, setUserRole, userGender, setUserGender, userAge, setUserAge, userProfile, setUserProfile,
         detailEmail, setDetailEmail,
         detailId, setDetailId,
-        currentReceiver, setCurrentReceiver,
+        currentReceiver, setCurrentReceiver, extractFirstLetter, isChatUsersLoading, setIsChatUsersLoading
       }}
     >
       {children}

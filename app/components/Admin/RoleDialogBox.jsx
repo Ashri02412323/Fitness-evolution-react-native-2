@@ -25,7 +25,7 @@ const RoleDialogBox = ({
       </View>
       {/* <Text className="text-white mt-4 text-base ">Select User Role to change</Text> */}
         <PickerInstance selectedUser={role} onUserChange={setRole} title={"Select Role to Change"}
-        userNames={['admin','trainer','user']}
+        userNames={['admin','user']}
         itemNotObj={true}
         />
       <View className="mt-6 flex flex-row items-center justify-center">

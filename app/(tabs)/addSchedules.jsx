@@ -88,12 +88,10 @@ const AddSchedule = () => {
     scheduleSubject: subject,
     scheduleDescription: description,
     userId: userId,
-    affectedArea: selectedArea,
     trainerId: trainerId,
   }
   const trainer = user?.role=="admin"?user:user.trainerAssigned;
-  // const userString = encodeURIComponent(JSON.stringify(trUiner));
-  
+
 
   const trainerName = user?.role=="admin"?user?.fullName:user.trainerAssigned?.fullName;
   const sendMessage = (msg) => {

@@ -10,7 +10,7 @@ import { useScheduleContext } from '../../contexts/ScheduleProvider';
 
 const Chat = () => {
   const insets = useSafeAreaInsets();
-  const {chatUsers} = useGlobalContext();
+  const {chatUsers,isChatUsersLoading} = useGlobalContext();
   const {chatsRefresh, setChatsRefresh} = useScheduleContext();
   const onRefresh = () => {
     setChatsRefresh(true);
@@ -23,7 +23,8 @@ const Chat = () => {
           <RefreshControl refreshing={chatsRefresh} onRefresh={onRefresh} />
         }>
       <View className="flex flex-col px-2">
-        {chatUsers.map((user,index) => {
+          {isChatUsersLoading&&<Text className="text-white text-lg text-center">Loading...</Text>}
+        {!isChatUsersLoading && chatUsers.map((user,index) => {
           if(!user || !user.userName){
             return null;
           }

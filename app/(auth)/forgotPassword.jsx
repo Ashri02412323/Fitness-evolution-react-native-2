@@ -91,44 +91,51 @@ const handleChangePass = async() => {
   
   return (
     <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top }}>
-      <ScrollView>
-        <View className="w-full relative h-[300px]">
-          <Image source={forgotImg} 
-          contentFit='cover'
-          contentPosition={'center'}
-          className="w-full h-full scale-110"
-          />
-        </View>
-
-        <View className="flex items-center justify-center gap-1 mt-0">
-          <Text className="text-white font-pop_SemiBold text-3xl">Fitness Evolution</Text>
-          <Text className="text-white font-pop_Regular text-lg">Recover Your Password</Text>
-        </View>
-
-        <View className="flex items-center justify-center gap-4 mt-8 px-4 w-full mx-auto" style={{gap:16}}>
-            {verified ? 
-            <>
-            <FormField title="Enter New Password" placeholder="Enter password"  iconType={"fontAwesome"}  icon='unlock' isPassword value={password} handleChangeText={(e)=>setPassword(e)} 
-            validationError={passwordValid}
+      <ScrollView className="flex flex-col  h-full" contentContainerStyle={{
+          justifyContent: 'space-between',
+          flexGrow: 1,
+        }}>
+          <View>
+            <View className="w-full relative h-[300px]">
+              <Image source={forgotImg} 
+              contentFit='cover'
+              contentPosition={'center'}
+              className="w-full h-full scale-110"
               />
+            </View>
 
-            <FormField title="Confirm Password"  placeholder="Confirm password" iconType={"fontAwesome"} icon='lock' isPassword 
-            value={confirmPassword} handleChangeText={(e)=>setConfirmPassword(e)} validationError={confirmPasswordValid}
-            />
-            </>
+            <View className="flex items-center justify-center gap-1 mt-0">
+              <Text className="text-white font-pop_SemiBold text-3xl">Fitness Evolution</Text>
+              <Text className="text-white font-pop_Regular text-lg">Recover Your Password</Text>
+            </View>
 
-            :
-            <FormField title="Email" placeholder="Enter your email" icon={"email"} value={email} handleChangeText={(e)=>setEmail(e)} validationError={emailValid} />
-            }
+            <View className="flex items-center justify-center gap-4 mt-8 px-4 w-full mx-auto" style={{gap:16}}>
+                {verified ? 
+                <>
+                <FormField title="Enter New Password" placeholder="Enter password"  iconType={"fontAwesome"}  icon='unlock' isPassword value={password} handleChangeText={(e)=>setPassword(e)} 
+                validationError={passwordValid}
+                  />
+
+                <FormField title="Confirm Password"  placeholder="Confirm password" iconType={"fontAwesome"} icon='lock' isPassword 
+                value={confirmPassword} handleChangeText={(e)=>setConfirmPassword(e)} validationError={confirmPasswordValid}
+                />
+                </>
+
+                :
+                <FormField title="Email" placeholder="Enter your email" icon={"email"} value={email} handleChangeText={(e)=>setEmail(e)} validationError={emailValid} />
+                }
+            </View>
+
+            <View className={`${verified?"mt-8":"mt-8"}`}>
+              
+              {verified ? 
+              <CustomButton title="Change Password" handlePress={handleChangePass} isLoading={isLoading}/>
+              :
+              <CustomButton title="Verify Email" handlePress={handleVerifyEmail} isLoading={isLoading}/>
+              }
+            </View>
         </View>
-
-        <View className={`${verified?"mt-8":"mt-28"}`}>
-          {/* <CustomButton title={`${verified?"Change Password":"Verify Email"}`} handlePress={() => {setVerified(prev => !prev)}} /> */}
-          {verified ? 
-          <CustomButton title="Change Password" handlePress={handleChangePass} isLoading={isLoading}/>
-          :
-          <CustomButton title="Verify Email" handlePress={handleVerifyEmail} isLoading={isLoading}/>
-          }
+          <View className="justify-self-end self-end w-full">
           <View style={{ height: 1, backgroundColor: '#E5E7EB', marginTop: 25,opacity: 0.8}} />
           <View className="py-6 flex flex-row mx-auto">
             <Text className="text-white text-base text-center ">Remember Password? {" "} 

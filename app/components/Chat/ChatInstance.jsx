@@ -3,6 +3,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { router } from 'expo-router';
 import { useGlobalContext } from '../../../contexts/GlobalProvider';
 import profileImg from "../../../assets/images/profilePic.png";
+import ProfileDefault from '../Profile/ProfileDefault';
+import AboutProfile from '../Profile/AboutProfile';
 
 const ChatInstance = ({ user, profile, role, userName }) => {
   const { setCurrentReceiver,chats} = useGlobalContext();
@@ -72,7 +74,7 @@ const ChatInstance = ({ user, profile, role, userName }) => {
           {profile ? (
             <Image source={{ uri: profile }} style={{ width: 50, height: 50, borderRadius: 50 }} />
           ) : (
-            <Image source={profileImg} style={{ width: 50, height: 50, borderRadius: 50 }} />
+           <AboutProfile sizeClass={"w-[50px] h-[50px]"} textStyle={"text-[20px]"} name={userName} parentStyle={"mr-0"} />
           )}
           {userStatus && <View className="absolute bottom-0 right-[1px] w-3 h-3 bg-green-500 rounded-full" />}
         </View>

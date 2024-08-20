@@ -43,7 +43,7 @@ const ChatScreen = () => {
     return () => {
       setCurrentReceiver(null);
     }
-  }, []);
+  }, [receiver]);
 useEffect(()=>{
   if (scrollRef.current) {
     scrollRef.current.scrollToEnd({ animated: true});
@@ -65,6 +65,7 @@ useEffect(()=>{
     if (!socket) return;
     let ifChatAlreadyExists = chats[userId2];
     if (!ifChatAlreadyExists){
+      setLoadingMessages(true);
     socket.emit('loadMessages', { userId1, userId2 })
   }
      socket.on('messages', (fetchedMessages) => {
