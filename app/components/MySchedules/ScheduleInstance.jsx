@@ -1,34 +1,56 @@
-import { View, Text, Image, Pressable } from 'react-native'
-import React from 'react'
-import profile from '../../../assets/images/profilePic.png'
-import { router } from 'expo-router'
+import { View, Text, Image, Pressable, TouchableOpacity, Linking } from 'react-native';
+import React from 'react';
+import profile from '../../../assets/images/profilePic.png';
+import { router } from 'expo-router';
+import { Toast } from 'toastify-react-native';
 
-const handleNavigate = (title, date, time, link, userName, noLink, profileImg,descr,isUser,isProfileLink,status,id,startTime,endTime,userId,rawDate,affectedArea) => {
-    router.push({pathname: "/ScheduleDetail", params: {title, date, time, link, userName, noLink,profileImg,descr,isUser,isProfileLink,status,id,startTime,endTime,userId,rawDate,affectedArea}})
-}
-const ScheduleInstance = ({title,date,time,link,userName,noLink,profileImg,descr,isUser,status,id,startTime,endTime ,userId ,rawDate,affectedArea}) => {
+const handleNavigate = (title, date, time, link, userName, noLink, profileImg, descr, isUser, isProfileLink, status, id, startTime, endTime, userId, rawDate, affectedArea) => {
+    router.push({ pathname: "/ScheduleDetail", params: { title, date, time, link, userName, noLink, profileImg, descr, isUser, isProfileLink, status, id, startTime, endTime, userId, rawDate, affectedArea } });
+};
+
+const ScheduleInstance = ({ title, date, time, link, userName, noLink, profileImg, descr, isUser, status, id, startTime, endTime, userId, rawDate, affectedArea }) => {
     const handlePress = () => {
-        handleNavigate(title,date,time,link,userName,noLink,profileImg??profile,descr,isUser,profileImg?true:false,status,id,startTime,endTime,userId,rawDate,affectedArea)
-    }
-  return (  
-    <Pressable onPress={handlePress} className="flex flex-row bg-secondary w-full items-center justify-start p-2 pl-0 rounded-lg mb-2">
-         <View className="w-[30%] flex items-center justify-center">
-          {profileImg ? <Image source={{uri:profileImg}} className="h-16 w-16 rounded-full" />:
-          <Image source={profile} className="h-16 w-16 rounded-full" />
-          }
-         </View>
-         <View className="flex flex-col gap-y-[4px] w-[70%]">
-            <Text className="text-white_87 font-dm_Medium text-base capitalize" numberOfLines={1}>{title}</Text>
-            <View className="flex flex-col gap-y-[2px]">
-              <Text className="text-white_60 font-inter_Regular text-md">{date}, {time}</Text>
-              {!noLink && <Text className=" text-blue-500 font-inter_Regular text-md" numberOfLines={1}
-              style={{ flexShrink: 1 }}
-              >{link}</Text>}
-              <Text className="text-white_38 font-inter_Regular text-sm">{isUser ?"Trainer: ": "User: "}{userName}</Text>
-            </View>
-        </View> 
-    </Pressable>
-  )
-}
+        handleNavigate(title, date, time, link, userName, noLink, profileImg ?? profile, descr, isUser, profileImg ? true : false, status, id, startTime, endTime, userId, rawDate, affectedArea);
+    };
 
-export default ScheduleInstance
+    const handleLinkPress = async () => {
+      if (link) {
+          try {
+              const supported = await Linking.canOpenURL(link);
+              if (supported) {
+                  Linking.openURL(link);
+              } else {
+                  Toast.warn( 'Uh oh! Looks like this url does not exist', 'top');
+              }
+          } catch (error) {
+            Toast.warn( 'Uh oh! Looks like an error occured while opening the url', 'top');
+          }
+      }
+  };
+
+    return (
+        <Pressable onPress={handlePress} className="flex flex-row bg-secondary w-full items-center justify-start p-2 pl-0 rounded-lg mb-2">
+            <View className="w-[30%] flex items-center justify-center">
+                {profileImg ? <Image source={{ uri: profileImg }} className="h-16 w-16 rounded-full" /> :
+                    <Image source={profile} className="h-16 w-16 rounded-full" />
+                }
+            </View>
+            <View className="flex flex-col gap-y-[4px] w-[70%]">
+                <Text className="text-white_87 font-dm_Medium text-base capitalize" numberOfLines={1}>{title}</Text>
+                <View className="flex flex-col gap-y-[2px]">
+                    <Text className="text-white_60 font-inter_Regular text-md">{date}, {time}</Text>
+                    {!noLink && (
+                        <TouchableOpacity onPress={handleLinkPress}>
+                            <Text className="text-blue-500 font-inter_Regular text-md" numberOfLines={1} style={{ flexShrink: 1 }}>
+                                {link}
+                            </Text>
+                        </TouchableOpacity>
+                    )}
+                    <Text className="text-white_38 font-inter_Regular text-sm">{isUser ? "Trainer: " : "User: "}{userName}</Text>
+                </View>
+            </View>
+        </Pressable>
+    );
+};
+
+export default ScheduleInstance;

@@ -14,12 +14,12 @@ const UserAboutDetail = ({name,email,gender,age,role}) => {
             <Text className="text-white_87 text-xl font-inter_Medium ">User Details</Text>
           </View>
           <View className="bg-tertiary rounded-2xl overflow-hidden">
-          <ImageBackground source={Wave2} style={{width: '100%', height: 230,}}
+          <ImageBackground source={Wave2} style={{width: '100%', }}
           imageStyle={{
             
           }}
             >
-            <View className="relative flex flex-col border-[0.5px] border-lava rounded-2xl overflow-hidden h-full px-6 py-4 justify-center ">
+            <View className="relative flex flex-col border-[0.5px] border-lava rounded-2xl overflow-hidden  px-6 py-4 justify-center items-center ">
                 <AboutInstance title="Full Name" value={name} />
                 <AboutInstance title="Email" value={email} />
                 <AboutInstance title="Role" value={role} />
