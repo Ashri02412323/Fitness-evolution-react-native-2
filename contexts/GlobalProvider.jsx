@@ -7,6 +7,7 @@ const GlobalContext = createContext();
 export const useGlobalContext = () => useContext(GlobalContext);
 
 export const GlobalProvider = ({ children }) => {
+  const [hasSignedUp, setHasSignedUp] = useState(false);
   const [isLogged, setIsLogged] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -47,7 +48,7 @@ export const GlobalProvider = ({ children }) => {
       if (!socket) return;
     if(!user) return;
     if(!user?._id) return;
-      const allUserIDs = chatUsers.map((user) => user.id)
+      const allUserIDs = chatUsers?.map((user) => user.id)
       socket.emit("allUsers", allUserIDs);
   
       const handleLastMessages = (messages) => {
@@ -194,7 +195,7 @@ useEffect(() => {
     }]);
     setIsChatUsersLoading(false);
   } else if (user?.role === "admin" && Array.isArray(allUsers)) {
-    const chatUsers = allUsers.map(user => ({
+    const chatUsers = allUsers?.map(user => ({
       userName: user.fullName,
       lastMessage: "Hello, how are you?",
       profile: user.profileImage,
@@ -227,7 +228,8 @@ useEffect(() => {
         userName, setUserName, userEmail, setUserEmail, userRole, setUserRole, userGender, setUserGender, userAge, setUserAge, userProfile, setUserProfile,
         detailEmail, setDetailEmail,
         detailId, setDetailId,
-        currentReceiver, setCurrentReceiver, extractFirstLetter, isChatUsersLoading, setIsChatUsersLoading
+        currentReceiver, setCurrentReceiver, extractFirstLetter, isChatUsersLoading, setIsChatUsersLoading,
+        hasSignedUp, setHasSignedUp,
       }}
     >
       {children}

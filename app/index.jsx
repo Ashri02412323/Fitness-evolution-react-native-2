@@ -3,7 +3,7 @@ import 'react-native-reanimated';
 import useCheckLoginStatus from './useCheckLoginStatus';
 
 function Index() {
-  const { isLoggedIn, delayCompleted, NotLoggedInComponent } = useCheckLoginStatus();
+  const { isLoggedIn,  NotLoggedInComponent } = useCheckLoginStatus();
 
   if (isLoggedIn === null) {
     return NotLoggedInComponent;

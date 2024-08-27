@@ -23,7 +23,7 @@ const [passwordValid, setPasswordValid] = useState(false);
 const [fullNameValid, setFullNameValid] = useState(false);
 
 const [isLoading, setIsLoading] = useState(false);
-const {setUser} = useGlobalContext();
+const {setUser,setHasSignedUp} = useGlobalContext();
 
 const handleSignUp= ()=>{
 setFullNameValid(false);
@@ -60,7 +60,7 @@ setPasswordValid(false);
     setPasswordValid(false);
     setFullNameValid(false);
 
-    SignUpUser(fullName, email, password)
+    SignUpUser(fullName, email, password,setHasSignedUp)
     .then((response) => {
       setUser(response);
       Toast.success('Sign Up Successful','top');

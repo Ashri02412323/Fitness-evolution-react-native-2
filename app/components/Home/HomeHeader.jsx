@@ -6,7 +6,7 @@ import { router } from 'expo-router';
 import ProfileDefault from '../Profile/ProfileDefault';
 
 const HomeHeader = () => {
-  const {user} = useGlobalContext();
+  const {user,hasSignedUp} = useGlobalContext();
  
   return (
     <View className="flex flex-row items-center gap-2 justify-between h-20  px-0" style={{margin:0}}>
@@ -17,7 +17,7 @@ const HomeHeader = () => {
         <ProfileDefault sizeClass={"h-12 w-12"} textStyle={"text-2xl bottom-0"} parentStyle={"mb-0 mt-3 mr-0 ml-3"} />
       </Pressable>
         <View className="flex flex-col justify-center h-full ml-3" style={{margin:0}}>
-          <Text className="text-white font-dm_Regular text-sm">Welcome Back</Text>
+          <Text className="text-white font-dm_Regular text-sm">{hasSignedUp?"Welcome":"Welcome Back"}</Text>
           <Text className="text-mint-87 font-pop_SemiBold  text-lg capitalize">{user?.fullName}</Text>
         </View>
       </View>

@@ -13,7 +13,7 @@ import ToastManager, { Toast } from 'toastify-react-native'
 import ToastManage from '../components/Home/ToastManage';
 
 const SignIn = () => {
-  const { setUser } = useGlobalContext();
+  const { setUser,setHasSignedUp } = useGlobalContext();
   const insets = useSafeAreaInsets();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -41,7 +41,7 @@ const SignIn = () => {
       setIsLoading(true);
       setEmailValid(false);
       setPasswordValid(false);
-      LoginUser(email, password)
+      LoginUser(email, password,setHasSignedUp)
         .then((response) => {
           setUser(response);
           Toast.success("Login Successful", 'top')

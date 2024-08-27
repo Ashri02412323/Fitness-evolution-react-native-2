@@ -24,10 +24,31 @@ const ChatScreen = () => {
   const { chats, setChats ,user,socket,setLastMessages,setReceived,scrollRef,setCurrentReceiver} = useGlobalContext();
   const [msg, setMsg] = useState("");
   const userId1 = user?._id;
+  useEffect(() => {
+    console.log("ChatScreen mounted receiver:", objReceiver);
+  }, [receiver]);
   const userId2 = objReceiver?.id;
   const [isSending, setIsSending] = useState(false);
   const [loadingMessages, setLoadingMessages] = useState(true);
 
+  useEffect(() => {
+    if (!socket) return;
+    if (!userId2) return;
+    if (!chats) {
+      console.log("Chats not found. Creating new chats object. empty here: ",chats);
+      setChats({ [userId2]: [] });
+      return;
+    }
+  if(chats[userId2] === undefined){
+    console.log("Chat not found. Creating new chat object.");
+    let ifChatAlreadyExists = chats[userId2] && chats[userId2]?.length > 0;
+    if (!ifChatAlreadyExists){
+      setLoadingMessages(true);
+      console.log("Chat not found. Fetching messages from server. loading here");
+    socket.emit('loadMessages', { userId1, userId2 })
+    }
+  }
+  }, [userId2, chats,socket]);
   useEffect(() => {
     const checkScrollRef = setInterval(() => {
       if (scrollRef.current) {
@@ -63,11 +84,7 @@ useEffect(()=>{
 },[])
   useEffect(() => {
     if (!socket) return;
-    let ifChatAlreadyExists = chats[userId2];
-    if (!ifChatAlreadyExists){
-      setLoadingMessages(true);
-    socket.emit('loadMessages', { userId1, userId2 })
-  }
+  
      socket.on('messages', (fetchedMessages) => {
       setChats((prev) => {
         let newObj = { ...prev, [userId2]: fetchedMessages };
@@ -101,7 +118,7 @@ useEffect(()=>{
 
     socket.on('message status', (msg) => {
       setChats((prevChats) => {
-        let newArr = prevChats[userId2].map((m) => {
+        let newArr = prevChats[userId2]?.map((m) => {
           return (m.timeStamp === msg.timeStamp ? msg : m)});
         return { ...prevChats, [userId2]: newArr };
       });
@@ -145,11 +162,6 @@ useEffect(()=>{
     if (scrollRef.current) {
       scrollRef.current.scrollToEnd({ animated: true });
     }
-    // setLastMessages((prevMessages) => {
-    //   let newMessages = prevMessages.filter((m) => m.senderId !== userId2 && m.receiverId !== userId2);
-    //   newMessages.push(newMsg);
-    //   return newMessages;
-    // });
   }
 
   const handleRead = (msg) => {
