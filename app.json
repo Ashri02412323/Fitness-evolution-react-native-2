@@ -24,10 +24,7 @@
         "foregroundImage": "./assets/images/fitnessLogoSmall3.png",
         "backgroundColor": "#0B1215"
       },
-      "package": "com.ashri024.fitnessevolution",
-      "buildProperties": {
-        "usesCleartextTraffic": true
-      }
+      "package": "com.ashri024.fitnessevolution"
     },
     "web": {
       "bundler": "metro",
@@ -36,7 +33,14 @@
     },
     "plugins": [
       "expo-router",
-      "expo-build-properties"
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
