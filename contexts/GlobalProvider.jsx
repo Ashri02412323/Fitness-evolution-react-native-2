@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useRef, useState } from "r
 import profileImg from "../assets/images/profilePic.png";
 import io from 'socket.io-client';
 
-const SOCKET_URL = 'https://evolution-erm4.onrender.com'; 
+const SOCKET_URL = 'http://fitnessevolution-env.eba-5itjpppf.us-east-1.elasticbeanstalk.com'; 
 const GlobalContext = createContext();
 export const useGlobalContext = () => useContext(GlobalContext);
 

@@ -24,9 +24,6 @@ const ChatScreen = () => {
   const { chats, setChats ,user,socket,setLastMessages,setReceived,scrollRef,setCurrentReceiver} = useGlobalContext();
   const [msg, setMsg] = useState("");
   const userId1 = user?._id;
-  useEffect(() => {
-    console.log("ChatScreen mounted receiver:", objReceiver);
-  }, [receiver]);
   const userId2 = objReceiver?.id;
   const [isSending, setIsSending] = useState(false);
   const [loadingMessages, setLoadingMessages] = useState(true);
@@ -35,16 +32,13 @@ const ChatScreen = () => {
     if (!socket) return;
     if (!userId2) return;
     if (!chats) {
-      console.log("Chats not found. Creating new chats object. empty here: ",chats);
       setChats({ [userId2]: [] });
       return;
     }
   if(chats[userId2] === undefined){
-    console.log("Chat not found. Creating new chat object.");
     let ifChatAlreadyExists = chats[userId2] && chats[userId2]?.length > 0;
     if (!ifChatAlreadyExists){
       setLoadingMessages(true);
-      console.log("Chat not found. Fetching messages from server. loading here");
     socket.emit('loadMessages', { userId1, userId2 })
     }
   }
