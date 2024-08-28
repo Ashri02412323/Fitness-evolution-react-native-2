@@ -14,14 +14,18 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.ashri024.fitnessevolution"
+      "bundleIdentifier": "com.ashri024.fitnessevolution",
+      "infoPlist": {
+        "NSAppTransportSecurity": { "NSAllowsArbitraryLoads": true }
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/fitnessLogoSmall3.png",
         "backgroundColor": "#0B1215"
       },
-      "package": "com.ashri024.fitnessevolution"
+      "package": "com.ashri024.fitnessevolution",
+      "usesCleartextTraffic": true
     },
     "web": {
       "bundler": "metro",
@@ -29,7 +33,8 @@
       "favicon": "./assets/images/fitnessLogoSmall3.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-build-properties"
     ],
     "experiments": {
       "typedRoutes": true
