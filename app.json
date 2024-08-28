@@ -25,7 +25,9 @@
         "backgroundColor": "#0B1215"
       },
       "package": "com.ashri024.fitnessevolution",
-      "usesCleartextTraffic": true
+      "buildProperties": {
+        "usesCleartextTraffic": true
+      }
     },
     "web": {
       "bundler": "metro",
