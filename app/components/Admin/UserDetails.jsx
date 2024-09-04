@@ -16,7 +16,6 @@ const UserDetails = () => {
         id: detailId
       }
       const userString = encodeURIComponent(JSON.stringify(receiver));
-      console.log("Receiver: ",receiver);
       router.push({
         pathname: "/ChatScreen",
         params: {receiver:userString,userName:detailName}

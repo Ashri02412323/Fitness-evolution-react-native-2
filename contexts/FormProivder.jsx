@@ -32,7 +32,7 @@ export const FormProvider = ({ children }) => {
     const [selectedUser, setSelectedUser] = useState();
     const [selectedArea, setSelectedArea] = useState();
   const [submitStatus,setSubmitStatus] = useState("createNew");
-
+  const [tabsChanged, setTabsChanged] = useState(false);
   const [scheduleApprovedId, setScheduleApprovedId] = useState('');
 
   const getIsoDateTimeString = (selectedDate, itemValue) => {
@@ -100,23 +100,30 @@ export const FormProvider = ({ children }) => {
     setStep(1);
     router.back();
   };
-    const getTimeOptions = (ISODate) => {
+    const getTimeOptions = (ISODate,isStartTime=false) => {
       const timeOptions = [];
       let date = new Date(ISODate);
       // if same day do date.now
-      if(dayjs(date).isSame(dayjs(), 'day')){
+      if (dayjs(date).isSame(dayjs(), 'day')) {
         date = new Date();
       }
       const hours = date.getHours();
-  
-      for (let i = hours+1; i < 24; i++) {
-        timeOptions.push(`${i < 10 ? '0' + i : i}:00`);
+    
+      for (let i = hours; i <= 24; i++) {
+        if(i===24 && isStartTime){
+          continue;
+        }
+        if (i === 24) {
+          timeOptions.push('23:59');
+        }
+        else {
+          timeOptions.push(`${i < 10 ? '0' + i : i}:00`);
+        }
       }
-  
+    
       return timeOptions;
     };
-    
-  const [startOptions, setStartOptions] = useState(getTimeOptions(selectedDate));
+  const [startOptions, setStartOptions] = useState(getTimeOptions(selectedDate, true));
   const [endOptions, setEndOptions] = useState(getTimeOptions(startTimeIso));
   return (
     <FormContext.Provider
@@ -136,7 +143,7 @@ export const FormProvider = ({ children }) => {
         getTimeOptions,
         getIsoDateTimeString,
         subject, setSubject, description, setDescription, userName, setUserName, link, setLink, userId, setUserId, submitStatus, setSubmitStatus, scheduleApprovedId, setScheduleApprovedId, handleApprove, postLoading, setPostLoading,reverseFromIsoString, selectedUser, setSelectedUser,resetFormValues, selectedArea, setSelectedArea,
-        step, setStep
+        step, setStep, tabsChanged, setTabsChanged
       }}
     >
       {children}

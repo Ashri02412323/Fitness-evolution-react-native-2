@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useGlobalContext } from "./GlobalProvider";
-import { fetchCompleted, fetchRequested, fetchUpcoming } from "../lib/Users/Schedule";
+import { fetchCompleted, fetchPending, fetchRequested, fetchUpcoming } from "../lib/Users/Schedule";
 // import Toast from 'react-native-toast-message';
 import ToastManager, {Toast} from 'toastify-react-native';
 import { allUsersUnderTrainer, checkIfLoggedIn } from "../lib/Users/User";
@@ -13,12 +13,15 @@ export const ScheduleProvider = ({ children }) => {
   const [upcoming, setUpcoming] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [requested, setRequested] = useState([]);
+  const [pending, setPending] = useState([]);
   const [upcomingLoading, setUpcomingLoading] = useState(true);
   const [completedLoading, setCompletedLoading] = useState(true);
   const [requestedLoading, setRequestedLoading] = useState(true);
+  const [pendingLoading, setPendingLoading] = useState(true);
   const [upcomingLength, setUpcomingLength] = useState(0);
   const [completedLength, setCompletedLength] = useState(0);
   const [requestedLength, setRequestedLength] = useState(0);
+  const [pendingLength, setPendingLength] = useState(0);
   const [userCount, setUserCount] = useState(0);
   const [userCountLoading, setUserCountLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -39,6 +42,12 @@ export const ScheduleProvider = ({ children }) => {
     length = length < 10 ? `0${length}` : length;
     setRequestedLength(length);
   },[requested])
+
+  useEffect(()=>{
+    let length = pending.length;
+    length = length < 10 ? `0${length}` : length;
+    setPendingLength(length);
+  },[pending])
 
   useEffect(()=>{
     let length = allUsers.length;
@@ -62,6 +71,12 @@ export const ScheduleProvider = ({ children }) => {
     setRequested((prev)=>{
       let newRequested = prev.filter((item)=>item._id!==schedule._id);
       return [schedule,...newRequested];
+    })
+  };
+  const appendPending = (schedule) => {
+    setPending((prev)=>{
+      let newPending = prev.filter((item)=>item._id!==schedule._id);
+      return [schedule,...newPending];
     })
   };
   const fetchUpcomingSchedules = async () => {
@@ -116,6 +131,19 @@ export const ScheduleProvider = ({ children }) => {
     }
   };
 
+  const fetchPendingSchedules = async () => {
+    setPendingLoading(true);
+    try {
+      let response = await fetchPending(token);
+      setPending(response);
+    } catch (error) {
+      console.error('Error fetching pending schedules:', error);
+      const errorMessage = error.response?.data?.message || 'Error fetching pending schedules';
+      Toast.error(errorMessage,'top')
+    } finally {
+      setPendingLoading(false);
+    }
+  };
   const fetchUserCount = async () => {
     setUserCountLoading(true);
     setIsChatUsersLoading(true);
@@ -144,6 +172,9 @@ export const ScheduleProvider = ({ children }) => {
         fetchRequestedSchedules();
         fetchUserCount();
       }
+      if(user?.role ==='user'){
+        fetchPendingSchedules();
+      }
     }
   }, [token, user?.role]);
 
@@ -158,6 +189,9 @@ export const ScheduleProvider = ({ children }) => {
       if(user.role==='admin'){
         fetchRequestedSchedules();
         fetchUserCount();
+      }
+      if(user.role ==='user'){
+        fetchPendingSchedules();
       }
       setRefreshing(false);
     }
@@ -196,7 +230,8 @@ export const ScheduleProvider = ({ children }) => {
         refreshing, setRefreshing, 
         profileRefetch, setProfileRefetch,
         chatsRefresh, setChatsRefresh,appendUpcoming,
-        appendCompleted, appendRequested
+        appendCompleted, appendRequested,
+        pending, setPending, pendingLoading, setPendingLoading, pendingLength, setPendingLength, appendPending
       }}
     >
       {children}

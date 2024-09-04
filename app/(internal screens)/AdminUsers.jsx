@@ -28,7 +28,9 @@ const AdminUsers = () => {
           }
         >
           <View className="flex flex-col px-2">
-            {allUsers.map((user, index) => (
+            {allUsers.length === 0 ? 
+            <Text className="text-white text-lg text-center font-inter_Medium">No users to show</Text>
+            :allUsers.map((user, index) => (
               <UserInstance key={index} index={index+1} gender={user.gender} name={user.fullName} profile={user.profileImage} age={user.age} email={user.email} role={user.role} id={user._id} />
             ))}
           </View>

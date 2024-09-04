@@ -2,12 +2,15 @@ import { View, Text, Pressable, ActivityIndicator } from 'react-native';
 import React from 'react';
 import { router } from 'expo-router';
 import { useGlobalContext } from '../../../contexts/GlobalProvider';
+import { useFormContext } from '../../../contexts/FormProivder';
 
 const ScheduleInstanc = ({title, color, value, subtitle, isLast, route, isLoading = true}) => {
   const { setIntialRoute} = useGlobalContext();
+  const {setTabsChanged} = useFormContext();
   return (
     <Pressable onPress={() => {
       setIntialRoute(route);
+      setTabsChanged(true);
       router.push('/mySchedules');
     }}>
       <View className={`flex flex-row items-center justify-between ${!isLast && "mb-4"} px-2`}>

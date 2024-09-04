@@ -19,6 +19,7 @@ module.exports = {
         requested: "#1F67FF",
         upcoming:"#D8730A",
         completed: "#73C34D",
+        pending: "#FFEB7E",
         red: "#FF3B30",
         tertiary: "#131B1E",
       },

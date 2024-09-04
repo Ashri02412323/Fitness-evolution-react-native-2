@@ -2,7 +2,8 @@ import React, { createContext, useContext, useEffect, useRef, useState } from "r
 import profileImg from "../assets/images/profilePic.png";
 import io from 'socket.io-client';
 
-const SOCKET_URL = 'http://fitnessevolution-env.eba-5itjpppf.us-east-1.elasticbeanstalk.com'; 
+// const SOCKET_URL = 'http://fitnessevolution-env.eba-5itjpppf.us-east-1.elasticbeanstalk.com'; 
+const SOCKET_URL = 'http://fitnessevol-env.eba-uunkm3cu.us-east-1.elasticbeanstalk.com'; 
 const GlobalContext = createContext();
 export const useGlobalContext = () => useContext(GlobalContext);
 
@@ -74,7 +75,6 @@ export const GlobalProvider = ({ children }) => {
           socket.off("user disconnected", handleUserDisconnected);
       };
   }, [chatUsers, socket,user]);
-
   
   useEffect(() => {
     if (!user?._id) return;
@@ -167,6 +167,7 @@ export const GlobalProvider = ({ children }) => {
   }
   useEffect(()=>{
     let fullName = user?.fullName;
+    console.log("Full Name: ", fullName);
     if(fullName){
       setFirstLetter(extractFirstLetter(fullName));
     }
@@ -207,7 +208,44 @@ useEffect(() => {
   }
 }, [user, allUsers, profileImg, setChatUsers, setIsChatUsersLoading]);
 
+const sendMsgFromTrainer = (msg, userName, userId) => {
+  let trainerName = user?.role === 'admin' ? user.fullName : user.trainerAssigned.fullName;
+  let trainerId = user?.role === 'admin' ? user._id : user.trainerAssigned._id;
 
+  const newMsg = {
+    senderName: trainerName,
+    receiverName: userName,
+    message: msg,
+    senderId: trainerId,
+    receiverId: userId,
+    status: 'pending',
+    timeStamp: new Date().toISOString(),
+  };
+
+  setChats((prevChats) => {
+    let userId1 = newMsg.senderId;
+    let userId2 = newMsg.receiverId;
+
+    if (!prevChats[userId2]) {
+      socket.emit('loadMessages', { userId1, userId2 });
+
+      // Move the event listener outside of the state update function
+      const handleMessages = (fetchedMessages) => {
+        fetchedMessages.push(newMsg);
+        setChats((prev) => {
+          let newObj = { ...prev, [userId2]: fetchedMessages };
+          return newObj;
+        });
+      };
+      socket.once('messages', handleMessages);
+    } else {
+      let newArr = prevChats[newMsg.receiverId].concat(newMsg);
+      return { ...prevChats, [newMsg.receiverId]: newArr };
+    }
+  });
+
+  socket?.emit('chat message', newMsg);
+};
 
   return (
     <GlobalContext.Provider
@@ -229,7 +267,7 @@ useEffect(() => {
         detailEmail, setDetailEmail,
         detailId, setDetailId,
         currentReceiver, setCurrentReceiver, extractFirstLetter, isChatUsersLoading, setIsChatUsersLoading,
-        hasSignedUp, setHasSignedUp,
+        hasSignedUp, setHasSignedUp, sendMsgFromTrainer
       }}
     >
       {children}

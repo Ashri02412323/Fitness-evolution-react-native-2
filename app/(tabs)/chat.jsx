@@ -24,7 +24,9 @@ const Chat = () => {
         }>
       <View className="flex flex-col px-2">
           {isChatUsersLoading&&<Text className="text-white text-lg text-center">Loading...</Text>}
-        {!isChatUsersLoading && chatUsers.map((user,index) => {
+        {!isChatUsersLoading && chatUsers.length === 0 ?
+        <Text className="text-white text-lg text-center font-inter_Medium">No chats to show</Text>
+        : chatUsers.map((user,index) => {
           if(!user || !user.userName){
             return null;
           }

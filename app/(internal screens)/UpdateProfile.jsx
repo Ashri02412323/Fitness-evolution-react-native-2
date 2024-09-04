@@ -14,7 +14,7 @@ import { useScheduleContext } from '../../contexts/ScheduleProvider';
 
 const UpdateProfile = () => {
     const insets = useSafeAreaInsets();
-    const {userName,userEmail,userAge,userGender,userProfile,token,} = useGlobalContext();
+    const {userName,userEmail,userAge,userGender,userProfile,token,setUserName,setUserEmail,setUserGender,setUserAge,user,setUser} = useGlobalContext();
     const [isValidAge, setIsValidAge] = useState(false);
     const [isValidEmail, setIsValidEmail] = useState(false);
     const [isValidName , setIsValidName] = useState(false);
@@ -38,9 +38,27 @@ const UpdateProfile = () => {
       }
       try{
         setUpdating(true);
-        await updateUser(token,data,userProfile);
+        const response = await updateUser(token,data,userProfile);
         Toast.success("Profile Updated Successfully", 'top');
-        router.push('/profile');
+        let newUserOject = {...user};
+        if(response?.age){
+        setUserAge(response?.age);
+        newUserOject.age = response?.age;
+        }
+        if(response?.email){
+        setUserEmail(response?.email);
+        newUserOject.email = response?.email;
+        }
+        if(response?.fullName){
+        setUserName(response?.fullName);
+        newUserOject.fullName = response?.fullName;
+        }
+        if(response?.gender){
+        setUserGender(response?.gender);
+        newUserOject.gender = response?.gender;
+        }
+        setUser(newUserOject);
+        router.back();
         setProfileRefetch(true)
     }catch(error){
         console.log("Error: ", error);

@@ -4,6 +4,8 @@ import profile from '../../../assets/images/profilePic.png';
 import { router } from 'expo-router';
 import { Toast } from 'toastify-react-native';
 import * as Clipboard from 'expo-clipboard';
+import ProfileDefault from '../Profile/ProfileDefault';
+import { useGlobalContext } from '../../../contexts/GlobalProvider';
 
 const handleNavigate = (title, date, time, link, userName, noLink, profileImg, descr, isUser, isProfileLink, status, id, startTime, endTime, userId, rawDate, affectedArea) => {
     router.push({ pathname: "/ScheduleDetail", params: { title, date, time, link, userName, noLink, profileImg, descr, isUser, isProfileLink, status, id, startTime, endTime, userId, rawDate, affectedArea } });
@@ -11,7 +13,8 @@ const handleNavigate = (title, date, time, link, userName, noLink, profileImg, d
 
 const ScheduleInstance = ({ title, date, time, link, userName, noLink, profileImg, descr, isUser, status, id, startTime, endTime, userId, rawDate, affectedArea }) => {
     const handlePress = () => {
-        handleNavigate(title, date, time, link, userName, noLink, profileImg ?? profile, descr, isUser, profileImg ? true : false, status, id, startTime, endTime, userId, rawDate, affectedArea);
+      console.log("profileImg: ", profileImg);
+        handleNavigate(title, date, time, link, userName, noLink, profileImg, descr, isUser, profileImg ? true : false, status, id, startTime, endTime, userId, rawDate, affectedArea);
     };
 
     const handleLinkPress = async () => {
@@ -30,12 +33,12 @@ const ScheduleInstance = ({ title, date, time, link, userName, noLink, profileIm
         Toast.success('Link copied to clipboard', 'top');
       }
     };
-
+const {user} = useGlobalContext();
     return (
         <Pressable onPress={handlePress} className="flex flex-row bg-secondary w-full items-center justify-start p-2 pl-0 rounded-lg mb-2">
-            <View className="w-[30%] flex items-center justify-center">
+            <View className="w-[30%] flex items-center justify-center ">
                 {profileImg ? <Image source={{ uri: profileImg }} className="h-16 w-16 rounded-full" /> :
-                    <Image source={profile} className="h-16 w-16 rounded-full" />
+                <ProfileDefault sizeClass="h-16 w-16" textStyle="text-[30px] mt-5" parentStyle="mb-0" userName={user?.role ==='admin'?user?.fullName: userName} isDefault={false} />
                 }
             </View>
             <View className="flex flex-col gap-y-[4px] w-[70%]">

@@ -6,7 +6,7 @@ import { useGlobalContext } from '../../contexts/GlobalProvider';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 // Import your tab screens explicitly
 import HomeScreen from './home';
-import MySchedulesScreen from './mySchedules2';
+import MySchedulesScreen from './mySchedules';
 import AddScheduleScreen from './addSchedules';
 import ChatScreen from './chat';
 import AdminScreen from './admin';

@@ -8,24 +8,25 @@ import CustomButton from '../components/CustomButton';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import { markAsCompleted } from '../../lib/Users/Schedule';
+import { deleteSchedule, markAsCompleted } from '../../lib/Users/Schedule';
 import { useGlobalContext } from '../../contexts/GlobalProvider';
 import { useScheduleContext } from '../../contexts/ScheduleProvider';
 import Entypo from '@expo/vector-icons/Entypo';
 import { useFormContext } from '../../contexts/FormProivder';
 // import Toast from 'react-native-toast-message';
 import ToastManager, { Toast } from 'toastify-react-native';
+import {  SimpleLineIcons } from '@expo/vector-icons';
+import ProfileDefault from '../components/Profile/ProfileDefault';
 
 const ScheduleDetail = () => {
   const { title, date, time, link, userName, noLink, profileImg,descr,isUser,isProfileLink,status,id,startTime,endTime,userId,rawDate,affectedArea} = useGlobalSearchParams();
   const [markingLoad, setMarkingLoad] = useState(false);
   const [currStatus, setCurrStatus] = useState(status);
-  const {token} = useGlobalContext();
-  const {setUpcoming,appendUpcoming,appendCompleted,setCompleted} = useScheduleContext();
+  const {token,user,sendMsgFromTrainer} = useGlobalContext();
+  const {setUpcoming,appendUpcoming,appendCompleted,setCompleted,setRequested,setPending} = useScheduleContext();
   const {handleApprove} =useFormContext();
-
+  const [rejectingLoader, setRejectingLoader] = useState(false);
   const insets = useSafeAreaInsets();
-
   const handleMarkCompleted = async(status) => {
     setMarkingLoad(true);
     try{
@@ -49,13 +50,36 @@ const ScheduleDetail = () => {
       setMarkingLoad(false);
     }
   }
- 
+  const handleReject = async() => {
+    setRejectingLoader(true);
+    try{
+      const response = await deleteSchedule(id);
+      if(response){
+        setCurrStatus("Rejected");
+        if(user?.role==="admin" || user?.role==="trainer"){
+        setRequested((prev)=>prev.filter((item)=>item._id!==id));
+        Toast.success("Schedule Rejected Successfully",'top');
+        sendMsgFromTrainer(`Sorry ${userName}, Your schedule has been rejected...I ll contact you later`,userName,userId);
+        }else if(user?.role==="user"){
+          setPending((prev)=>prev.filter((item)=>item._id!==id));
+          Toast.success("Schedule Cancelled Successfully",'top');
+        }
+        router.back();
+      }
+    }catch(err){
+      console.log("Error while rejeting schedule: ",err);
+      const errorMessage = err.response?.data?.message || 'Error rejecting schedule';
+      Toast.error(errorMessage,'top')
+    }finally{
+      setRejectingLoader(false);
+    }
+  }
   return (
     <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top }}>
       <ScrollView className="h-full"> 
         <ScheduleHeader isDetail title={"Schedule Details"} />
-        {isProfileLink ? <Image source={{uri:profileImg}} className="h-32 w-32 rounded-full mx-auto mt-8" />:
-          <Image source={profileImg} className="h-32 w-32 rounded-full mx-auto mt-8" />
+        {isProfileLink && isProfileLink !== "false" ? <Image source={{uri:profileImg}} className="h-32 w-32 rounded-full mx-auto mt-8 " />:
+            <ProfileDefault sizeClass="h-32 w-32" textStyle="text-[90px] mt-[12px]" parentStyle="mx-auto mb-0 mt-8 rounded-full" userName={user?.role ==='admin'?user?.fullName: userName} isDefault={false} />
           }
         
         <Text className="text-white_87 font-dm_Medium text-2xl capitalize text-center mt-4 px-4">{title}</Text>
@@ -70,7 +94,7 @@ const ScheduleDetail = () => {
           <DetailInstance title="Status" value={currStatus} isLast={true}/>
         </View>
         <View className="flex flex-col items-center justify-center mt-8 mb-8">
-          {isUser==="true"?
+          {isUser==="true" && status !== "Pending"?
           <CustomButton title="Request Reschedule" handlePress={()=> router.push("/chat")} isDetail={true} 
           customStyle={"bg-mint-87"}
           endIcon={<MaterialIcons name="restart-alt" 
@@ -78,7 +102,9 @@ const ScheduleDetail = () => {
             />
           :
           <>
-          { status==='Requested' ? 
+          { status==='Requested' ? <View className="flex flex-row" style={{
+            columnGap: 10
+          }}>
             <CustomButton title="Approve it" handlePress={()=>{
               handleApprove(id,rawDate,startTime,endTime,link,title,descr,userId,userName,"toApprove",affectedArea);
             }} isDetail={true} 
@@ -86,6 +112,19 @@ const ScheduleDetail = () => {
             textStyle={"mr-3"}
             endIcon={<FontAwesome6 name="circle-check" size={22} color="#fff" />}
               />
+            <CustomButton title="Reject it" handlePress={handleReject} isDetail={true} 
+            customStyle={"bg-red mb-2" }
+            textStyle={"mr-3 text-white"}
+            isLoading={rejectingLoader}
+            endIcon={<SimpleLineIcons name="close" size={22} color="#fff" />}
+              />
+               </View>
+          : status === "Pending" ?
+          <CustomButton title="Cancel it" handlePress={handleReject} isDetail={true}
+          customStyle={"bg-red mb-2"}
+          isLoading={rejectingLoader}
+          endIcon={<SimpleLineIcons name="close" size={22} color="#fff" />}
+            />
           :
           <CustomButton title="Reschedule it" handlePress={()=>{
             handleApprove(id,rawDate,startTime,endTime,link,title,descr,userId,userName,"toReschedule",affectedArea);

@@ -60,7 +60,6 @@ const handleRedirect = () => {
     id: id
   }
   const userString = encodeURIComponent(JSON.stringify(receiver));
-  console.log("Receiver: ",receiver);
   router.push({
     pathname: "/ChatScreen",
     params: {receiver:userString,userName:name}
@@ -95,10 +94,10 @@ const handleRoleChange = async() => {
           <View className="absolute -top-2 -left-2 -right-2 h-full bg-primary rounded-b-[50px] border-mint-87 border-[1px]" />
           <AboutProfile sizeClass="h-[150px] w-[150px]" textStyle="text-[100px] -bottom-1" parentStyle="" name={name} profileImg={profile} />
 
-          <View className="flex flex-row items-center justify-around w-full mt-2">
-            <UserSettings title={"Roles"}
+          <View className="flex flex-row items-center justify-center w-full mt-2">
+            {/* <UserSettings title={"Roles"}
             icon={<MaterialIcons name="published-with-changes" size={22} color="#01AFA8" />} onPress={()=>setRoleVisible(true)}
-            />
+            /> */}
             <UserSettings title={"Chat"}
             icon={<Ionicons name="chatbox-ellipses-outline" size={22} color="#01AFA8" />} onPress={handleRedirect}
             />

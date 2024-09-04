@@ -8,6 +8,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { router } from 'expo-router'
 import { useGlobalContext } from '../../../contexts/GlobalProvider'
 import { useScheduleContext } from '../../../contexts/ScheduleProvider'
+import { useFormContext } from '../../../contexts/FormProivder'
 
 const zoomIn = {
   0: {
@@ -29,10 +30,13 @@ const zoomOut = {
 
 const ScheduleCard = ({ activeItem, item,route}) => {
 const {setIntialRoute} = useGlobalContext();
+const {setTabsChanged} = useFormContext();
+
 // const valuePaddingZero = item.value < 10 ? `0${item.value}` : item.value;
   return (
     <Pressable onPress={()=>{
       setIntialRoute(route)
+      setTabsChanged(true);
       router.push("/mySchedules")
       }}>
     <Animatable.View
@@ -67,7 +71,7 @@ const Indicator = ({ isActive }) => {
   );
 };
 const SchedulesCarousal = () => {
-  const {upcomingLoading,completedLoading,upcomingLength,completedLength} = useScheduleContext();
+  const {upcomingLoading,completedLoading,upcomingLength,completedLength,pendingLength,pendingLoading} = useScheduleContext();
     const data = [
         {
             title: 'Upcoming Schedules',
@@ -75,6 +79,13 @@ const SchedulesCarousal = () => {
             value: upcomingLength,
             tab:"Upcoming",
             isLoading : upcomingLoading
+        },
+        {
+            title: 'Pending Schedules',
+            bg: PendingBg,
+            value: pendingLength,
+            tab:"Pending",
+            isLoading: pendingLoading
         },
         {
             title: 'Completed Schedules',

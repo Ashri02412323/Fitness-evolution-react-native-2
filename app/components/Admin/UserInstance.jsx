@@ -31,7 +31,6 @@ const UserInstance = ({isLast,name,gender,profile,index,age,role,email,id}) => {
           id: id
         }
         const userString = encodeURIComponent(JSON.stringify(receiver));
-        console.log("Receiver: ",receiver);
         router.push({
           pathname: "/ChatScreen",
           params: {receiver:userString,userName:name}

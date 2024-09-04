@@ -22,11 +22,9 @@ const validationSchema = Yup.object().shape({
 
 const AddSchedule = () => {
   const insets = useSafeAreaInsets();
-  const {selectedDate, startTime,  endTime,subject, description, userName,link,userId,submitStatus,setPostLoading,scheduleApprovedId,getIsoDateTimeString,resetFormValues,step, setStep,selectedArea,selectedUser,setSelectedUser} = useFormContext();
-  const [fetching, setFetching] = useState(false);
-  const [redirect, setRedirect] = useState(false);
-  const {token,user,setIntialRoute,currReceiver,setCurrentReceiver,setChats,socket,} = useGlobalContext();
-  const {appendUpcoming,setRequested} = useScheduleContext();
+  const {selectedDate, startTime,  endTime,subject, description, userName,link,userId,submitStatus,setPostLoading,scheduleApprovedId,getIsoDateTimeString,resetFormValues,step, setStep,setSelectedUser,setTabsChanged} = useFormContext();
+  const {token,user,setIntialRoute,setChats,sendMsgFromTrainer} = useGlobalContext();
+  const {appendUpcoming,setRequested,appendPending} = useScheduleContext();
   const handleNext = (values) => {
     if (step < 3) {
       setStep(step + 1);
@@ -42,29 +40,6 @@ const AddSchedule = () => {
       setStep(step - 1);
     }
   };
-  useEffect(() => {
-    const currentUser = user?.role=="admin"?{
-      userName: selectedUser?.fullName,
-      id: selectedUser?.id
-    }:{
-      userName: user?.fullName,
-      id: user?._id
-    };
-    const userString = encodeURIComponent(JSON.stringify(currentUser));
-    setCurrentReceiver(currentUser);
-
-    if(!fetching && redirect){
-      router.push({
-        pathname: "/ChatScreen",
-        params: {
-          userName: currentUser?.userName,
-          receiver: userString
-        },
-      });
-      setRedirect(false);
-      setSelectedUser(null);
-}
-},[fetching,redirect,selectedUser,userName,user,setCurrentReceiver])
   const handleSubmit = async() => {
   const trainerId = user?.role === 'admin' ? user?._id : user.trainerAssigned?._id;
   let startTimeFormatted,endTimeFormatted;
@@ -90,49 +65,7 @@ const AddSchedule = () => {
     userId: userId,
     trainerId: trainerId,
   }
-  const trainer = user?.role=="admin"?user:user.trainerAssigned;
-
-
-  const trainerName = user?.role=="admin"?user?.fullName:user.trainerAssigned?.fullName;
-  const sendMessage = (msg) => {
-    const newMsg = {
-      senderName: trainerName,
-      receiverName: userName,
-      message: msg,
-      senderId: trainer?._id,
-      receiverId: userId,
-      status: 'pending',
-      timeStamp: new Date().toISOString(),
-    }
-
-    setChats((prevChats) =>{
-    let userId1 = newMsg.senderId;
-    let userId2 = newMsg.receiverId;
-
-    if (!prevChats[userId2]) {
-      setFetching(true);
-      socket.emit('loadMessages', { userId1, userId2 });
-
-      // Move the event listener outside of the state update function
-      const handleMessages = (fetchedMessages) => {
-        fetchedMessages.push(newMsg);
-        setChats((prev) => {
-          let newObj = { ...prev, [userId2]: fetchedMessages };
-          return newObj;
-        });
-        setFetching(false);
-        setRedirect(true);
-      };
-      socket.once('messages', handleMessages); 
-    }
-    else{
-    let newArr = (prevChats[newMsg.receiverId]).concat(newMsg);
-    setRedirect(true);
-    return { ...prevChats, [newMsg.receiverId]: newArr };
-  }
-})
-    socket?.emit('chat message', newMsg);
-  }
+  
     if(submitStatus==='createNew'){
       setPostLoading(true);
       try{
@@ -140,20 +73,28 @@ const AddSchedule = () => {
       if(user?.role === 'admin'){
         appendUpcoming(response);
       }
-        setIntialRoute("Upcoming")
+      if(user?.role === 'user'){
+        appendPending(response);
+      }
         setStep(1);
         resetFormValues();
         if(user?.role === 'admin'){
           Toast.success('Schedule created successfully','top')
-          sendMessage(`Yo ${userName} ! I have scheduled a class named "${subject}" with you. Please check the schedule in your upcomings.`);
+          setIntialRoute("Upcoming")
+          setTabsChanged(true);
+          router.push("/mySchedules");
+          sendMsgFromTrainer(`Yo ${userName} ! I have scheduled a class named "${subject}" with you. Please check the schedule in your upcomings.`,userName,userId);
         }else{
           Toast.success('Schedule requested successfully','top')
-          sendMessage(`Yo ${userName} ! Thanks for scheduling a class "${subject}" with me. I am looking forward to it. I will approve the schedule soon :)`);
+          setIntialRoute("Pending")
+          setTabsChanged(true);
+          router.push("/mySchedules");
+          sendMsgFromTrainer(`Yo ${userName} ! Thanks for scheduling a class "${subject}" with me. I am looking forward to it. I will approve the schedule soon :)`,userName,userId);
         }
       }catch (err){
+        const errorMessage = err.response?.data?.message || 'Error creating schedule';
         Toast.error(errorMessage,'top')
         console.error('Error creating schedule:',err);
-        const errorMessage = err.response?.data?.message || 'Error creating schedule';
       }finally{
         setPostLoading(false);
       }
@@ -169,28 +110,31 @@ const AddSchedule = () => {
         if(response){
           appendUpcoming(response);
           setIntialRoute("Upcoming")
+          setTabsChanged(true);
           setStep(1);
           resetFormValues();
         if(submitStatus==='toReschedule'){
           Toast.success('Schedule rescheduled successfully','top')
-          sendMessage(`Hey ${userName}, I have rescheduled the class "${subject}". Please check the new schedule in your upcomings.`);
+          sendMsgFromTrainer(`Hey ${userName}, I have rescheduled the class "${subject}". Please check the new schedule in your upcomings.`,userName,userId);
         }else{
           Toast.success('Schedule approved successfully','top')
-          sendMessage(`Hey ${userName}, I have approved the schedule "${subject}". Please check the schedule in your upcomings.`);
+          sendMsgFromTrainer(`Hey ${userName}, I have approved the schedule "${subject}". Please check the schedule in your upcomings.`,userName,userId);
           setRequested((prev)=>{
             let newRequested = prev.filter((item)=>item._id!==scheduleApprovedId);
             return newRequested;
           })
         }
+        router.push("/mySchedules");
       }
       }catch (err){
+        const errorMessage = err.response?.data?.message || 'Error modifying schedule';
         Toast.error(errorMessage,'top')
         console.error('Error modifying schedule:',err);
-        const errorMessage = err.response?.data?.message || 'Error modifying schedule';
       }finally{
         setPostLoading(false);
       }
     }
+    setSelectedUser(null);
   }
   const changeMilestone = (step) => {
     return `Milestone ${step}`;

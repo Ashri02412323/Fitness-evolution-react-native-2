@@ -1,62 +1,77 @@
-import React, { useEffect, useState } from 'react';
-import { Text, SafeAreaView, Dimensions } from 'react-native';
-import { useSafeAreaInsets} from 'react-native-safe-area-context';
-import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-import ScheduleHeader from '../components/MySchedules/ScheduleHeader';
+import React, { useEffect } from 'react';
+import { SafeAreaView, Dimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import UpcomingSchedules from '../components/MySchedules/UpcomingSchedule';
 import CompletedSchedules from '../components/MySchedules/CompletedSchedule';
-import RequestedSchedules from '../components/MySchedules/RequestedSchedules';
+import RequestedSchedule from '../components/MySchedules/RequestedSchedules';
+import PendingSchedule from '../components/MySchedules/PendingSchedule';
+import ScheduleHeader from '../components/MySchedules/ScheduleHeader';
 import { useGlobalContext } from '../../contexts/GlobalProvider';
+import { useFormContext } from '../../contexts/FormProivder';
 
-const MySchedules = () => {
+const Tab = createMaterialTopTabNavigator();
+
+const MySchedules2 = () => {
   const insets = useSafeAreaInsets();
-  const layout = Dimensions.get('window');
-  const { index, setIndex, user } = useGlobalContext();
-  if (!user || !UpcomingSchedules || !CompletedSchedules || !RequestedSchedules || !ScheduleHeader) {
-    return (
-      <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top, flex: 1 }}>
-       <View className="flex w-[98%] mx-auto px-2 flex-col items-center mt-4">
-        <Text className="text-lg text-center text-white font-dm_Medium">Loading...</Text>
-      </View>
-      </SafeAreaView>
-    );
-  }
-  const [routes] = useState([
-    { key: 'upcoming', title: 'Upcoming' },
-    { key: 'completed', title: 'Completed' },
-    ...(user?.role === 'admin' ? [{ key: 'requested', title: 'Requested' }] : [])
-  ]);
+  const { user, intialRoute, } = useGlobalContext();
+const {setTabsChanged, tabsChanged} = useFormContext();
+  const navigation = useNavigation();
 
-  const renderScene = SceneMap({
-    upcoming: UpcomingSchedules,
-    completed: CompletedSchedules,
-    ...(user?.role === 'admin' ? { requested: RequestedSchedules } : {})
-  });
+  useEffect(() => {
+    if (intialRoute && tabsChanged) {
+      navigation.navigate('mySchedules', { screen: intialRoute });
+      setTabsChanged(false);
+    }
+  }, [intialRoute, navigation, tabsChanged]);
+
+
+  if (!user) return null;
 
   return (
-    <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top, flex: 1 }}>
-      <ScheduleHeader title={"My Schedules"} />
-      
-      {/* <TabView
-        navigationState={{ index, routes }}
-        renderScene={renderScene}
-        onIndexChange={setIndex}
-        initialLayout={{ width: layout.width }}
-        renderTabBar={props => (
-          <TabBar
-            {...props}
-            indicatorStyle={{ backgroundColor: index === 2 && user?.role === 'admin' ? '#1F67FF' : index === 0 ? '#D8730A' : '#73C34D', height: 3 }}
-            className="bg-primary"
-            renderLabel={({ route, focused, color }) => (
-              <Text className={`font-inter_Medium text-base mb-2 ${focused ? (route.key === 'requested' && user?.role === 'admin' ? 'text-[#1F67FF]' : index === 0 ? 'text-upcoming' : 'text-completed') : 'text-white_60'}`}>
-                {route.title}
-              </Text>
-            )}
-          />
+    <SafeAreaView className="bg-primary h-full" style={{ paddingTop: insets.top }}>
+      <ScheduleHeader title="My Schedules" />
+      <Tab.Navigator
+
+        initialLayout={{
+          width: Dimensions.get('window').width,
+        }}
+        screenOptions={({ route }) => ({
+          tabBarStyle: { backgroundColor: '#0B1215' }, // Change the background color of the tab bar
+          tabBarActiveTintColor: 
+            route.name === 'Upcoming' ? '#D8730A' : 
+            route.name === 'Completed' ? '#73C34D' : 
+            route.name === 'Requested' ? '#1F67FF' :
+            route.name === 'Pending' ? '#FFEB7E' :
+            'white', // Change the color of the active tab label
+          tabBarInactiveTintColor: 'gray', // Change the color of the inactive tab label
+          tabBarIndicatorStyle: { 
+            backgroundColor: 
+              route.name === 'Upcoming' ? '#D8730A' : 
+              route.name === 'Completed' ? '#73C34D' : 
+              route.name === 'Requested' ? '#1F67FF' :
+              route.name === 'Pending' ? '#FFEB7E' :
+              'white', // Change the color of the indicator
+            height: 3, // Makes the indicator thicker
+          },
+          tabBarLabelStyle: {
+            fontFamily: 'DMSans-SemiBold', // Change the font family of the labels
+            fontSize: 14, // Change the font size of the labels
+          },
+        })}
+      >
+        <Tab.Screen name="Upcoming" component={UpcomingSchedules} />
+        <Tab.Screen name="Completed" component={CompletedSchedules} />
+        {user.role === 'admin' && (
+          <Tab.Screen name="Requested" component={RequestedSchedule} />
         )}
-      /> */}
+        {user.role === 'user' && (
+          <Tab.Screen name="Pending" component={PendingSchedule} />
+        )}
+      </Tab.Navigator>
     </SafeAreaView>
   );
 };
 
-export default MySchedules;
+export default MySchedules2;

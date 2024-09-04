@@ -27,7 +27,7 @@ const DateTime = ({ values, errors, handleNext}) => {
     setSelectedDate(params.date);
     // Convert the date to a local date string in UTC
     const localDate = new Date(params.date).toISOString();
-    let newStartOptions = getTimeOptions(localDate);
+    let newStartOptions = getTimeOptions(localDate, true);
     setStartOptions(newStartOptions);
   };
 
