@@ -16,7 +16,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.ashri024.fitnessevolution",
       "infoPlist": {
-        "NSAppTransportSecurity": { "NSAllowsArbitraryLoads": true }
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
       }
     },
     "android": {
@@ -40,7 +42,8 @@
             "usesCleartextTraffic": true
           }
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
