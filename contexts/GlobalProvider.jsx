@@ -167,7 +167,6 @@ export const GlobalProvider = ({ children }) => {
   }
   useEffect(()=>{
     let fullName = user?.fullName;
-    console.log("Full Name: ", fullName);
     if(fullName){
       setFirstLetter(extractFirstLetter(fullName));
     }

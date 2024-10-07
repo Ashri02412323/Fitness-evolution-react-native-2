@@ -13,7 +13,6 @@ const handleNavigate = (title, date, time, link, userName, noLink, profileImg, d
 
 const ScheduleInstance = ({ title, date, time, link, userName, noLink, profileImg, descr, isUser, status, id, startTime, endTime, userId, rawDate, affectedArea }) => {
     const handlePress = () => {
-      console.log("profileImg: ", profileImg);
         handleNavigate(title, date, time, link, userName, noLink, profileImg, descr, isUser, profileImg ? true : false, status, id, startTime, endTime, userId, rawDate, affectedArea);
     };
 

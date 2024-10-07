@@ -2,7 +2,7 @@
   "expo": {
     "name": "Fitness-evolution",
     "slug": "fitness-evolution",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/fitnessLogoSmall3.png",
     "scheme": "fitness-evolution",

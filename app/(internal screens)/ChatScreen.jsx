@@ -105,7 +105,6 @@ useEffect(()=>{
       if (socket?.connected) {
         socket.emit('message sent', msg._id);
       } else {
-        console.log("Socket is not connected. Message delivered event not emitted.");
         Toast.error('Message delivered event not emitted.','top')
       }
     });
@@ -122,7 +121,6 @@ useEffect(()=>{
       if (socket?.connected) {
         socket.emit('message sent', msgT._id);
       } else {
-        console.log("Socket is not connected. Message delivered event not emitted.");
       }
     });
     return () => {
