@@ -54,7 +54,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "dbb0c0d2-6671-4083-8dd0-82205220f44e"
+        "projectId": "02078a28-1b05-4e91-bca0-d93dd4949f1f"
       }
     },
     "runtimeVersion": {
@@ -62,6 +62,7 @@
     },
     "updates": {
       "url": "https://u.expo.dev/dbb0c0d2-6671-4083-8dd0-82205220f44e"
-    }
+    },
+    "owner": "fitnessevolution"
   }
 }
