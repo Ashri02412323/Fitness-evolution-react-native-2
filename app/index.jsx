@@ -4,7 +4,7 @@ import useCheckLoginStatus from './useCheckLoginStatus';
 
 function Index() {
   const { isLoggedIn,  NotLoggedInComponent } = useCheckLoginStatus();
-
+//I have added a comment
   if (isLoggedIn === null) {
     return NotLoggedInComponent;
   }
